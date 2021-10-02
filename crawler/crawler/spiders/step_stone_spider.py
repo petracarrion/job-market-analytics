@@ -11,7 +11,7 @@ class StepStoneSpider(scrapy.Spider):
     def get_urls(self):
         job_title = 'Python'
 
-        url = f'https://www.stepstone.de/jobs/{job_title}.html'
+        url = f'https://www.stepstone.de/jobs/{job_title}'
 
         return [url]
 
