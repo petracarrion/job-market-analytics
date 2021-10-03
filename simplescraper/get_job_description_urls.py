@@ -1,6 +1,9 @@
 import xmltodict as xmltodict
+import pandas as pd
 
 from simplescraper.utils.webclient import get_web_content
+
+DATA_RESULTS_URLS_CSV = "data/results/urls.csv"
 
 SITEMAP_INDEX_XML = "https://www.stepstone.de/5/sitemaps/de/sitemapindex.xml"
 
@@ -41,5 +44,29 @@ def get_listing_urls():
     return urls
 
 
-all_job_description_urls = get_all_job_description_urls()
-print(all_job_description_urls)
+def save_urls_as_df(all_job_description_urls):
+    df = pd.DataFrame(all_job_description_urls, columns=['job_url'])
+    url_split = df["job_url"].str.split("--", expand=True)
+    df["job_name_slug"] = url_split[1]
+    df["job_id"] = url_split[2].str.split('-', expand=True)[0]
+    df = df.sort_values(by=["job_id"], ascending=False)
+    df.to_csv(DATA_RESULTS_URLS_CSV, index=False)
+
+
+def load_urls_as_df():
+    return pd.read_csv(DATA_RESULTS_URLS_CSV)
+
+
+# all_job_description_urls = get_all_job_description_urls()
+# print(all_job_description_urls)
+#
+#
+# save_urls_as_df(all_job_description_urls)
+
+# df = load_urls_as_df()
+# url_split = df["url"].str.split("--", expand=True)
+# df["job_name_slug"] = url_split[1]
+# df["job_id"] = url_split[2]
+# df = df.sort_values(by=["job_id"], ascending=False)
+# df = df.reset_index(drop=True)
+# print(df)
