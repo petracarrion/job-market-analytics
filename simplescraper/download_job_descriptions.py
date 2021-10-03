@@ -18,14 +18,14 @@ def open_first_page(browser):
 
 def download_urls(urls):
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=False, slow_mo=500)
+        browser = p.chromium.launch(headless=False, slow_mo=250)
         page = open_first_page(browser)
-        for url in urls:
+        for idx, url in enumerate(urls):
             file_path = get_local_path(url)
             if os.path.isfile(file_path):
                 continue
             try:
-                print(f"Downloading: {url}")
+                print(f"Downloading ({idx+1}/{len(urls)}): {url}")
                 page.goto(url)
                 listing_content = page.query_selector(".listing-content")
                 listing_content_html = listing_content.inner_html()
