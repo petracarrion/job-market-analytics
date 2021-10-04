@@ -1,11 +1,11 @@
-import xmltodict as xmltodict
 import pandas as pd
+import xmltodict
 
 from simplescraper.utils.webclient import get_web_content
 
-DATA_RESULTS_URLS_CSV = "data/results/urls.csv"
+DATA_RESULTS_URLS_CSV = 'data/results/urls.csv'
 
-SITEMAP_INDEX_XML = "https://www.stepstone.de/5/sitemaps/de/sitemapindex.xml"
+SITEMAP_INDEX_XML = 'https://www.stepstone.de/5/sitemaps/de/sitemapindex.xml'
 
 
 def get_all_job_description_urls():
@@ -19,9 +19,9 @@ def get_all_job_description_urls():
 def get_job_description_urls(listing_url):
     print(f'Parsing {listing_url}')
     web_content = get_web_content(listing_url)
-    parsed_response = xmltodict.parse(web_content)
-    url_set = parsed_response['urlset']
-    url_entries = url_set['url']
+    web_content = xmltodict.parse(web_content)
+    web_content = web_content['urlset']
+    url_entries = web_content['url']
     urls = []
     for entry in url_entries:
         url = entry['loc']
@@ -33,11 +33,11 @@ def get_job_description_urls(listing_url):
 
 def get_listing_urls():
     web_content = get_web_content(SITEMAP_INDEX_XML)
-    parsed_response = xmltodict.parse(web_content)
-    sitemap = parsed_response['sitemapindex']
-    sitemap_entries = sitemap['sitemap']
+    web_content = xmltodict.parse(web_content)
+    web_content = web_content['sitemapindex']
+    web_content = web_content['sitemap']
     urls = []
-    for entry in sitemap_entries:
+    for entry in web_content:
         url = entry['loc']
         if 'listings' in url:
             urls.append(url)
@@ -46,10 +46,10 @@ def get_listing_urls():
 
 def save_urls_as_df(all_job_description_urls):
     df = pd.DataFrame(all_job_description_urls, columns=['job_url'])
-    url_split = df["job_url"].str.split("--", expand=True)
-    df["job_name_slug"] = url_split[1]
-    df["job_id"] = url_split[2].str.split('-', expand=True)[0]
-    df = df.sort_values(by=["job_id"], ascending=False)
+    url_split = df['job_url'].str.split('--', expand=True)
+    df['job_name_slug'] = url_split[1]
+    df['job_id'] = url_split[2].str.split('-', expand=True)[0]
+    df = df.sort_values(by=['job_id'], ascending=False)
     df.to_csv(DATA_RESULTS_URLS_CSV, index=False)
 
 
