@@ -2,7 +2,7 @@ import os
 import time
 
 import pandas as pd
-from playwright.sync_api import sync_playwright
+from playwright.sync_api import sync_playwright, TimeoutError
 
 from simplescraper.get_job_description_urls import DATA_RESULTS_URLS_CSV
 from simplescraper.utils.webclient import get_local_path
@@ -11,7 +11,7 @@ from simplescraper.utils.webclient import get_local_path
 def open_first_page(browser):
     page = browser.new_page()
     page.goto('https://www.stepstone.de/')
-    page.click("#ccmgt_explicit_accept")
+    page.click('#ccmgt_explicit_accept')
     time.sleep(1)
     return page
 
@@ -25,12 +25,12 @@ def download_urls(urls):
             if os.path.isfile(file_path):
                 continue
             try:
-                print(f"Downloading ({idx+1}/{len(urls)}): {url}")
+                print(f'Downloading ({idx+1}/{len(urls)}): {url}')
                 page.goto(url)
-                listing_content = page.query_selector(".listing-content")
+                listing_content = page.query_selector('.listing-content')
                 listing_content_html = listing_content.inner_html()
                 listing_content_html = listing_content_html.replace('\xad', '')
-                with open(file_path, "w", encoding="utf-8") as f:
+                with open(file_path, 'w', encoding='utf-8') as f:
                     f.write(listing_content_html)
             except TimeoutError:
                 print(f'TimeoutError: Timeout error while requesting the page {url}')
