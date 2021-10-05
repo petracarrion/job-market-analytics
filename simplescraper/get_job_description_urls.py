@@ -4,6 +4,7 @@ import xmltodict
 from simplescraper.utils.webclient import get_web_content
 
 DATA_RESULTS_URLS_CSV = 'data/results/urls.csv'
+DATA_RESULTS_DOWLOADED_URLS_CSV = 'data/results/downloaded_urls.csv'
 
 SITEMAP_INDEX_XML = 'https://www.stepstone.de/5/sitemaps/de/sitemapindex.xml'
 
@@ -57,11 +58,11 @@ def load_urls_as_df():
     return pd.read_csv(DATA_RESULTS_URLS_CSV)
 
 
-# all_job_description_urls = get_all_job_description_urls()
-# print(all_job_description_urls)
-#
-#
-# save_urls_as_df(all_job_description_urls)
+if __name__ == '__main__':
+    all_job_description_urls = get_all_job_description_urls()
+    print(all_job_description_urls)
+
+    save_urls_as_df(all_job_description_urls)
 
 # df = load_urls_as_df()
 # url_split = df["url"].str.split("--", expand=True)
