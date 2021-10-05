@@ -79,7 +79,7 @@ async def main():
 
 if __name__ == '__main__':
     df = pd.read_csv(DATA_RESULTS_URLS_CSV)
-    dfs = split_dataframe(df, 50)
+    dfs = split_dataframe(df, 200)
 
     # df = df[df.job_name_slug.str.contains("Entwickle")]
     # df = df.head(500)
