@@ -9,6 +9,7 @@ from simplescraper.get_job_description_urls import DATA_RESULTS_URLS_CSV, DATA_R
 from simplescraper.utils.logging import get_logger
 from simplescraper.utils.webclient import get_local_path
 
+SEMAPHORE_COUNT = 8
 
 logger = get_logger()
 
@@ -22,9 +23,17 @@ async def open_first_page(browser):
 
 
 async def download_urls(df):
+    if df.empty:
+        return
     async with async_playwright() as p:
         browser = await p.chromium.launch(headless=False, slow_mo=250)
         try:
+            min = df['position'].min()
+            max = df['position'].max()
+            chunk_id = f'{min}-{max}'
+            chunk_size = df.shape[0]
+            logger.info(f'Starting chunk {chunk_id} with size of {chunk_size}')
+            start_time = time.time()
             page = await open_first_page(browser)
             url_dicts = df.to_dict('records')
             for url_dict in url_dicts:
@@ -53,6 +62,11 @@ async def download_urls(df):
         finally:
             await browser.close()
 
+        elapsed_time = time.time() - start_time
+        logger.info(f'Finished chunk {chunk_id}')
+        logger.info(f'Elapsed time {chunk_id}: {elapsed_time:.2f} seconds')
+        logger.info(f'Downloads per second {chunk_id}: {chunk_size / elapsed_time:.2f}')
+
 
 # def get_urls():
 #     urls = """https://www.stepstone.de/stellenangebote--IT-Systemadministrator-Netzwerkadministrator-m-w-d-Greifswald-HanseYachts-AG--7577304-inline.html"""
@@ -64,14 +78,14 @@ async def download_urls(df):
 # download_urls(get_urls())
 
 def split_dataframe(df, chunk_size):
-    chunks = list()
+    chunks = []
     num_chunks = len(df) // chunk_size + 1
     for i in range(num_chunks):
-        chunks.append(df[i*chunk_size:(i+1)*chunk_size])
+        chunks.append(df[i * chunk_size:(i + 1) * chunk_size])
     return chunks
 
 
-sem = asyncio.Semaphore(8)
+sem = asyncio.Semaphore(SEMAPHORE_COUNT)
 
 
 async def safe_download_urls(urls):
@@ -87,6 +101,7 @@ async def main():
     ]
     await asyncio.gather(*tasks)
 
+
 if __name__ == '__main__':
     df: pd.DataFrame = pd.read_csv(DATA_RESULTS_URLS_CSV)
     downloaded_df = pd.read_csv(DATA_RESULTS_DOWLOADED_URLS_CSV)
@@ -97,15 +112,22 @@ if __name__ == '__main__':
 
     df = df.reset_index(drop=True)
     df['position'] = df.index + 1
-    df['total_count'] = df.shape[0]
+    total_count = df.shape[0]
+    df['total_count'] = total_count
 
-    dfs = split_dataframe(df, 10)
+    dfs = split_dataframe(df, 200)
 
-    # df = df[df.job_name_slug.str.contains("Entwickle")]
-    # df = df.head(500)
+    start_time = time.time()
+    logger.info(f'Starting')
+    logger.info(f'Concurrent tasks: {SEMAPHORE_COUNT}')
+    logger.info(f'Urls to dowload: {total_count}')
     loop = asyncio.get_event_loop()
     try:
         loop.run_until_complete(main())
     finally:
         loop.run_until_complete(loop.shutdown_asyncgens())
         loop.close()
+    elapsed_time = time.time() - start_time
+    logger.info(f'Finished')
+    logger.info(f'Elapsed time: {elapsed_time:.2f} seconds')
+    logger.info(f'Downloads per second: {total_count / elapsed_time:.2f}')
