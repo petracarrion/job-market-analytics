@@ -17,8 +17,8 @@ logger = get_logger()
 async def open_first_page(browser):
     page = await browser.new_page()
     await page.goto('https://www.stepstone.de/')
-    await page.click('#ccmgt_explicit_accept')
-    time.sleep(1)
+    # await page.click('#ccmgt_explicit_accept')
+    # time.sleep(1)
     return page
 
 

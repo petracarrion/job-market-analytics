@@ -47,6 +47,7 @@ def get_listing_urls():
 
 def save_urls_as_df(all_job_description_urls):
     df = pd.DataFrame(all_job_description_urls, columns=['job_url'])
+    df = df.drop_duplicates()
     url_split = df['job_url'].str.split('--', expand=True)
     df['job_name_slug'] = url_split[1]
     df['job_id'] = url_split[2].str.split('-', expand=True)[0]
