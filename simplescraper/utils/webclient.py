@@ -1,4 +1,5 @@
 import os
+from datetime import date
 
 import requests
 
@@ -56,6 +57,11 @@ def save_to_cache(url, content):
     dirname = os.path.dirname(file_path)
     if not os.path.exists(dirname):
         os.makedirs(dirname)
+    save_file(content, file_path)
+    save_file(content, file_path + '.' + str(date.today()))
+
+
+def save_file(content, file_path):
     with open(file_path, "wb") as f:
         f.write(content)
 
