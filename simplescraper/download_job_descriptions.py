@@ -17,8 +17,8 @@ logger = get_logger()
 async def open_first_page(browser):
     page = await browser.new_page()
     await page.goto('https://www.stepstone.de/')
-    # await page.click('#ccmgt_explicit_accept')
-    # time.sleep(1)
+    await page.click('#ccmgt_explicit_accept')
+    time.sleep(1)
     return page
 
 
@@ -115,7 +115,7 @@ if __name__ == '__main__':
     total_count = df.shape[0]
     df['total_count'] = total_count
 
-    dfs = split_dataframe(df, 200)
+    dfs = split_dataframe(df, 100)
 
     start_time = time.time()
     logger.info(f'Starting')
