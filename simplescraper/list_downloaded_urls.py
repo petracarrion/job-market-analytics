@@ -1,12 +1,18 @@
-from os import listdir
-from os.path import isfile, join
+import os
 
 import pandas as pd
 
-PREFIX = 'https://www.stepstone.de/'
-DIR_PATH = './data/cache/www.stepstone.de'
+from utils.save_results import DOWNLOADED_URLS_CSV, save_csv
 
-urls = [PREFIX + f for f in listdir(DIR_PATH) if isfile(join(DIR_PATH, f))]
-print(urls)
+PREFIX = 'https://www.stepstone.de/'
+
+DATA_DIR = os.getenv('DATA_DIR', os.path.expanduser('~/job-market-analytics/data'))
+RAW_DIR = os.getenv('RAW_DIR', os.path.join(DATA_DIR, 'raw'))
+JOB_RESULTS_DIR = os.getenv('JOB_RESULTS_DIR', os.path.join(DATA_DIR, 'results/latest'))
+
+DIR_PATH = os.path.join(RAW_DIR, 'www.stepstone.de')
+
+urls = [PREFIX + f for f in os.listdir(DIR_PATH) if os.path.isfile(os.path.join(DIR_PATH, f))]
+
 df = pd.DataFrame(urls, columns=['job_url'])
-df.to_csv('./data/results/downloaded_urls.csv', index=False)
+save_csv(df, os.path.join(JOB_RESULTS_DIR, DOWNLOADED_URLS_CSV))

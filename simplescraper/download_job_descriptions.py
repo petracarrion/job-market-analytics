@@ -5,7 +5,7 @@ import time
 import pandas as pd
 from playwright.async_api import async_playwright, Error, TimeoutError
 
-from simplescraper.get_job_description_urls import DATA_RESULTS_URLS_CSV, DATA_RESULTS_DOWLOADED_URLS_CSV
+from simplescraper.download_sitemap import DATA_RESULTS_URLS_CSV, DATA_RESULTS_DOWLOADED_URLS_CSV
 from simplescraper.utils.logging import get_logger
 from simplescraper.utils.webclient import get_local_path
 
