@@ -1,18 +1,16 @@
-import os
-
 import pandas as pd
 
-from utils.save_results import DOWNLOADED_URLS_CSV, save_csv
+from utils.storage import DOWNLOADED_URLS_CSV, JOB_DIR_NAME, save_result_csv, list_raw_files
 
-PREFIX = 'https://www.stepstone.de/'
+URL_PREFIX = 'https://www.stepstone.de/'
 
-DATA_DIR = os.getenv('DATA_DIR', os.path.expanduser('~/job-market-analytics/data'))
-RAW_DIR = os.getenv('RAW_DIR', os.path.join(DATA_DIR, 'raw'))
-JOB_RESULTS_DIR = os.getenv('JOB_RESULTS_DIR', os.path.join(DATA_DIR, 'results/latest'))
 
-DIR_PATH = os.path.join(RAW_DIR, 'www.stepstone.de')
+def main():
+    file_names = list_raw_files(JOB_DIR_NAME)
+    urls = [URL_PREFIX + file_name for file_name in file_names]
+    df = pd.DataFrame(urls, columns=['job_url'])
+    save_result_csv(df, DOWNLOADED_URLS_CSV)
 
-urls = [PREFIX + f for f in os.listdir(DIR_PATH) if os.path.isfile(os.path.join(DIR_PATH, f))]
 
-df = pd.DataFrame(urls, columns=['job_url'])
-save_csv(df, os.path.join(JOB_RESULTS_DIR, DOWNLOADED_URLS_CSV))
+if __name__ == "__main__":
+    main()
