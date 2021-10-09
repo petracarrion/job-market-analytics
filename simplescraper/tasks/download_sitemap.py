@@ -1,7 +1,7 @@
 import pandas as pd
 import xmltodict
 
-from simplescraper.utils.webclient import get_and_historize_url_content
+from utils.webclient import get_and_historize_url_content
 from utils.storage import save_temp_df, SITEMAP_URLS_CSV
 
 SITEMAP_INDEX_XML = 'https://www.stepstone.de/5/sitemaps/de/sitemapindex.xml'
@@ -27,7 +27,6 @@ def get_job_description_urls(web_content):
     urls = []
     for entry in url_entries:
         url = entry['loc']
-        print(url)
         urls.append(url)
 
     return urls
@@ -38,7 +37,6 @@ def get_all_job_description_urls():
     job_description_urls = []
     for listing_url in listing_urls:
         web_content = get_and_historize_url_content(listing_url)
-        print(f'Parsing {listing_url}')
         job_description_urls.extend(get_job_description_urls(web_content))
     return job_description_urls
 
