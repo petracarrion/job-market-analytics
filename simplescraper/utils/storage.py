@@ -40,8 +40,14 @@ URLS_TO_DOWNLOAD_CSV = '03_urls_to_download.csv'
 
 def list_raw_files(data_source, entity):
     dir_path = os.path.join(RAW_DIR, data_source, entity)
-    file_list = [f.split('/')[-1] for f in glob.iglob(dir_path + '**/**', recursive=True) if os.path.isfile(f)]
+    file_list = [f.split('/')[-1] for f in glob.iglob(dir_path + '/*/*', recursive=True) if os.path.isfile(f)]
     return file_list
+
+
+def raw_files_exists(data_source, entity, file_name):
+    dir_path = os.path.join(RAW_DIR, data_source, entity)
+    file_list = [f.split('/')[-1] for f in glob.iglob(dir_path + '/*/' + file_name, recursive=True) if os.path.isfile(f)]
+    return len(file_list) > 0
 
 
 def get_current_date():
@@ -54,7 +60,8 @@ def _create_dir(file_path):
 
 
 def _save_file(content, file_path):
-    with open(file_path, "wb") as f:
+    file_type = "w" if isinstance(content, str) else "wb"
+    with open(file_path, file_type) as f:
         f.write(content)
 
 
@@ -75,3 +82,7 @@ def save_temp_df(df: pd.DataFrame, file_name: str):
         os.makedirs(TEMP_DIR)
     # noinspection PyTypeChecker
     df.to_csv(os.path.join(TEMP_DIR, file_name), index=False)
+
+
+def load_temp_df(file_name: str):
+    return pd.read_csv(os.path.join(TEMP_DIR, file_name))

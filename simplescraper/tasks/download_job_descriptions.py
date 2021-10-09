@@ -1,13 +1,11 @@
 import asyncio
-import os
 import time
 
 import pandas as pd
 from playwright.async_api import async_playwright, Error, TimeoutError
 
-from tasks.download_sitemap import DATA_RESULTS_URLS_CSV, DATA_RESULTS_DOWLOADED_URLS_CSV
-from simplescraper.utils.logging import get_logger
-from simplescraper.utils.webclient import get_file_name
+from utils.logging import get_logger
+from utils.storage import load_temp_df, DOWNLOADED_URLS_CSV, SITEMAP_URLS_CSV, save_raw_file, raw_files_exists
 
 SEMAPHORE_COUNT = 8
 
@@ -40,19 +38,19 @@ async def download_urls(df):
                 url = url_dict['job_url']
                 position = url_dict['position']
                 total_count = url_dict['total_count']
-                file_path = get_file_name(url)
-                if os.path.isfile(file_path):
+                file_name = url.split('/')[-1]
+                if raw_files_exists('stepstone', 'job_description', file_name):
                     logger.info(f'Skipped {url}')
                     continue
                 try:
                     logger.info(f'Downloading ({position}/{total_count}): {url}')
                     await page.goto(url)
+                    await page.wait_for_selector('.listing-content', timeout=10000, state='attached')
                     listing_content = await page.query_selector('.listing-content')
                     listing_content_html = await listing_content.inner_html()
                     listing_content_html = listing_content_html.replace('\xad', '')
-                    with open(file_path, 'w', encoding='utf-8') as f:
-                        f.write(listing_content_html)
-                        logger.info(f'Dowloaded {url}')
+                    save_raw_file(listing_content_html, 'job_description', file_name, timestamp=None)
+                    logger.info(f'Dowloaded {url}')
                 except TimeoutError:
                     logger.warning(f'TimeoutError: Timeout error while requesting the page {url}')
                 except AttributeError:
@@ -93,37 +91,34 @@ async def safe_download_urls(urls):
         return await download_urls(urls)
 
 
-async def main():
+async def run_async_tasks(chucks):
     tasks = [
         asyncio.ensure_future(safe_download_urls(chunk))  # creating task starts coroutine
         for chunk
-        in dfs
+        in chucks
     ]
     await asyncio.gather(*tasks)
 
 
-if __name__ == '__main__':
-    df: pd.DataFrame = pd.read_csv(DATA_RESULTS_URLS_CSV)
-    downloaded_df = pd.read_csv(DATA_RESULTS_DOWLOADED_URLS_CSV)
+def main():
+    downloaded_df: pd.DataFrame = load_temp_df(DOWNLOADED_URLS_CSV)
+    df: pd.DataFrame = load_temp_df(SITEMAP_URLS_CSV)
 
     df = (df.merge(downloaded_df, on='job_url', how='left', indicator=True)
           .query('_merge == "left_only"')
           .drop('_merge', 1))
-
     df = df.reset_index(drop=True)
     df['position'] = df.index + 1
     total_count = df.shape[0]
     df['total_count'] = total_count
-
-    dfs = split_dataframe(df, 100)
-
+    chucks = split_dataframe(df, 100)
     start_time = time.time()
     logger.info(f'Starting')
     logger.info(f'Concurrent tasks: {SEMAPHORE_COUNT}')
     logger.info(f'Urls to dowload: {total_count}')
     loop = asyncio.get_event_loop()
     try:
-        loop.run_until_complete(main())
+        loop.run_until_complete(run_async_tasks(chucks))
     finally:
         loop.run_until_complete(loop.shutdown_asyncgens())
         loop.close()
@@ -131,3 +126,7 @@ if __name__ == '__main__':
     logger.info(f'Finished')
     logger.info(f'Elapsed time: {elapsed_time:.2f} seconds')
     logger.info(f'Downloads per second: {total_count / elapsed_time:.2f}')
+
+
+if __name__ == '__main__':
+    main()
