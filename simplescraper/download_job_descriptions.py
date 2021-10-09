@@ -7,7 +7,7 @@ from playwright.async_api import async_playwright, Error, TimeoutError
 
 from simplescraper.download_sitemap import DATA_RESULTS_URLS_CSV, DATA_RESULTS_DOWLOADED_URLS_CSV
 from simplescraper.utils.logging import get_logger
-from simplescraper.utils.webclient import get_local_path
+from simplescraper.utils.webclient import get_file_name
 
 SEMAPHORE_COUNT = 8
 
@@ -40,7 +40,7 @@ async def download_urls(df):
                 url = url_dict['job_url']
                 position = url_dict['position']
                 total_count = url_dict['total_count']
-                file_path = get_local_path(url)
+                file_path = get_file_name(url)
                 if os.path.isfile(file_path):
                     logger.info(f'Skipped {url}')
                     continue

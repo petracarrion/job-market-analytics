@@ -3,9 +3,7 @@ from datetime import date
 
 import requests
 
-USE_WEB_CACHE = "USE_WEB_CACHE"
-
-HTTPS_PREFIX = "https://"
+from utils.storage import save_raw_file
 
 REQUEST_HEADERS = {
     "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
@@ -22,71 +20,21 @@ REQUEST_HEADERS = {
   }
 
 
-def get_web_content(url):
-    if use_web_cache():
-        return load_from_cache(url)
-    else:
-        response = requests.get(url)
-        content = response.content
-        save_to_cache(url, content)
-        return content
+def drop_url_prefix(url):
+    for prefix in ['https://', 'http://']:
+        if url.startswith(prefix):
+            url = url[len(prefix):]
+    return url
 
 
-def use_web_cache():
-    return os.environ.get(USE_WEB_CACHE) == "True"
+def historize_url_content(url, content):
+    file_path = drop_url_prefix(url)
+    save_raw_file(file_path, content)
+    save_raw_file(file_path + '.' + str(date.today()), content)
 
 
-def save_if_not_cached(url):
-    try:
-        load_from_cache(url)
-    except:
-        response = requests.get(url, headers=REQUEST_HEADERS)
-        content = response.content
-        save_to_cache(url, content)
-
-
-def load_from_cache(url):
-    file_path = get_local_path(url)
-    with open(file_path, mode='rb') as file:  # b is important -> binary
-        content = file.read()
+def get_and_historize_url_content(url):
+    response = requests.get(url)
+    content = response.content
+    historize_url_content(url, content)
     return content
-
-
-def save_to_cache(url, content):
-    file_path = get_local_path(url)
-    dirname = os.path.dirname(file_path)
-    if not os.path.exists(dirname):
-        os.makedirs(dirname)
-    save_file(content, file_path)
-    save_file(content, file_path + '.' + str(date.today()))
-
-
-def save_file(content, file_path):
-    with open(file_path, "wb") as f:
-        f.write(content)
-
-
-def get_local_path(url):
-    if url.startswith(HTTPS_PREFIX):
-        url = url[len(HTTPS_PREFIX):]
-    current_dir = os.path.dirname(__file__)
-    file_path = os.path.join(current_dir, '../data/cache/', url)
-    return file_path
-
-
-# result = get_web_content('https://www.stepstone.de/5/sitemaps/de/sitemapindex.xml')
-# print(result)
-
-urls = """https://www.stepstone.de/stellenangebote--Diplom-Jurist-Bachelor-of-Laws-Wirtschaftsjurist-m-w-d-Stuttgart-tekom-Deutschland-e-V--7577309-inline.html
-https://www.stepstone.de/stellenangebote--Erzieherin-Heilerziehungspflegerin-Sozialpaedagogen-Heilpaedagogen-m-w-d-als-Region-und-Landeshauptstadt-Hannover-Landkreis-Hildesheim-Langenhagen-Laatzen-Burgdorf-Pro-School-Professionelle-Schulbegleitung--7577308-inline.html
-https://www.stepstone.de/stellenangebote--Lagerhelfer-m-w-d-Duerrholz-Daufenbach-Gundlach-Automotive-Corporation--7577307-inline.html
-https://www.stepstone.de/stellenangebote--Produktionshelfer-m-w-d-Duerrholz-Daufenbach-Gundlach-Automotive-Corporation--7577306-inline.html
-https://www.stepstone.de/stellenangebote--Mitarbeiter-m-w-d-Einkauf-Muehlenbeck-Freyer-Siegel-Elektronik-GmbH-Co-KG--7577305-inline.html
-https://www.stepstone.de/stellenangebote--IT-Systemadministrator-Netzwerkadministrator-m-w-d-Greifswald-HanseYachts-AG--7577304-inline.html
-https://www.stepstone.de/stellenangebote--SPS-Programmierer-Automatisierungstechniker-BB3I-Ruesselsheim-Frankfurt-Mainz-VisionR-GmbH--7577303-inline.html
-https://www.stepstone.de/stellenangebote--Sachbearbeiter-m-w-d-Auftragsabwicklung-Haar-bei-Muenchen-Softing-IT-Networks-GmbH--7577302-inline.html"""
-
-urls = urls.split()
-
-# for url in urls:
-#     save_if_not_cached(url)
