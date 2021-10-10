@@ -21,13 +21,7 @@ REQUEST_HEADERS = {
   }
 
 
-def historize_url_content(url, content):
-    file_name = url.split('/')[-1]
-    save_raw_file(content, 'sitemap', file_name)
-
-
-def get_and_historize_url_content(url):
+def get_url_content(url):
     response = requests.get(url)
     content = response.content
-    historize_url_content(url, content)
     return content

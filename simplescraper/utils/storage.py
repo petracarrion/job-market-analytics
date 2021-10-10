@@ -71,8 +71,8 @@ def save_file(layer, content, entity, file_name, timestamp):
     _save_file(content, file_path)
 
 
-def save_raw_file(content, entity, file_name, timestamp=None):
-    timestamp = timestamp or get_current_date()
+def save_raw_file(content, entity, file_name):
+    timestamp = get_current_date()
     save_file(RAW_LAYER, content, entity, file_name, timestamp)
     save_file(RAW_LAYER, content, entity, file_name, 'latest')
 

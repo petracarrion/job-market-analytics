@@ -1,10 +1,21 @@
 import pandas as pd
 import xmltodict
 
-from utils.webclient import get_and_historize_url_content
-from utils.storage import save_temp_df, SITEMAP_URLS_CSV
+from utils.webclient import get_url_content
+from utils.storage import save_temp_df, SITEMAP_URLS_CSV, save_raw_file
 
 SITEMAP_INDEX_XML = 'https://www.stepstone.de/5/sitemaps/de/sitemapindex.xml'
+
+
+def historize_url_content(url, content):
+    file_name = url.split('/')[-1]
+    save_raw_file(content, 'sitemap', file_name)
+
+
+def get_and_historize_url_content(url):
+    content = get_url_content(url)
+    historize_url_content(url, content)
+    return content
 
 
 def get_listing_urls():

@@ -49,7 +49,7 @@ async def download_urls(df):
                     listing_content = await page.query_selector('.listing-content')
                     listing_content_html = await listing_content.inner_html()
                     listing_content_html = listing_content_html.replace('\xad', '')
-                    save_raw_file(listing_content_html, 'job_description', file_name, timestamp=None)
+                    save_raw_file(listing_content_html, 'job_description', file_name)
                     logger.info(f'Dowloaded {url}')
                 except TimeoutError:
                     logger.warning(f'TimeoutError: Timeout error while requesting the page {url}')
