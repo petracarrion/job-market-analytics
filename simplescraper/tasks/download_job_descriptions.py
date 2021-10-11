@@ -44,8 +44,13 @@ async def download_urls(df):
                     continue
                 try:
                     logger.info(f'Downloading ({position}/{total_count}): {url}')
-                    await page.goto(url)
-                    await page.wait_for_selector('.listing-content', timeout=10000, state='attached')
+                    try:
+                        await page.goto(url)
+                        await page.wait_for_selector('.listing-content', timeout=10000, state='attached')
+                    except TimeoutError:
+                        logger.warning(f'TimeoutError: second try for {url}')
+                        await page.goto(url)
+                        await page.wait_for_selector('.listing-content', timeout=10000, state='attached')
                     listing_content = await page.query_selector('.listing-content')
                     listing_content_html = await listing_content.inner_html()
                     listing_content_html = listing_content_html.replace('\xad', '')
