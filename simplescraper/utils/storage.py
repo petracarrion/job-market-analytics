@@ -74,7 +74,6 @@ def save_file(layer, content, entity, file_name, timestamp):
 def save_raw_file(content, entity, file_name):
     timestamp = get_current_date()
     save_file(RAW_LAYER, content, entity, file_name, timestamp)
-    save_file(RAW_LAYER, content, entity, file_name, 'latest')
 
 
 def save_temp_df(df: pd.DataFrame, file_name: str):
