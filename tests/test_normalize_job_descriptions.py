@@ -16,7 +16,6 @@ def _test_normalize_job_descriptions(test_case):
 
     result_content = normalize_job_description(input_content)
 
-    result_content_json = json.dumps(result_content)
     output_content = json.loads(load_file('output/' + test_case + '.json'))
     assert result_content == output_content
 
