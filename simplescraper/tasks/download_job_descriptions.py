@@ -12,6 +12,10 @@ SEMAPHORE_COUNT = 8
 logger = get_logger()
 
 
+class PageNotFound(Exception):
+    pass
+
+
 async def open_first_page(browser):
     page = await browser.new_page()
     await page.goto('https://www.stepstone.de/')
@@ -24,7 +28,7 @@ async def download_urls(df):
     if df.empty:
         return
     async with async_playwright() as p:
-        browser = await p.chromium.launch(headless=False, slow_mo=250)
+        browser = await p.chromium.launch(headless=False)
         try:
             min = df['position'].min()
             max = df['position'].max()
@@ -45,8 +49,10 @@ async def download_urls(df):
                 try:
                     logger.info(f'Downloading ({position}/{total_count}): {url}')
                     try:
-                        await page.goto(url)
-                        await page.wait_for_selector('.listing-content', timeout=10000, state='attached')
+                        response = await page.goto(url)
+                        if response.status >= 400 and response.status >= 400 < 500:
+                            raise PageNotFound('Page not found')
+                        await page.wait_for_selector('.listing-content', timeout=5000, state='attached')
                     except TimeoutError:
                         logger.warning(f'TimeoutError: second try for {url}')
                         await page.goto(url)
@@ -55,11 +61,13 @@ async def download_urls(df):
                     listing_content_html = await listing_content.inner_html()
                     listing_content_html = listing_content_html.replace('\xad', '')
                     save_raw_file(listing_content_html, 'job_description', file_name)
-                    logger.info(f'Dowloaded {url}')
+                    logger.info(f'Dowloaded   ({position}/{total_count}): {url}')
                 except TimeoutError:
                     logger.warning(f'TimeoutError: Timeout error while requesting the page {url}')
                 except AttributeError:
                     logger.warning(f'AttributeError: it seems the following URL is gone {url}')
+                except PageNotFound:
+                    logger.warning(f'PageNotFound: the following URL is no longer available {url}')
         except Error:
             logger.error('It seems that the browser crashed.')
         finally:
