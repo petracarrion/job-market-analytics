@@ -5,6 +5,7 @@ import time
 import pandas as pd
 from playwright.async_api import async_playwright, Error, TimeoutError
 
+from utils.env_variables import DATA_SOURCE_URL, DATA_SOURCE_NAME
 from utils.logging import get_logger
 from utils.storage import load_temp_df, DOWNLOADED_URLS_CSV, SITEMAP_URLS_CSV, save_raw_file, raw_files_exists
 
@@ -20,7 +21,7 @@ class PageNotFound(Exception):
 
 async def open_first_page(browser):
     page = await browser.new_page()
-    await page.goto('https://www.stepstone.de/')
+    await page.goto(DATA_SOURCE_URL)
     await page.click('#ccmgt_explicit_accept')
     time.sleep(1)
     return page
@@ -45,7 +46,7 @@ async def download_urls(df):
                 position = url_dict['position']
                 total_count = url_dict['total_count']
                 file_name = url.split('/')[-1]
-                if raw_files_exists('stepstone', 'job_description', file_name):
+                if raw_files_exists(DATA_SOURCE_NAME, 'job_description', file_name):
                     logger.info(f'Skipped {url}')
                     continue
                 try:
