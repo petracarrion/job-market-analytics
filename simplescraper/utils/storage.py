@@ -24,11 +24,11 @@ LAYERS = [RAW_LAYER, CLEANSED_LAYER, CURATED_LAYER, TEMP_LAYER]
 DATA_FOLDER = os.getenv('DATA_FOLDER', os.path.expanduser('~/job-market-analytics/data'))
 
 RAW_FOLDER = os.getenv('RAW_FOLDER', os.path.join(DATA_FOLDER, RAW_LAYER))
-TEMP_DIR = os.getenv('TEMP_DIR', os.path.join(DATA_FOLDER, TEMP_LAYER))
+TEMP_FOLDER = os.getenv('TEMP_FOLDER', os.path.join(DATA_FOLDER, TEMP_LAYER))
 
 LAYER_DIR = {
     RAW_LAYER: RAW_FOLDER,
-    TEMP_LAYER: TEMP_DIR,
+    TEMP_LAYER: TEMP_FOLDER,
 }
 
 DATA_SOURCE = 'stepstone'
@@ -77,11 +77,11 @@ def save_raw_file(content, entity, file_name):
 
 
 def save_temp_df(df: pd.DataFrame, file_name: str):
-    if not os.path.exists(TEMP_DIR):
-        os.makedirs(TEMP_DIR)
+    if not os.path.exists(TEMP_FOLDER):
+        os.makedirs(TEMP_FOLDER)
     # noinspection PyTypeChecker
-    df.to_csv(os.path.join(TEMP_DIR, file_name), index=False)
+    df.to_csv(os.path.join(TEMP_FOLDER, file_name), index=False)
 
 
 def load_temp_df(file_name: str):
-    return pd.read_csv(os.path.join(TEMP_DIR, file_name))
+    return pd.read_csv(os.path.join(TEMP_FOLDER, file_name))
