@@ -113,7 +113,7 @@ def get_chunk_size(total_count):
     return chunk_size
 
 
-def main():
+def download_job_descriptions():
     downloaded_df: pd.DataFrame = load_temp_df(DOWNLOADED_URLS_CSV)
     df: pd.DataFrame = load_temp_df(SITEMAP_URLS_CSV)
 
@@ -145,4 +145,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    download_job_descriptions()

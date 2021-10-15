@@ -64,10 +64,10 @@ def save_urls_as_df(all_job_description_urls):
     save_temp_df(df, SITEMAP_URLS_CSV)
 
 
-def main():
+def download_sitemap():
     all_job_description_urls = get_all_job_description_urls()
     save_urls_as_df(all_job_description_urls)
 
 
 if __name__ == '__main__':
-    main()
+    download_sitemap()

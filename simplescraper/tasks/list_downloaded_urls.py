@@ -5,7 +5,7 @@ from utils.storage import DOWNLOADED_URLS_CSV, DATA_SOURCE, save_temp_df, list_r
 URL_PREFIX = 'https://www.stepstone.de/'
 
 
-def main():
+def list_downloaded_urls():
     file_names = list_raw_files(DATA_SOURCE, 'job_description')
     urls = [URL_PREFIX + file_name for file_name in file_names]
     df = pd.DataFrame(urls, columns=['job_url'])
@@ -13,4 +13,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    list_downloaded_urls()
