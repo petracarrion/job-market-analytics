@@ -131,3 +131,4 @@ dmypy.json
 # Added by me
 temp/
 .idea/
+_trial_temp/
