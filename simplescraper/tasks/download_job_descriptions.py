@@ -81,15 +81,6 @@ async def download_urls(df):
         logger.info(f'Downloads per second {chunk_id}: {chunk_size / elapsed_time:.2f}')
 
 
-# def get_urls():
-#     urls = """https://www.stepstone.de/stellenangebote--IT-Systemadministrator-Netzwerkadministrator-m-w-d-Greifswald-HanseYachts-AG--7577304-inline.html"""
-#     urls = urls.split()
-#
-#     return urls
-#
-#
-# download_urls(get_urls())
-
 def split_dataframe(df, chunk_size):
     chunks = []
     num_chunks = len(df) // chunk_size + 1
