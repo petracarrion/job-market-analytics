@@ -21,8 +21,7 @@ def _test_normalize_job_descriptions(test_case):
 
 
 def test_normalize_job_descriptions():
-    test_cases = [os.path.splitext(os.path.basename(f))[0] for f in glob.iglob('tests/data/normalize_job_description/input/*.html')]
+    test_cases = [os.path.splitext(os.path.basename(f))[0] for f in glob.iglob('tests/data/normalize_job_description/'
+                                                                               'input/*.html')]
     for test_case in test_cases:
         _test_normalize_job_descriptions(test_case)
-
-
