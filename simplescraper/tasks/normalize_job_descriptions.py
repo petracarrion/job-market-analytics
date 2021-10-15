@@ -8,8 +8,7 @@ METADATA_JSON_SUFFIX = ';'
 
 def normalize_job_description(html_content):
     result = {}
-    print(html_content)
-    soup = BeautifulSoup(html_content)
+    soup = BeautifulSoup(html_content, features='lxml')
     script_tag = soup.find('script', id='js-section-preloaded-HeaderStepStoneBlock')
     script_tag_lines = script_tag.text.split('\n')
     for line in script_tag_lines:
