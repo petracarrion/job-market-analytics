@@ -21,10 +21,10 @@ TEMP_LAYER = 'temp'
 
 LAYERS = [RAW_LAYER, CLEANSED_LAYER, CURATED_LAYER, TEMP_LAYER]
 
-DATA_DIR = os.getenv('DATA_DIR', os.path.expanduser('~/job-market-analytics/data'))
+DATA_FOLDER = os.getenv('DATA_FOLDER', os.path.expanduser('~/job-market-analytics/data'))
 
-RAW_DIR = os.getenv('RAW_DIR', os.path.join(DATA_DIR, RAW_LAYER))
-TEMP_DIR = os.getenv('TEMP_DIR', os.path.join(DATA_DIR, TEMP_LAYER))
+RAW_DIR = os.getenv('RAW_DIR', os.path.join(DATA_FOLDER, RAW_LAYER))
+TEMP_DIR = os.getenv('TEMP_DIR', os.path.join(DATA_FOLDER, TEMP_LAYER))
 
 LAYER_DIR = {
     RAW_LAYER: RAW_DIR,
