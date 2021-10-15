@@ -4,8 +4,9 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-DATA_DIR = os.getenv('DATA_DIR', os.path.expanduser('~/job-market-analytics/data'))
+DATA_DIR = os.getenv('DATA_DIR')
 
-DATA_SOURCE_NAME = os.getenv('DATA_SOURCE_NAME', 'datasource')
+DATA_SOURCE_NAME = os.getenv('DATA_SOURCE_NAME')
+DATA_SOURCE_URL = os.getenv('DATA_SOURCE_URL')
 
 print(DATA_SOURCE_NAME)
