@@ -26,7 +26,7 @@ DATA_FOLDER = os.getenv('DATA_FOLDER', os.path.expanduser('~/job-market-analytic
 RAW_FOLDER = os.getenv('RAW_FOLDER', os.path.join(DATA_FOLDER, RAW_LAYER))
 TEMP_FOLDER = os.getenv('TEMP_FOLDER', os.path.join(DATA_FOLDER, TEMP_LAYER))
 
-LAYER_FOLDER = {
+LAYER_DIR = {
     RAW_LAYER: RAW_FOLDER,
     TEMP_LAYER: TEMP_FOLDER,
 }
@@ -66,7 +66,7 @@ def _save_file(content, file_path):
 
 
 def save_file(layer, content, entity, file_name, timestamp):
-    file_path = os.path.join(LAYER_FOLDER[layer], DATA_SOURCE, entity, timestamp, file_name)
+    file_path = os.path.join(LAYER_DIR[layer], DATA_SOURCE, entity, timestamp, file_name)
     _create_dir(file_path)
     _save_file(content, file_path)
 
