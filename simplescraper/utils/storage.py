@@ -23,11 +23,11 @@ LAYERS = [RAW_LAYER, CLEANSED_LAYER, CURATED_LAYER, TEMP_LAYER]
 
 DATA_FOLDER = os.getenv('DATA_FOLDER', os.path.expanduser('~/job-market-analytics/data'))
 
-RAW_DIR = os.getenv('RAW_DIR', os.path.join(DATA_FOLDER, RAW_LAYER))
+RAW_FOLDER = os.getenv('RAW_FOLDER', os.path.join(DATA_FOLDER, RAW_LAYER))
 TEMP_DIR = os.getenv('TEMP_DIR', os.path.join(DATA_FOLDER, TEMP_LAYER))
 
 LAYER_DIR = {
-    RAW_LAYER: RAW_DIR,
+    RAW_LAYER: RAW_FOLDER,
     TEMP_LAYER: TEMP_DIR,
 }
 
@@ -39,13 +39,13 @@ URLS_TO_DOWNLOAD_CSV = '03_urls_to_download.csv'
 
 
 def list_raw_files(data_source, entity):
-    dir_path = os.path.join(RAW_DIR, data_source, entity)
+    dir_path = os.path.join(RAW_FOLDER, data_source, entity)
     file_list = [f.split('/')[-1] for f in glob.iglob(dir_path + '/*/*', recursive=True) if os.path.isfile(f)]
     return file_list
 
 
 def raw_files_exists(data_source, entity, file_name):
-    dir_path = os.path.join(RAW_DIR, data_source, entity)
+    dir_path = os.path.join(RAW_FOLDER, data_source, entity)
     file_list = [f.split('/')[-1] for f in glob.iglob(dir_path + '/*/' + file_name, recursive=True) if os.path.isfile(f)]
     return len(file_list) > 0
 
