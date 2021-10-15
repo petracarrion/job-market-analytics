@@ -1,4 +1,5 @@
 import asyncio
+import math
 import time
 
 import pandas as pd
@@ -8,6 +9,7 @@ from utils.logging import get_logger
 from utils.storage import load_temp_df, DOWNLOADED_URLS_CSV, SITEMAP_URLS_CSV, save_raw_file, raw_files_exists
 
 SEMAPHORE_COUNT = 8
+MAX_CHUNK_SIZE = 500
 
 logger = get_logger()
 
@@ -113,6 +115,13 @@ async def run_async_tasks(chucks):
     await asyncio.gather(*tasks)
 
 
+def get_chunk_size(total_count):
+    chunk_size = total_count / SEMAPHORE_COUNT
+    chunk_size = int(math.ceil(chunk_size))
+    chunk_size = min(chunk_size, MAX_CHUNK_SIZE)
+    return chunk_size
+
+
 def main():
     downloaded_df: pd.DataFrame = load_temp_df(DOWNLOADED_URLS_CSV)
     df: pd.DataFrame = load_temp_df(SITEMAP_URLS_CSV)
@@ -124,7 +133,10 @@ def main():
     df['position'] = df.index + 1
     total_count = df.shape[0]
     df['total_count'] = total_count
-    chucks = split_dataframe(df, 100)
+
+    chunk_size = get_chunk_size(total_count)
+
+    chucks = split_dataframe(df, chunk_size)
     start_time = time.time()
     logger.info(f'Starting')
     logger.info(f'Concurrent tasks: {SEMAPHORE_COUNT}')
