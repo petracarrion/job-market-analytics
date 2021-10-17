@@ -23,17 +23,22 @@ def keys_to_snake_case(job_description):
     return snake_case_object
 
 
-def normalize_job_description(html_content):
+def extract_metadata(soup):
     job_description = {}
-    soup = BeautifulSoup(html_content, features='lxml')
     script_tag = soup.find('script', id='js-section-preloaded-HeaderStepStoneBlock')
     script_tag_lines = script_tag.text.split('\n')
     for line in script_tag_lines:
         if line.startswith(METADATA_JSON_PREFIX) and line.endswith(METADATA_JSON_SUFFIX):
             json_line = line[len(METADATA_JSON_PREFIX):len(line) - len(METADATA_JSON_SUFFIX)]
             job_description = json.loads(json_line)['listingData']
-
     job_description = flatten_metadata(job_description)
     job_description = keys_to_snake_case(job_description)
+    return job_description
+
+
+def normalize_job_description(html_content):
+    soup = BeautifulSoup(html_content, features='lxml')
+    
+    job_description = extract_metadata(soup)
 
     return job_description
