@@ -34,9 +34,9 @@ async def download_urls(df):
     async with async_playwright() as p:
         browser = await p.chromium.launch(headless=False)
         try:
-            min = df['position'].min()
-            max = df['position'].max()
-            chunk_id = f'{min}-{max}'
+            min_position = df['position'].min()
+            max_position = df['position'].max()
+            chunk_id = f'{min_position}-{max_position}'
             chunk_size = df.shape[0]
             logger.info(f'Starting chunk {chunk_id} with size of {chunk_size}')
             start_time = time.time()
