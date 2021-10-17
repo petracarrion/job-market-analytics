@@ -5,10 +5,10 @@ import time
 import pandas as pd
 from playwright.async_api import async_playwright, Error, TimeoutError
 
-from utils.env_variables import DATA_SOURCE_URL, DATA_SOURCE_NAME
+from utils.env_variables import DATA_SOURCE_URL
 from utils.logging import configure_logger, get_logger
-from utils.storage import load_temp_df, DOWNLOADED_URLS_CSV, SITEMAP_URLS_CSV, save_raw_file, raw_files_exists, \
-    save_temp_df, URLS_TO_DOWNLOAD_CSV
+from utils.storage import load_temp_df, DOWNLOADED_URLS_CSV, SITEMAP_URLS_CSV, save_raw_file, save_temp_df, \
+    URLS_TO_DOWNLOAD_CSV
 
 SEMAPHORE_COUNT = 8
 MAX_CHUNK_SIZE = 500
@@ -47,9 +47,6 @@ async def download_urls(df):
                 position = url_dict['position']
                 total_count = url_dict['total_count']
                 file_name = url.split('/')[-1]
-                if raw_files_exists(DATA_SOURCE_NAME, 'job_description', file_name):
-                    logger.info(f'Skipped {url}')
-                    continue
                 try:
                     logger.info(f'Downloading ({position}/{total_count}): {url}')
                     try:
@@ -127,6 +124,10 @@ def download_job_descriptions(job_id):
     df = df.reset_index(drop=True)
 
     save_temp_df(df, job_id, URLS_TO_DOWNLOAD_CSV)
+
+    if df.empty:
+        logger.info('Nothing to download')
+        exit(0)
 
     df['position'] = df.index + 1
     total_count = df.shape[0]

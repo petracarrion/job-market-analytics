@@ -39,13 +39,6 @@ def list_raw_files(data_source, entity):
     return file_list
 
 
-def raw_files_exists(data_source, entity, file_name):
-    dir_path = os.path.join(RAW_DIR, data_source, entity)
-    file_list = [f.split('/')[-1] for f in glob.iglob(dir_path + '/*/' + file_name, recursive=True) if
-                 os.path.isfile(f)]
-    return len(file_list) > 0
-
-
 def get_current_date():
     return str(datetime.date.today())
 
