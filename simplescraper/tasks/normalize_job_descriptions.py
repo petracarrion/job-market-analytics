@@ -3,8 +3,20 @@ import re
 
 from bs4 import BeautifulSoup
 
+SPACE_CHAR = ' '
+NBSP_CHAR = u'\xa0'
+
 METADATA_JSON_PREFIX = 'window.__PRELOADED_STATE__.HeaderStepStoneBlock = '
 METADATA_JSON_SUFFIX = ';'
+
+FIELD_SELECTORS = {
+    'company_name': '.at-header-company-name',
+    'description': '#job-description',
+    'description_introduction': '.at-section-text-introduction',
+    'description_responsabilities': '.at-section-text-description-content',
+    'description_requirements': '.at-section-text-profile-content',
+    'description_perks': '.at-section-text-weoffer-content',
+}
 
 
 def flatten_metadata(metadata):
@@ -40,5 +52,7 @@ def normalize_job_description(html_content):
     soup = BeautifulSoup(html_content, features='lxml')
 
     job_description = extract_metadata(soup)
+    for field, selector in FIELD_SELECTORS.items():
+        job_description[field] = soup.select_one(selector).text.strip().replace(NBSP_CHAR, SPACE_CHAR)
 
     return job_description
