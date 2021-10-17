@@ -44,12 +44,17 @@ def list_raw_files(data_source, entity):
 
 def raw_files_exists(data_source, entity, file_name):
     dir_path = os.path.join(RAW_DIR, data_source, entity)
-    file_list = [f.split('/')[-1] for f in glob.iglob(dir_path + '/*/' + file_name, recursive=True) if os.path.isfile(f)]
+    file_list = [f.split('/')[-1] for f in glob.iglob(dir_path + '/*/' + file_name, recursive=True) if
+                 os.path.isfile(f)]
     return len(file_list) > 0
 
 
 def get_current_date():
     return str(datetime.date.today())
+
+
+def get_current_date_and_time():
+    return datetime.datetime.today().strftime('%Y-%m-%d_%H-%M-%S')
 
 
 def _create_dir(file_path):
@@ -63,7 +68,7 @@ def _save_file(content, file_path):
         f.write(content)
 
 
-def save_file(layer, content, entity, file_name, timestamp):
+def save_file(layer, content, entity, timestamp, file_name):
     file_path = os.path.join(LAYER_DIR[layer], DATA_SOURCE_NAME, entity, timestamp, file_name)
     _create_dir(file_path)
     _save_file(content, file_path)
@@ -71,15 +76,16 @@ def save_file(layer, content, entity, file_name, timestamp):
 
 def save_raw_file(content, entity, file_name):
     timestamp = get_current_date()
-    save_file(RAW_LAYER, content, entity, file_name, timestamp)
+    save_file(RAW_LAYER, content, entity, timestamp, file_name)
 
 
-def save_temp_df(df: pd.DataFrame, file_name: str):
-    if not os.path.exists(TEMP_DIR):
-        os.makedirs(TEMP_DIR)
+def save_temp_df(df: pd.DataFrame, job_id: str, file_name: str):
+    temp_dir = os.path.join(TEMP_DIR, job_id)
+    if not os.path.exists(temp_dir):
+        os.makedirs(temp_dir)
     # noinspection PyTypeChecker
-    df.to_csv(os.path.join(TEMP_DIR, file_name), index=False)
+    df.to_csv(os.path.join(temp_dir, file_name), index=False)
 
 
-def load_temp_df(file_name: str):
-    return pd.read_csv(os.path.join(TEMP_DIR, file_name))
+def load_temp_df(job_id: str, file_name: str):
+    return pd.read_csv(os.path.join(TEMP_DIR, job_id, file_name))

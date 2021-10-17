@@ -3,7 +3,7 @@ import xmltodict
 
 from utils.env_variables import DATA_SOURCE_URL
 from utils.webclient import get_url_content
-from utils.storage import save_temp_df, SITEMAP_URLS_CSV, save_raw_file
+from utils.storage import save_temp_df, SITEMAP_URLS_CSV, save_raw_file, get_current_date_and_time
 
 SITEMAP_INDEX_XML = f'{DATA_SOURCE_URL}5/sitemaps/de/sitemapindex.xml'
 
@@ -53,7 +53,7 @@ def get_all_job_description_urls():
     return job_description_urls
 
 
-def save_urls_as_df(all_job_description_urls):
+def save_urls_as_df(all_job_description_urls, job_id):
     df = pd.DataFrame(all_job_description_urls, columns=['job_url'])
 
     df = df.drop_duplicates()
@@ -62,13 +62,13 @@ def save_urls_as_df(all_job_description_urls):
     df['job_id'] = url_split[2].str.split('-', expand=True)[0]
     df = df.sort_values(by=['job_id'], ascending=False)
 
-    save_temp_df(df, SITEMAP_URLS_CSV)
+    save_temp_df(df, job_id, SITEMAP_URLS_CSV)
 
 
-def download_sitemap():
+def download_sitemap(job_id):
     all_job_description_urls = get_all_job_description_urls()
-    save_urls_as_df(all_job_description_urls)
+    save_urls_as_df(all_job_description_urls, job_id)
 
 
 if __name__ == '__main__':
-    download_sitemap()
+    download_sitemap(get_current_date_and_time())

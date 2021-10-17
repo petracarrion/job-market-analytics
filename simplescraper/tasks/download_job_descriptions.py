@@ -6,8 +6,9 @@ import pandas as pd
 from playwright.async_api import async_playwright, Error, TimeoutError
 
 from utils.env_variables import DATA_SOURCE_URL, DATA_SOURCE_NAME
-from utils.logging import get_logger
-from utils.storage import load_temp_df, DOWNLOADED_URLS_CSV, SITEMAP_URLS_CSV, save_raw_file, raw_files_exists
+from utils.logging import configure_logger, get_logger
+from utils.storage import load_temp_df, DOWNLOADED_URLS_CSV, SITEMAP_URLS_CSV, save_raw_file, raw_files_exists, \
+    save_temp_df, URLS_TO_DOWNLOAD_CSV
 
 SEMAPHORE_COUNT = 8
 MAX_CHUNK_SIZE = 500
@@ -114,14 +115,19 @@ def get_chunk_size(total_count):
     return chunk_size
 
 
-def download_job_descriptions():
-    downloaded_df: pd.DataFrame = load_temp_df(DOWNLOADED_URLS_CSV)
-    df: pd.DataFrame = load_temp_df(SITEMAP_URLS_CSV)
+def download_job_descriptions(job_id):
+    configure_logger(job_id)
+
+    downloaded_df: pd.DataFrame = load_temp_df(job_id, DOWNLOADED_URLS_CSV)
+    df: pd.DataFrame = load_temp_df(job_id, SITEMAP_URLS_CSV)
 
     df = (df.merge(downloaded_df, on='job_url', how='left', indicator=True)
           .query('_merge == "left_only"')
           .drop('_merge', 1))
     df = df.reset_index(drop=True)
+
+    save_temp_df(df, job_id, URLS_TO_DOWNLOAD_CSV)
+
     df['position'] = df.index + 1
     total_count = df.shape[0]
     df['total_count'] = total_count
@@ -146,4 +152,4 @@ def download_job_descriptions():
 
 
 if __name__ == '__main__':
-    download_job_descriptions()
+    download_job_descriptions('TODO: Read it from an env variable or just get the latest job_id')
