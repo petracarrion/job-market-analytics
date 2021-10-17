@@ -118,9 +118,9 @@ def download_job_descriptions(job_id):
     downloaded_df: pd.DataFrame = load_temp_df(job_id, DOWNLOADED_URLS_CSV)
     df: pd.DataFrame = load_temp_df(job_id, SITEMAP_URLS_CSV)
 
-    df = (df.merge(downloaded_df, on='job_url', how='left', indicator=True)
-          .query('_merge == "left_only"')
-          .drop('_merge', 1))
+    df = df.merge(downloaded_df, on='job_url', how='left', indicator=True)
+    df = df.query('_merge == "left_only"')
+    df = df.drop(columns=['_merge'])
     df = df.reset_index(drop=True)
 
     save_temp_df(df, job_id, URLS_TO_DOWNLOAD_CSV)
