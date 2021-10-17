@@ -7,14 +7,14 @@ This module will store the files in the following structure
         - <timestamp>
           - <file.extension>
 """
+import datetime
 import glob
 import os
 import pathlib
-import datetime
 
 import pandas as pd
 
-from utils.env_variables import DATA_SOURCE_NAME, DATA_DIR
+from utils.env_variables import DATA_SOURCE_NAME, RAW_DIR, TEMP_DIR
 
 RAW_LAYER = 'raw'
 CLEANSED_LAYER = 'cleansed'
@@ -22,9 +22,6 @@ CURATED_LAYER = 'curated'
 TEMP_LAYER = 'temp'
 
 LAYERS = [RAW_LAYER, CLEANSED_LAYER, CURATED_LAYER, TEMP_LAYER]
-
-RAW_DIR = os.path.join(DATA_DIR, RAW_LAYER)
-TEMP_DIR = os.path.join(DATA_DIR, TEMP_LAYER)
 
 LAYER_DIR = {
     RAW_LAYER: RAW_DIR,
