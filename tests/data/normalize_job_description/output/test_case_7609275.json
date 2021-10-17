@@ -1,15 +1,11 @@
 {
-  "listingData": {
-    "id": 7609275,
-    "title": "Account Manager (m/w/d)",
-    "onlineStatus": "online",
-    "isAnonymous": false,
-    "metaData": {
-      "shouldDisplayEarlyApplicant": false,
-      "location": "bundesweit",
-      "contractType": "Feste Anstellung",
-      "workType": "Vollzeit, Home Office möglich",
-      "onlineDate": "2021-10-13T13:22:15Z"
-    }
-  }
+  "id": 7609275,
+  "title": "Account Manager (m/w/d)",
+  "online_status": "online",
+  "is_anonymous": false,
+  "should_display_early_applicant": false,
+  "location": "bundesweit",
+  "contract_type": "Feste Anstellung",
+  "work_type": "Vollzeit, Home Office möglich",
+  "online_date": "2021-10-13T13:22:15Z"
 }
