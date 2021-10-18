@@ -48,7 +48,7 @@ def extract_metadata(soup):
     return metadata
 
 
-def normalize_job_description(html_content):
+def parse_job_description(html_content):
     soup = BeautifulSoup(html_content, features='lxml')
 
     job_description = extract_metadata(soup)
