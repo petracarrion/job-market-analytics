@@ -34,21 +34,20 @@ async def download_urls(df):
     async with async_playwright() as p:
         browser = await p.chromium.launch(headless=False)
         try:
-            min_position = df['position'].min()
-            max_position = df['position'].max()
-            chunk_id = f'{min_position}-{max_position}'
-            chunk_size = df.shape[0]
+            chunk_pos = df['chunk_pos'].values[0]
+            num_chunks = df['num_chunks'].values[0]
+            chunk_size = df['chunk_size'].values[0]
+            chunk_id = f'{chunk_pos}/{num_chunks}'
             logger.info(f'Starting chunk {chunk_id} with size of {chunk_size}')
             start_time = time.time()
             page = await open_first_page(browser)
             url_dicts = df.to_dict('records')
             for url_dict in url_dicts:
                 url = url_dict['job_url']
-                position = url_dict['position']
-                total_count = url_dict['total_count']
+                pos_in_chunk = url_dict['pos_in_chunk']
                 file_name = url.split('/')[-1]
                 try:
-                    logger.info(f'Downloading ({position}/{total_count}): {url}')
+                    logger.info(f'Chunk {chunk_id}: Downloading ({pos_in_chunk}/{chunk_size}): {url}')
                     try:
                         response = await page.goto(url)
                         if response.status >= 400 and response.status >= 400 < 500:
@@ -62,7 +61,7 @@ async def download_urls(df):
                     listing_content_html = await listing_content.inner_html()
                     listing_content_html = listing_content_html.replace('\xad', '')
                     save_raw_file(listing_content_html, 'job_description', file_name)
-                    logger.info(f'Dowloaded   ({position}/{total_count}): {url}')
+                    logger.info(f'Chunk {chunk_id}: Dowloaded   ({pos_in_chunk}/{chunk_size}): {url}')
                 except TimeoutError:
                     logger.warning(f'TimeoutError: Timeout error while requesting the page {url}')
                 except AttributeError:
@@ -84,7 +83,13 @@ def split_dataframe(df, chunk_size):
     chunks = []
     num_chunks = len(df) // chunk_size + 1
     for i in range(num_chunks):
-        chunks.append(df[i * chunk_size:(i + 1) * chunk_size])
+        chunk = df[i * chunk_size:(i + 1) * chunk_size]
+        chunk = chunk.reset_index(drop=True)
+        chunk['chunk_pos'] = i + 1
+        chunk['num_chunks'] = num_chunks
+        chunk['pos_in_chunk'] = chunk.index + 1
+        chunk['chunk_size'] = chunk.shape[0]
+        chunks.append(chunk)
     return chunks
 
 
@@ -129,23 +134,22 @@ def download_job_descriptions(job_id):
         logger.info('Nothing to download')
         exit(0)
 
-    df['position'] = df.index + 1
     total_count = df.shape[0]
-    df['total_count'] = total_count
-
     chunk_size = get_chunk_size(total_count)
-
     chucks = split_dataframe(df, chunk_size)
+
     start_time = time.time()
     logger.info(f'Starting')
     logger.info(f'Concurrent tasks: {SEMAPHORE_COUNT}')
     logger.info(f'Urls to dowload: {total_count}')
+
     loop = asyncio.get_event_loop()
     try:
         loop.run_until_complete(run_async_tasks(chucks))
     finally:
         loop.run_until_complete(loop.shutdown_asyncgens())
         loop.close()
+
     elapsed_time = time.time() - start_time
     logger.info(f'Finished')
     logger.info(f'Elapsed time: {elapsed_time:.2f} seconds')
