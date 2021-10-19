@@ -10,7 +10,7 @@ from utils.logging import configure_logger, get_logger
 from utils.storage import load_temp_df, DOWNLOADED_URLS_CSV, SITEMAP_URLS_CSV, save_raw_file, save_temp_df, \
     URLS_TO_DOWNLOAD_CSV
 
-SEMAPHORE_COUNT = 8
+SEMAPHORE_COUNT = 1
 MAX_CHUNK_SIZE = 500
 
 logger = get_logger()
