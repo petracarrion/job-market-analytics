@@ -53,6 +53,8 @@ def parse_job_description(html_content):
 
     job_description = extract_metadata(soup)
     for field, selector in FIELD_SELECTORS.items():
-        job_description[field] = soup.select_one(selector).text.strip().replace(NBSP_CHAR, SPACE_CHAR)
+        element = soup.select_one(selector)
+        if element:
+            job_description[field] = element.text.strip().replace(NBSP_CHAR, SPACE_CHAR)
 
     return job_description

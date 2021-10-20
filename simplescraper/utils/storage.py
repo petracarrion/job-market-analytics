@@ -72,6 +72,13 @@ def save_raw_file(content, entity, file_name):
     save_file(RAW_LAYER, content, entity, timestamp, file_name)
 
 
+def load_raw_file(entity, timestamp, file_name):
+    file_path = os.path.join(LAYER_DIR[RAW_LAYER], DATA_SOURCE_NAME, entity, timestamp, file_name)
+    with open(file_path, 'r') as f:
+        content = f.read()
+    return content
+
+
 def save_temp_df(df: pd.DataFrame, job_id: str, file_name: str):
     temp_dir = os.path.join(TEMP_DIR, job_id)
     if not os.path.exists(temp_dir):
