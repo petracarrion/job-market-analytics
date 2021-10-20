@@ -12,7 +12,7 @@ from utils.storage import load_temp_df, DOWNLOADED_URLS_CSV, SITEMAP_URLS_CSV, s
 
 TAB_HITS = 30
 
-SEMAPHORE_COUNT = 1
+SEMAPHORE_COUNT = 8
 MAX_CHUNK_SIZE = 500
 
 logger = get_logger()
