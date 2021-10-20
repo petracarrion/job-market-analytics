@@ -10,6 +10,8 @@ from utils.logging import configure_logger, get_logger
 from utils.storage import load_temp_df, DOWNLOADED_URLS_CSV, SITEMAP_URLS_CSV, save_raw_file, save_temp_df, \
     URLS_TO_DOWNLOAD_CSV
 
+TAB_HITS = 30
+
 SEMAPHORE_COUNT = 1
 MAX_CHUNK_SIZE = 500
 
@@ -25,6 +27,11 @@ async def open_first_page(browser):
     await page.goto(DATA_SOURCE_URL)
     await page.click('#ccmgt_explicit_accept')
     time.sleep(1)
+    for i in range(TAB_HITS):
+        await page.keyboard.press('Tab')
+    await page.goto(DATA_SOURCE_URL + 'de/sitemap/')
+    for i in range(TAB_HITS):
+        await page.keyboard.press('Tab')
     return page
 
 
@@ -32,7 +39,7 @@ async def download_urls(df):
     if df.empty:
         return
     async with async_playwright() as p:
-        browser = await p.chromium.launch(headless=False)
+        browser = await p.chromium.launch(headless=False, slow_mo=250)
         try:
             chunk_pos = df['chunk_pos'].values[0]
             num_chunks = df['num_chunks'].values[0]
@@ -50,12 +57,19 @@ async def download_urls(df):
                     logger.info(f'Chunk {chunk_id}: Downloading ({pos_in_chunk}/{chunk_size}): {url}')
                     try:
                         response = await page.goto(url)
+                        for i in range(TAB_HITS):
+                            await page.keyboard.press('Tab')
                         if response.status >= 400 and response.status >= 400 < 500:
                             raise PageNotFound('Page not found')
                         await page.wait_for_selector('.listing-content', timeout=5000, state='attached')
                     except TimeoutError:
                         logger.warning(f'TimeoutError: second try for {url}')
+                        await page.goto(DATA_SOURCE_URL + 'de/sitemap/')
+                        for i in range(TAB_HITS):
+                            await page.keyboard.press('Tab')
                         await page.goto(url)
+                        for i in range(TAB_HITS):
+                            await page.keyboard.press('Tab')
                         await page.wait_for_selector('.listing-content', timeout=10000, state='attached')
                     listing_content = await page.query_selector('.listing-content')
                     listing_content_html = await listing_content.inner_html()
