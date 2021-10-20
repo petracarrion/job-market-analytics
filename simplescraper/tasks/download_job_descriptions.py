@@ -50,7 +50,7 @@ async def download_urls(df):
             page = await open_first_page(browser)
             url_dicts = df.to_dict('records')
             for url_dict in url_dicts:
-                url = url_dict['job_url']
+                url = url_dict['url']
                 pos_in_chunk = url_dict['pos_in_chunk']
                 file_name = url.split('/')[-1]
                 try:
@@ -137,7 +137,7 @@ def download_job_descriptions(job_id):
     downloaded_df: pd.DataFrame = load_temp_df(job_id, DOWNLOADED_URLS_CSV)
     df: pd.DataFrame = load_temp_df(job_id, SITEMAP_URLS_CSV)
 
-    df = df.merge(downloaded_df, on='job_url', how='left', indicator=True)
+    df = df.merge(downloaded_df, on='url', how='left', indicator=True)
     df = df.query('_merge == "left_only"')
     df = df.drop(columns=['_merge'])
     df = df.reset_index(drop=True)

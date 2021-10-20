@@ -35,7 +35,10 @@ URLS_TO_DOWNLOAD_CSV = '03_urls_to_download.csv'
 
 def list_raw_files(data_source, entity):
     dir_path = os.path.join(RAW_DIR, data_source, entity)
-    file_list = [f.split('/')[-1] for f in glob.iglob(dir_path + '/*/*', recursive=True) if os.path.isfile(f)]
+    file_list = [{
+        'timestamp': f.split('/')[-2],
+        'file_name': f.split('/')[-1],
+    } for f in glob.iglob(dir_path + '/*/*', recursive=True) if os.path.isfile(f)]
     return file_list
 
 

@@ -5,10 +5,11 @@ from utils.storage import DOWNLOADED_URLS_CSV, DATA_SOURCE_NAME, save_temp_df, l
 
 
 def list_downloaded_job_descriptions(job_id):
-    file_names = list_raw_files(DATA_SOURCE_NAME, 'job_description')
-    urls = [DATA_SOURCE_URL + file_name for file_name in file_names]
-    df = pd.DataFrame(urls, columns=['job_url'])
+    files = list_raw_files(DATA_SOURCE_NAME, 'job_description')
+    df = pd.DataFrame(files)
+    df['url'] = DATA_SOURCE_URL + df['file_name']
     save_temp_df(df, job_id, DOWNLOADED_URLS_CSV)
+    return df
 
 
 if __name__ == "__main__":

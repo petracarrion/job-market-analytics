@@ -54,13 +54,13 @@ def get_all_job_description_urls():
 
 
 def save_urls_as_df(all_job_description_urls, job_id):
-    df = pd.DataFrame(all_job_description_urls, columns=['job_url'])
+    df = pd.DataFrame(all_job_description_urls, columns=['url'])
 
     df = df.drop_duplicates()
-    url_split = df['job_url'].str.split('--', expand=True)
-    df['job_name_slug'] = url_split[1]
-    df['job_id'] = url_split[2].str.split('-', expand=True)[0]
-    df = df.sort_values(by=['job_id'], ascending=False)
+    url_split = df['url'].str.split('--', expand=True)
+    df['name_slug'] = url_split[1]
+    df['id'] = url_split[2].str.split('-', expand=True)[0]
+    df = df.sort_values(by=['id'], ascending=False)
 
     save_temp_df(df, job_id, SITEMAP_URLS_CSV)
 
