@@ -26,11 +26,10 @@ async def open_first_page(browser):
     page = await browser.new_page()
     await page.goto(DATA_SOURCE_URL)
     await page.click('#ccmgt_explicit_accept')
-    time.sleep(1)
-    for i in range(TAB_HITS):
+    for i in range(TAB_HITS * 2):
         await page.keyboard.press('Tab')
     await page.goto(DATA_SOURCE_URL + 'de/sitemap/')
-    for i in range(TAB_HITS):
+    for i in range(TAB_HITS * 2):
         await page.keyboard.press('Tab')
     return page
 
