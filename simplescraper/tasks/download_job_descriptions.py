@@ -71,7 +71,7 @@ async def download_urls(df):
                     listing_content_html = await listing_content.inner_html()
                     listing_content_html = listing_content_html.replace('\xad', '')
                     save_raw_file(listing_content_html, 'job_description', file_name)
-                    logger.info(f'Chunk {chunk_id}: Dowloaded   ({pos_in_chunk}/{chunk_size}): {url}')
+                    logger.success(f'Chunk {chunk_id}: Dowloaded   ({pos_in_chunk}/{chunk_size}): {url}')
                 except TimeoutError:
                     logger.warning(f'TimeoutError: Timeout error while requesting the page {url}')
                 except AttributeError:
