@@ -1,0 +1,12 @@
+beautifulsoup4
+lxml
+loguru
+pandas
+pip-tools
+playwright
+pyarrow
+pytest
+python-dotenv
+requests
+wemake-python-styleguide
+xmltodict
