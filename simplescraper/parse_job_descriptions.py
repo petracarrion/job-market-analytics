@@ -1,4 +1,6 @@
 import pandas as pd
+import pyarrow as pa
+import pyarrow.parquet as pq
 
 from tasks.list_downloaded_job_descriptions import list_downloaded_job_descriptions
 from tasks.parse_job_description import parse_job_description
@@ -25,16 +27,21 @@ def load_and_parse(row) -> str:
 
 def parse_job_descriptions():
     job_id = get_current_date_and_time()
-    df = list_downloaded_job_descriptions(job_id)
+    df: pd.DataFrame = list_downloaded_job_descriptions(job_id)
     if DEBUG:
-        df = df.sample(n=100)
+        df = df.sample(n=20)
     # df = df.reset_index(drop=True)
     df['parsed_content'] = df.apply(load_and_parse, axis=1)
     # df = df.reset_index(drop=True)
     df = df.join(pd.json_normalize(df['parsed_content']))
     df = df.drop(columns=['parsed_content'])
 
-    df.to_parquet('../temp/job_descriptions.parquet', engine='pyarrow', partition_cols=['timestamp'])
+    # df.to_parquet('../temp/job_descriptions.parquet', engine='pyarrow', partition_cols=['timestamp'])
+    # noinspection PyArgumentList
+    table: pa.Table = pa.Table.from_pandas(df, preserve_index=False)
+
+    pq.write_to_dataset(table, '../temp/new_job_description.parquet', partition_cols=['timestamp'],
+                        use_legacy_dataset=False)
 
     print(df)
 
