@@ -32,9 +32,10 @@ LAYER_DIR = {
     TEMP_LAYER: TEMP_DIR,
 }
 
-DOWNLOADED_URLS_CSV = '01_downloaded_urls.csv'
-SITEMAP_URLS_CSV = '02_sitemap_urls.csv'
-URLS_TO_DOWNLOAD_CSV = '03_urls_to_download.csv'
+DOWNLOADED_URLS_CSV = '11_downloaded_urls.csv'
+SITEMAP_URLS_CSV = '12_sitemap_urls.csv'
+URLS_TO_DOWNLOAD_CSV = '13_urls_to_download.csv'
+PARSED_JOB_DESCRIPTIONS_CSV = '21_parsed_job_descriptions.csv'
 
 
 def list_raw_files(data_source, entity: Entity):
