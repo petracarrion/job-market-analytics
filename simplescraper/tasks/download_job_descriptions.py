@@ -135,7 +135,7 @@ def download_job_descriptions(job_id, df_to_download):
 
     total_count = df.shape[0]
     chunk_size = get_chunk_size(total_count)
-    chucks = split_dataframe(df, chunk_size)
+    chunks = split_dataframe(df, chunk_size)
 
     start_time = time.time()
     logger.info(f'Starting downloading job descriptions for job: {job_id}')
@@ -144,7 +144,7 @@ def download_job_descriptions(job_id, df_to_download):
 
     loop = asyncio.get_event_loop()
     try:
-        loop.run_until_complete(run_async_tasks(chucks))
+        loop.run_until_complete(run_async_tasks(chunks))
     finally:
         loop.run_until_complete(loop.shutdown_asyncgens())
         loop.close()
