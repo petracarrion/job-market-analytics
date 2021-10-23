@@ -54,7 +54,7 @@ def get_all_job_description_urls():
     return job_description_urls
 
 
-def save_urls_as_df(all_job_description_urls, job_id):
+def convert_urls_to_df(all_job_description_urls) -> pd.DataFrame:
     df = pd.DataFrame(all_job_description_urls, columns=['url'])
 
     df = df.drop_duplicates()
@@ -63,12 +63,14 @@ def save_urls_as_df(all_job_description_urls, job_id):
     df['id'] = url_split[2].str.split('-', expand=True)[0]
     df = df.sort_values(by=['id'], ascending=False)
 
-    save_temp_df(df, job_id, SITEMAP_URLS_CSV)
+    return df
 
 
-def download_sitemap(job_id):
+def download_sitemap(job_id) -> pd.DataFrame:
     all_job_description_urls = get_all_job_description_urls()
-    save_urls_as_df(all_job_description_urls, job_id)
+    df = convert_urls_to_df(all_job_description_urls)
+    save_temp_df(df, job_id, SITEMAP_URLS_CSV)
+    return df
 
 
 if __name__ == '__main__':

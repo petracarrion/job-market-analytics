@@ -2,14 +2,12 @@ import asyncio
 import math
 import time
 
-import pandas as pd
 from playwright.async_api import async_playwright, Error, TimeoutError
 
 from common.entity import JOB_DESCRIPTION
-from common.env_variables import DATA_SOURCE_URL, SEMAPHORE_COUNT, MAX_CHUNK_SIZE
-from common.logging import configure_logger, get_logger
-from common.storage import load_temp_df, DOWNLOADED_JOB_DESCRIPTIONS_CSV, SITEMAP_URLS_CSV, save_raw_file, save_temp_df, \
-    JOB_DESCRIPTIONS_TO_DOWNLOAD_CSV
+from common.env_variables import DATA_SOURCE_URL, SEMAPHORE_COUNT, MAX_CHUNK_SIZE, LATEST_JOB_ID
+from common.logging import get_logger
+from common.storage import save_raw_file, load_temp_df, JOB_DESCRIPTIONS_TO_DOWNLOAD_CSV
 
 TAB_HITS = 30
 
@@ -128,18 +126,8 @@ def get_chunk_size(total_count):
     return chunk_size
 
 
-def download_job_descriptions(job_id):
-    configure_logger(job_id)
-
-    downloaded_df: pd.DataFrame = load_temp_df(job_id, DOWNLOADED_JOB_DESCRIPTIONS_CSV)
-    df: pd.DataFrame = load_temp_df(job_id, SITEMAP_URLS_CSV)
-
-    df = df.merge(downloaded_df, on='url', how='left', indicator=True)
-    df = df.query('_merge == "left_only"')
-    df = df.drop(columns=['_merge'])
-    df = df.reset_index(drop=True)
-
-    save_temp_df(df, job_id, JOB_DESCRIPTIONS_TO_DOWNLOAD_CSV)
+def download_job_descriptions(job_id, df_to_download):
+    df = df_to_download
 
     if df.empty:
         logger.info('Nothing to download')
@@ -150,7 +138,7 @@ def download_job_descriptions(job_id):
     chucks = split_dataframe(df, chunk_size)
 
     start_time = time.time()
-    logger.info(f'Starting')
+    logger.info(f'Starting downloading job descriptions for job: {job_id}')
     logger.info(f'Concurrent tasks: {SEMAPHORE_COUNT}')
     logger.info(f'Urls to dowload: {total_count}')
 
@@ -168,4 +156,7 @@ def download_job_descriptions(job_id):
 
 
 if __name__ == '__main__':
-    download_job_descriptions('TODO: Read it from an env variable or just get the latest job_id')
+    download_job_descriptions(
+        LATEST_JOB_ID,
+        load_temp_df(LATEST_JOB_ID, JOB_DESCRIPTIONS_TO_DOWNLOAD_CSV),
+    )
