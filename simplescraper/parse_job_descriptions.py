@@ -1,3 +1,5 @@
+import os
+
 import pandas as pd
 
 from common.entity import JOB_DESCRIPTION
@@ -55,6 +57,8 @@ def parse_job_descriptions():
         df = df.drop(columns=['chunk_id', 'pos_in_chunk', 'chunk_size'])
 
         save_cleansed_df(df, JOB_DESCRIPTION)
+        
+    os.system('say -v Zuzana A je to')
 
 
 if __name__ == "__main__":
