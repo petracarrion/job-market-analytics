@@ -1,6 +1,7 @@
 import pandas as pd
 import xmltodict
 
+from common.entity import SITEMAP
 from common.env_variables import DATA_SOURCE_URL
 from common.webclient import get_url_content
 from common.storage import save_temp_df, SITEMAP_URLS_CSV, save_raw_file, get_current_date_and_time
@@ -10,7 +11,7 @@ SITEMAP_INDEX_XML = f'{DATA_SOURCE_URL}5/sitemaps/de/sitemapindex.xml'
 
 def historize_url_content(url, content):
     file_name = url.split('/')[-1]
-    save_raw_file(content, 'sitemap', file_name)
+    save_raw_file(content, SITEMAP, file_name)
 
 
 def get_and_historize_url_content(url):
@@ -23,7 +24,7 @@ def get_listing_urls():
     web_content = get_and_historize_url_content(SITEMAP_INDEX_XML)
     web_content = xmltodict.parse(web_content)
     web_content = web_content['sitemapindex']
-    web_content = web_content['sitemap']
+    web_content = web_content[SITEMAP]
     listing_urls = []
     for entry in web_content:
         url = entry['loc']

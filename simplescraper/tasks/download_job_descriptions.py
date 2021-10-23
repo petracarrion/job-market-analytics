@@ -5,6 +5,7 @@ import time
 import pandas as pd
 from playwright.async_api import async_playwright, Error, TimeoutError
 
+from common.entity import JOB_DESCRIPTION
 from common.env_variables import DATA_SOURCE_URL, SEMAPHORE_COUNT, MAX_CHUNK_SIZE
 from common.logging import configure_logger, get_logger
 from common.storage import load_temp_df, DOWNLOADED_URLS_CSV, SITEMAP_URLS_CSV, save_raw_file, save_temp_df, \
@@ -70,7 +71,7 @@ async def download_urls(df):
                     listing_content = await page.query_selector('.listing-content')
                     listing_content_html = await listing_content.inner_html()
                     listing_content_html = listing_content_html.replace('\xad', '')
-                    save_raw_file(listing_content_html, 'job_description', file_name)
+                    save_raw_file(listing_content_html, JOB_DESCRIPTION, file_name)
                     logger.success(f'Chunk {chunk_id}: Dowloaded   ({pos_in_chunk}/{chunk_size}): {url}')
                 except TimeoutError:
                     logger.warning(f'TimeoutError: Timeout error while requesting the page {url}')

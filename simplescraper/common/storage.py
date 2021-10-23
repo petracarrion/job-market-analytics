@@ -14,6 +14,7 @@ import pathlib
 
 import pandas as pd
 
+from common.entity import Entity
 from common.env_variables import DATA_SOURCE_NAME, RAW_DIR, TEMP_DIR
 
 RAW_LAYER = 'raw'
@@ -25,6 +26,7 @@ LAYERS = [RAW_LAYER, CLEANSED_LAYER, CURATED_LAYER, TEMP_LAYER]
 
 LAYER_DIR = {
     RAW_LAYER: RAW_DIR,
+    CLEANSED_LAYER: CLEANSED_LAYER,
     TEMP_LAYER: TEMP_DIR,
 }
 
@@ -61,19 +63,19 @@ def _save_file(content, file_path):
         f.write(content)
 
 
-def save_file(layer, content, entity, timestamp, file_name):
-    file_path = os.path.join(LAYER_DIR[layer], DATA_SOURCE_NAME, entity, timestamp, file_name)
+def save_file(layer, content, entity: Entity, timestamp, file_name):
+    file_path = os.path.join(LAYER_DIR[layer], DATA_SOURCE_NAME, entity.name, timestamp, file_name)
     _create_dir(file_path)
     _save_file(content, file_path)
 
 
-def save_raw_file(content, entity, file_name):
+def save_raw_file(content, entity: Entity, file_name):
     timestamp = get_current_date()
     save_file(RAW_LAYER, content, entity, timestamp, file_name)
 
 
-def load_raw_file(entity, timestamp, file_name):
-    file_path = os.path.join(LAYER_DIR[RAW_LAYER], DATA_SOURCE_NAME, entity, timestamp, file_name)
+def load_raw_file(entity: Entity, timestamp, file_name):
+    file_path = os.path.join(LAYER_DIR[RAW_LAYER], DATA_SOURCE_NAME, entity.name, timestamp, file_name)
     with open(file_path, 'r') as f:
         content = f.read()
     return content
