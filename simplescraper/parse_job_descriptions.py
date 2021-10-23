@@ -1,11 +1,10 @@
 import pandas as pd
-import pyarrow as pa
-import pyarrow.parquet as pq
 
+from common.entity import JOB_DESCRIPTION
 from tasks.list_downloaded_job_descriptions import list_downloaded_job_descriptions
 from tasks.parse_job_description import parse_job_description
 from common.logging import get_logger
-from common.storage import get_current_date_and_time, load_raw_file
+from common.storage import get_current_date_and_time, load_raw_file, save_cleansed_df
 
 DEBUG = True
 
@@ -15,7 +14,7 @@ logger = get_logger()
 def load_and_parse(row) -> str:
     timestamp = row['timestamp']
     file_name = row['file_name']
-    html_content = load_raw_file('job_description', timestamp, file_name)
+    html_content = load_raw_file(JOB_DESCRIPTION, timestamp, file_name)
     try:
         logger.info(f'Parsing: {timestamp}/{file_name}')
         parsed_content = parse_job_description(html_content)
@@ -37,12 +36,7 @@ def parse_job_descriptions():
     df = df.drop(columns=['parsed_content'])
     df[['year', 'moth', 'day']] = df['timestamp'].str.split('-', 2, expand=True)
 
-    # df.to_parquet('../temp/job_descriptions.parquet', engine='pyarrow', partition_cols=['timestamp'])
-    # noinspection PyArgumentList
-    table: pa.Table = pa.Table.from_pandas(df, preserve_index=False)
-
-    pq.write_to_dataset(table, '../temp/new_job_description.parquet', partition_cols=['year', 'moth', 'day'],
-                        use_legacy_dataset=False)
+    save_cleansed_df(df, JOB_DESCRIPTION)
 
     print(df)
 

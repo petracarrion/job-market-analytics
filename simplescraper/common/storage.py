@@ -13,9 +13,11 @@ import os
 import pathlib
 
 import pandas as pd
+import pyarrow as pa
+import pyarrow.parquet as pq
 
 from common.entity import Entity
-from common.env_variables import DATA_SOURCE_NAME, RAW_DIR, TEMP_DIR
+from common.env_variables import DATA_SOURCE_NAME, RAW_DIR, CLEANSED_DIR, TEMP_DIR
 
 RAW_LAYER = 'raw'
 CLEANSED_LAYER = 'cleansed'
@@ -26,7 +28,7 @@ LAYERS = [RAW_LAYER, CLEANSED_LAYER, CURATED_LAYER, TEMP_LAYER]
 
 LAYER_DIR = {
     RAW_LAYER: RAW_DIR,
-    CLEANSED_LAYER: CLEANSED_LAYER,
+    CLEANSED_LAYER: CLEANSED_DIR,
     TEMP_LAYER: TEMP_DIR,
 }
 
@@ -91,3 +93,13 @@ def save_temp_df(df: pd.DataFrame, job_id: str, file_name: str):
 
 def load_temp_df(job_id: str, file_name: str):
     return pd.read_csv(os.path.join(TEMP_DIR, job_id, file_name))
+
+
+def save_cleansed_df(df: pd.DataFrame, entity: Entity):
+    # noinspection PyArgumentList
+    table: pa.Table = pa.Table.from_pandas(df, preserve_index=False)
+    root_path = os.path.join(LAYER_DIR[CLEANSED_LAYER], DATA_SOURCE_NAME, entity.name)
+    pq.write_to_dataset(table,
+                        root_path,
+                        partition_cols=['year', 'moth', 'day'],
+                        use_legacy_dataset=False)
