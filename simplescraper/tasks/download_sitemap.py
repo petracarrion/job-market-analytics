@@ -2,7 +2,7 @@ import pandas as pd
 import xmltodict
 
 from common.entity import SITEMAP
-from common.env_variables import DATA_SOURCE_URL
+from common.env_variables import DATA_SOURCE_URL, LATEST_JOB_ID
 from common.webclient import get_url_content
 from common.storage import save_temp_df, SITEMAP_URLS_CSV, save_raw_file, get_job_id
 
@@ -72,4 +72,4 @@ def download_sitemap(job_id):
 
 
 if __name__ == '__main__':
-    download_sitemap(get_job_id())
+    download_sitemap(LATEST_JOB_ID)
