@@ -2,7 +2,7 @@ import pandas as pd
 
 from common.entity import JOB_DESCRIPTION
 from tasks.list_downloaded_job_descriptions import list_downloaded_job_descriptions
-from tasks.list_files_to_parse import list_files_to_parse
+from tasks.list_job_descriptions_to_parse import list_job_descriptions_to_parse
 from tasks.list_parsed_job_descriptions import list_parsed_job_descriptions
 from tasks.parse_job_description import parse_job_description
 from common.logging import get_logger
@@ -30,7 +30,7 @@ def parse_job_descriptions():
     job_id = get_job_id()
     df_downloaded = list_downloaded_job_descriptions(job_id)
     df_parsed = list_parsed_job_descriptions(job_id)
-    df = list_files_to_parse(job_id, df_downloaded, df_parsed)
+    df = list_job_descriptions_to_parse(job_id, df_downloaded, df_parsed)
     if DEBUG:
         df = df.sample(n=20)
     # df = df.reset_index(drop=True)
