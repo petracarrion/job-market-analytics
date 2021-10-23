@@ -8,8 +8,8 @@ from playwright.async_api import async_playwright, Error, TimeoutError
 from common.entity import JOB_DESCRIPTION
 from common.env_variables import DATA_SOURCE_URL, SEMAPHORE_COUNT, MAX_CHUNK_SIZE
 from common.logging import configure_logger, get_logger
-from common.storage import load_temp_df, DOWNLOADED_URLS_CSV, SITEMAP_URLS_CSV, save_raw_file, save_temp_df, \
-    URLS_TO_DOWNLOAD_CSV
+from common.storage import load_temp_df, DOWNLOADED_JOB_DESCRIPTIONS_CSV, SITEMAP_URLS_CSV, save_raw_file, save_temp_df, \
+    JOB_DESCRIPTIONS_TO_DOWNLOAD_CSV
 
 TAB_HITS = 30
 
@@ -131,7 +131,7 @@ def get_chunk_size(total_count):
 def download_job_descriptions(job_id):
     configure_logger(job_id)
 
-    downloaded_df: pd.DataFrame = load_temp_df(job_id, DOWNLOADED_URLS_CSV)
+    downloaded_df: pd.DataFrame = load_temp_df(job_id, DOWNLOADED_JOB_DESCRIPTIONS_CSV)
     df: pd.DataFrame = load_temp_df(job_id, SITEMAP_URLS_CSV)
 
     df = df.merge(downloaded_df, on='url', how='left', indicator=True)
@@ -139,7 +139,7 @@ def download_job_descriptions(job_id):
     df = df.drop(columns=['_merge'])
     df = df.reset_index(drop=True)
 
-    save_temp_df(df, job_id, URLS_TO_DOWNLOAD_CSV)
+    save_temp_df(df, job_id, JOB_DESCRIPTIONS_TO_DOWNLOAD_CSV)
 
     if df.empty:
         logger.info('Nothing to download')

@@ -32,10 +32,11 @@ LAYER_DIR = {
     TEMP_LAYER: TEMP_DIR,
 }
 
-DOWNLOADED_URLS_CSV = '11_downloaded_urls.csv'
+DOWNLOADED_JOB_DESCRIPTIONS_CSV = '11_downloaded_job_descriptions.csv'
 SITEMAP_URLS_CSV = '12_sitemap_urls.csv'
-URLS_TO_DOWNLOAD_CSV = '13_urls_to_download.csv'
+JOB_DESCRIPTIONS_TO_DOWNLOAD_CSV = '13_job_descriptions_to_download.csv'
 PARSED_JOB_DESCRIPTIONS_CSV = '21_parsed_job_descriptions.csv'
+JOB_DESCRIPTIONS_TO_PARSE_CSV = '22_job_descriptions_to_parse.csv'
 
 
 def list_raw_files(data_source, entity: Entity):
@@ -92,7 +93,7 @@ def save_temp_df(df: pd.DataFrame, job_id: str, file_name: str):
     df.to_csv(os.path.join(temp_dir, file_name), index=False)
 
 
-def load_temp_df(job_id: str, file_name: str):
+def load_temp_df(job_id: str, file_name: str) -> pd.DataFrame:
     return pd.read_csv(os.path.join(TEMP_DIR, job_id, file_name))
 
 
@@ -106,7 +107,7 @@ def save_cleansed_df(df: pd.DataFrame, entity: Entity):
                         use_legacy_dataset=False)
 
 
-def load_cleansed_df(entity: Entity, columns=None, filters=None):
+def load_cleansed_df(entity: Entity, columns=None, filters=None) -> pd.DataFrame:
     # noinspection PyArgumentList
     root_path = os.path.join(LAYER_DIR[CLEANSED_LAYER], DATA_SOURCE_NAME, entity.name)
     table = pq.read_table(root_path, columns, filters=filters, use_legacy_dataset=False)
