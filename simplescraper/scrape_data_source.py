@@ -3,11 +3,11 @@ import os
 from tasks.download_job_descriptions import download_job_descriptions
 from tasks.download_sitemap import download_sitemap
 from tasks.list_downloaded_job_descriptions import list_downloaded_job_descriptions
-from common.storage import get_current_date_and_time
+from common.storage import get_job_id
 
 
 def scraper_data_source():
-    job_id = get_current_date_and_time()
+    job_id = get_job_id()
     list_downloaded_job_descriptions(job_id)
     download_sitemap(job_id)
     download_job_descriptions(job_id)

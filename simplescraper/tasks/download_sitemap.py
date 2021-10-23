@@ -4,7 +4,7 @@ import xmltodict
 from common.entity import SITEMAP
 from common.env_variables import DATA_SOURCE_URL
 from common.webclient import get_url_content
-from common.storage import save_temp_df, SITEMAP_URLS_CSV, save_raw_file, get_current_date_and_time
+from common.storage import save_temp_df, SITEMAP_URLS_CSV, save_raw_file, get_job_id
 
 SITEMAP_INDEX_XML = f'{DATA_SOURCE_URL}5/sitemaps/de/sitemapindex.xml'
 
@@ -72,4 +72,4 @@ def download_sitemap(job_id):
 
 
 if __name__ == '__main__':
-    download_sitemap(get_current_date_and_time())
+    download_sitemap(get_job_id())

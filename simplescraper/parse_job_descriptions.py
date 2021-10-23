@@ -4,7 +4,7 @@ from common.entity import JOB_DESCRIPTION
 from tasks.list_downloaded_job_descriptions import list_downloaded_job_descriptions
 from tasks.parse_job_description import parse_job_description
 from common.logging import get_logger
-from common.storage import get_current_date_and_time, load_raw_file, save_cleansed_df
+from common.storage import get_job_id, load_raw_file, save_cleansed_df, load_cleansed_df
 
 DEBUG = True
 
@@ -25,7 +25,7 @@ def load_and_parse(row) -> str:
 
 
 def parse_job_descriptions():
-    job_id = get_current_date_and_time()
+    job_id = get_job_id()
     df: pd.DataFrame = list_downloaded_job_descriptions(job_id)
     if DEBUG:
         df = df.sample(n=20)
@@ -42,7 +42,7 @@ def parse_job_descriptions():
 
 
 def read_parquet():
-    df = pd.read_parquet('../temp/job_descriptions.parquet', engine='pyarrow', columns=['timestamp', 'file_name'])
+    df = load_cleansed_df(JOB_DESCRIPTION)
     print(df)
 
 

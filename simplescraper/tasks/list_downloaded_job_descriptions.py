@@ -3,7 +3,7 @@ import pandas as pd
 from common.entity import JOB_DESCRIPTION
 from common.env_variables import DATA_SOURCE_URL
 from common.storage import DOWNLOADED_URLS_CSV, DATA_SOURCE_NAME, save_temp_df, list_raw_files, \
-    get_current_date_and_time
+    get_job_id
 
 
 def list_downloaded_job_descriptions(job_id):
@@ -15,4 +15,4 @@ def list_downloaded_job_descriptions(job_id):
 
 
 if __name__ == "__main__":
-    list_downloaded_job_descriptions(get_current_date_and_time())
+    list_downloaded_job_descriptions(get_job_id())

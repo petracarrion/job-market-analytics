@@ -50,8 +50,8 @@ def get_current_date():
     return str(datetime.date.today())
 
 
-def get_current_date_and_time():
-    return datetime.datetime.today().strftime('%Y-%m-%d_%H-%M-%S')
+def get_job_id():
+    return datetime.datetime.today().strftime('%Y/%m/%d/%H-%M-%S')
 
 
 def _create_dir(file_path):
