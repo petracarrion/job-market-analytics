@@ -51,7 +51,7 @@ async def download_urls(df):
                 pos_in_chunk = url_dict['pos_in_chunk']
                 file_name = url.split('/')[-1]
                 try:
-                    logger.info(f'Chunk {chunk_id}: Downloading ({pos_in_chunk}/{chunk_size}): {url}')
+                    logger.debug(f'Chunk {chunk_id}: Downloading ({pos_in_chunk}/{chunk_size}): {url}')
                     try:
                         response = await page.goto(url)
                         for i in range(TAB_HITS):
