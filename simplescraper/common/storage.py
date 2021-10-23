@@ -35,8 +35,8 @@ SITEMAP_URLS_CSV = '02_sitemap_urls.csv'
 URLS_TO_DOWNLOAD_CSV = '03_urls_to_download.csv'
 
 
-def list_raw_files(data_source, entity):
-    dir_path = os.path.join(RAW_DIR, data_source, entity)
+def list_raw_files(data_source, entity: Entity):
+    dir_path = os.path.join(RAW_DIR, data_source, entity.name)
     file_list = [{
         'timestamp': f.split('/')[-2],
         'file_name': f.split('/')[-1],

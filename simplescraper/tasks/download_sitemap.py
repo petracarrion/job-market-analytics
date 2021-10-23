@@ -24,7 +24,7 @@ def get_listing_urls():
     web_content = get_and_historize_url_content(SITEMAP_INDEX_XML)
     web_content = xmltodict.parse(web_content)
     web_content = web_content['sitemapindex']
-    web_content = web_content[SITEMAP]
+    web_content = web_content['sitemap']
     listing_urls = []
     for entry in web_content:
         url = entry['loc']
