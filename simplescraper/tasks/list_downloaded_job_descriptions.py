@@ -2,8 +2,7 @@ import pandas as pd
 
 from common.entity import JOB_DESCRIPTION
 from common.env_variables import DATA_SOURCE_URL, LATEST_JOB_ID
-from common.storage import DOWNLOADED_JOB_DESCRIPTIONS_CSV, DATA_SOURCE_NAME, save_temp_df, list_raw_files, \
-    get_job_id
+from common.storage import DOWNLOADED_JOB_DESCRIPTIONS_CSV, DATA_SOURCE_NAME, save_temp_df, list_raw_files
 
 
 def list_downloaded_job_descriptions(job_id) -> pd.DataFrame:
