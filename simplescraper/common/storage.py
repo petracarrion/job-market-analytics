@@ -104,3 +104,10 @@ def save_cleansed_df(df: pd.DataFrame, entity: Entity):
                         root_path,
                         partition_cols=['year', 'moth', 'day'],
                         use_legacy_dataset=False)
+
+
+def load_cleansed_df(entity: Entity, columns=None, filters=None):
+    # noinspection PyArgumentList
+    root_path = os.path.join(LAYER_DIR[CLEANSED_LAYER], DATA_SOURCE_NAME, entity.name)
+    table = pq.read_table(root_path, columns, filters=filters, use_legacy_dataset=False)
+    return table.to_pandas()
