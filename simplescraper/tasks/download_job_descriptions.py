@@ -5,9 +5,9 @@ import time
 import pandas as pd
 from playwright.async_api import async_playwright, Error, TimeoutError
 
-from utils.env_variables import DATA_SOURCE_URL, SEMAPHORE_COUNT, MAX_CHUNK_SIZE
-from utils.logging import configure_logger, get_logger
-from utils.storage import load_temp_df, DOWNLOADED_URLS_CSV, SITEMAP_URLS_CSV, save_raw_file, save_temp_df, \
+from common.env_variables import DATA_SOURCE_URL, SEMAPHORE_COUNT, MAX_CHUNK_SIZE
+from common.logging import configure_logger, get_logger
+from common.storage import load_temp_df, DOWNLOADED_URLS_CSV, SITEMAP_URLS_CSV, save_raw_file, save_temp_df, \
     URLS_TO_DOWNLOAD_CSV
 
 TAB_HITS = 30

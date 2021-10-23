@@ -2,7 +2,7 @@ import os.path
 
 from loguru import logger
 
-from utils.env_variables import TEMP_DIR
+from common.env_variables import TEMP_DIR
 
 
 def configure_logger(job_id):

@@ -14,7 +14,7 @@ import pathlib
 
 import pandas as pd
 
-from utils.env_variables import DATA_SOURCE_NAME, RAW_DIR, TEMP_DIR
+from common.env_variables import DATA_SOURCE_NAME, RAW_DIR, TEMP_DIR
 
 RAW_LAYER = 'raw'
 CLEANSED_LAYER = 'cleansed'

@@ -4,8 +4,8 @@ import pyarrow.parquet as pq
 
 from tasks.list_downloaded_job_descriptions import list_downloaded_job_descriptions
 from tasks.parse_job_description import parse_job_description
-from utils.logging import get_logger
-from utils.storage import get_current_date_and_time, load_raw_file
+from common.logging import get_logger
+from common.storage import get_current_date_and_time, load_raw_file
 
 DEBUG = True
 

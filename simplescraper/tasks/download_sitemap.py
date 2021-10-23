@@ -1,9 +1,9 @@
 import pandas as pd
 import xmltodict
 
-from utils.env_variables import DATA_SOURCE_URL
-from utils.webclient import get_url_content
-from utils.storage import save_temp_df, SITEMAP_URLS_CSV, save_raw_file, get_current_date_and_time
+from common.env_variables import DATA_SOURCE_URL
+from common.webclient import get_url_content
+from common.storage import save_temp_df, SITEMAP_URLS_CSV, save_raw_file, get_current_date_and_time
 
 SITEMAP_INDEX_XML = f'{DATA_SOURCE_URL}5/sitemaps/de/sitemapindex.xml'
 

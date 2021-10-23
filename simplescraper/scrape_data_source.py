@@ -3,7 +3,7 @@ import os
 from tasks.download_job_descriptions import download_job_descriptions
 from tasks.download_sitemap import download_sitemap
 from tasks.list_downloaded_job_descriptions import list_downloaded_job_descriptions
-from utils.storage import get_current_date_and_time
+from common.storage import get_current_date_and_time
 
 
 def scraper_data_source():

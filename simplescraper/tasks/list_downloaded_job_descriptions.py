@@ -1,7 +1,7 @@
 import pandas as pd
 
-from utils.env_variables import DATA_SOURCE_URL
-from utils.storage import DOWNLOADED_URLS_CSV, DATA_SOURCE_NAME, save_temp_df, list_raw_files, get_current_date_and_time
+from common.env_variables import DATA_SOURCE_URL
+from common.storage import DOWNLOADED_URLS_CSV, DATA_SOURCE_NAME, save_temp_df, list_raw_files, get_current_date_and_time
 
 
 def list_downloaded_job_descriptions(job_id):
