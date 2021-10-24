@@ -3,13 +3,13 @@ import os
 import pandas as pd
 
 from common.entity import JOB_DESCRIPTION
+from common.logging import get_logger, configure_logger
+from common.storage import get_job_id, load_raw_file, save_cleansed_df
 from tasks.chunk_job_descriptions_to_parse import chunk_job_descriptions_to_parse
 from tasks.list_downloaded_job_descriptions import list_downloaded_job_descriptions
 from tasks.list_job_descriptions_to_parse import list_job_descriptions_to_parse
 from tasks.list_parsed_job_descriptions import list_parsed_job_descriptions
 from tasks.parse_job_description import parse_job_description
-from common.logging import get_logger, configure_logger
-from common.storage import get_job_id, load_raw_file, save_cleansed_df, load_cleansed_df
 
 DEBUG = True
 
@@ -57,7 +57,7 @@ def parse_job_descriptions():
         df = df.drop(columns=['chunk_id', 'pos_in_chunk', 'chunk_size'])
 
         save_cleansed_df(df, JOB_DESCRIPTION)
-        
+
     os.system('say -v Zuzana A je to')
 
 
