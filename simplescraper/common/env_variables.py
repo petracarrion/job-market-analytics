@@ -14,4 +14,4 @@ DATA_SOURCE_URL = os.getenv('DATA_SOURCE_URL')
 SEMAPHORE_COUNT: int = int(os.getenv('SEMAPHORE_COUNT'))
 MAX_CHUNK_SIZE: int = int(os.getenv('MAX_CHUNK_SIZE'))
 
-LATEST_JOB_ID = os.getenv('LATEST_JOB_ID')
+LATEST_RUN_ID = os.getenv('LATEST_RUN_ID')

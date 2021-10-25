@@ -53,7 +53,7 @@ def get_current_date():
     return str(datetime.date.today())
 
 
-def get_job_id():
+def get_run_id():
     return datetime.datetime.today().strftime('%Y/%m/%d/%H-%M-%S')
 
 
@@ -86,16 +86,16 @@ def load_raw_file(entity: Entity, timestamp, file_name):
     return content
 
 
-def save_temp_df(df: pd.DataFrame, job_id: str, file_name: str):
-    temp_dir = os.path.join(TEMP_DIR, job_id)
+def save_temp_df(df: pd.DataFrame, run_id: str, file_name: str):
+    temp_dir = os.path.join(TEMP_DIR, run_id)
     if not os.path.exists(temp_dir):
         os.makedirs(temp_dir)
     # noinspection PyTypeChecker
     df.to_csv(os.path.join(temp_dir, file_name), index=False)
 
 
-def load_temp_df(job_id: str, file_name: str) -> pd.DataFrame:
-    return pd.read_csv(os.path.join(TEMP_DIR, job_id, file_name))
+def load_temp_df(run_id: str, file_name: str) -> pd.DataFrame:
+    return pd.read_csv(os.path.join(TEMP_DIR, run_id, file_name))
 
 
 def save_cleansed_df(df: pd.DataFrame, entity: Entity):

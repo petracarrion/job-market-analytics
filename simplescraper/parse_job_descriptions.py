@@ -4,7 +4,7 @@ import pandas as pd
 
 from common.entity import JOB_DESCRIPTION
 from common.logging import get_logger, configure_logger
-from common.storage import get_job_id, load_raw_file, save_cleansed_df
+from common.storage import get_run_id, load_raw_file, save_cleansed_df
 from tasks.chunk_job_descriptions_to_parse import chunk_job_descriptions_to_parse
 from tasks.list_downloaded_job_descriptions import list_downloaded_job_descriptions
 from tasks.list_job_descriptions_to_parse import list_job_descriptions_to_parse
@@ -33,12 +33,12 @@ def load_and_parse(row) -> str:
 
 
 def parse_job_descriptions():
-    job_id = get_job_id()
-    configure_logger(job_id)
-    df_downloaded = list_downloaded_job_descriptions(job_id)
-    df_parsed = list_parsed_job_descriptions(job_id)
-    df_to_parse = list_job_descriptions_to_parse(job_id, df_downloaded, df_parsed)
-    dfs_to_parse = chunk_job_descriptions_to_parse(job_id, df_to_parse)
+    run_id = get_run_id()
+    configure_logger(run_id)
+    df_downloaded = list_downloaded_job_descriptions(run_id)
+    df_parsed = list_parsed_job_descriptions(run_id)
+    df_to_parse = list_job_descriptions_to_parse(run_id, df_downloaded, df_parsed)
+    dfs_to_parse = chunk_job_descriptions_to_parse(run_id, df_to_parse)
     for index, df in enumerate(dfs_to_parse):
         chunk_pos = index + 1
         num_chunks = len(dfs_to_parse)

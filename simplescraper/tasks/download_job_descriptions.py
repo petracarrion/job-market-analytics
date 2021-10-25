@@ -5,7 +5,7 @@ import time
 from playwright.async_api import async_playwright, Error, TimeoutError
 
 from common.entity import JOB_DESCRIPTION
-from common.env_variables import DATA_SOURCE_URL, SEMAPHORE_COUNT, MAX_CHUNK_SIZE, LATEST_JOB_ID
+from common.env_variables import DATA_SOURCE_URL, SEMAPHORE_COUNT, MAX_CHUNK_SIZE, LATEST_RUN_ID
 from common.logging import get_logger
 from common.storage import save_raw_file, load_temp_df, JOB_DESCRIPTIONS_TO_DOWNLOAD_CSV
 
@@ -126,7 +126,7 @@ def get_chunk_size(total_count):
     return chunk_size
 
 
-def download_job_descriptions(job_id, df_to_download):
+def download_job_descriptions(run_id, df_to_download):
     df = df_to_download
 
     if df.empty:
@@ -138,7 +138,7 @@ def download_job_descriptions(job_id, df_to_download):
     chunks = split_dataframe(df, chunk_size)
 
     start_time = time.time()
-    logger.info(f'Starting downloading job descriptions for job: {job_id}')
+    logger.info(f'Starting downloading job descriptions for job: {run_id}')
     logger.info(f'Concurrent tasks: {SEMAPHORE_COUNT}')
     logger.info(f'Urls to dowload: {total_count}')
 
@@ -157,6 +157,6 @@ def download_job_descriptions(job_id, df_to_download):
 
 if __name__ == '__main__':
     download_job_descriptions(
-        LATEST_JOB_ID,
-        load_temp_df(LATEST_JOB_ID, JOB_DESCRIPTIONS_TO_DOWNLOAD_CSV),
+        LATEST_RUN_ID,
+        load_temp_df(LATEST_RUN_ID, JOB_DESCRIPTIONS_TO_DOWNLOAD_CSV),
     )
