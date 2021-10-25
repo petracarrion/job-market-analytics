@@ -38,6 +38,8 @@ JOB_DESCRIPTIONS_TO_DOWNLOAD_CSV = '13_job_descriptions_to_download.csv'
 PARSED_JOB_DESCRIPTIONS_CSV = '21_parsed_job_descriptions.csv'
 JOB_DESCRIPTIONS_TO_PARSE_CSV = '22_job_descriptions_to_parse.csv'
 DOWNLOADED_SITEMAPS_CSV = '31_downloaded_sitemaps.csv'
+PARSED_SITEMAPS_CSV = '32_parsed_sitemaps.csv'
+SITEMAPS_TO_PARSE_CSV = '33_sitemaps_to_parse.csv'
 
 
 def list_raw_files(data_source, entity: Entity):
@@ -111,5 +113,8 @@ def save_cleansed_df(df: pd.DataFrame, entity: Entity):
 def load_cleansed_df(entity: Entity, columns=None, filters=None) -> pd.DataFrame:
     # noinspection PyArgumentList
     root_path = os.path.join(LAYER_DIR[CLEANSED_LAYER], DATA_SOURCE_NAME, entity.name)
-    table = pq.read_table(root_path, columns, filters=filters, use_legacy_dataset=False)
-    return table.to_pandas()
+    try:
+        table = pq.read_table(root_path, columns, filters=filters, use_legacy_dataset=False)
+        return table.to_pandas()
+    except FileNotFoundError:
+        return pd.DataFrame(columns=columns)

@@ -2,7 +2,7 @@ import pandas as pd
 
 from common.entity import JOB_DESCRIPTION
 from common.env_variables import LATEST_RUN_ID
-from common.storage import load_cleansed_df, save_temp_df, PARSED_JOB_DESCRIPTIONS_CSV, get_run_id
+from common.storage import load_cleansed_df, save_temp_df, PARSED_JOB_DESCRIPTIONS_CSV
 
 
 def list_parsed_job_descriptions(run_id) -> pd.DataFrame:

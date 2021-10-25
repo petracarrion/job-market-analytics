@@ -45,6 +45,7 @@ def extract_metadata(soup):
             metadata = json.loads(json_line)['listingData']
     metadata = flatten_metadata(metadata)
     metadata = keys_to_snake_case(metadata)
+    metadata['job_id'] = metadata.pop('id')
     return metadata
 
 

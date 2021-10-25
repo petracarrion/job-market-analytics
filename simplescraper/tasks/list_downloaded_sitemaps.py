@@ -8,6 +8,7 @@ from common.storage import DATA_SOURCE_NAME, save_temp_df, list_raw_files, DOWNL
 def list_downloaded_sitemaps(run_id) -> pd.DataFrame:
     files = list_raw_files(DATA_SOURCE_NAME, SITEMAP)
     df = pd.DataFrame(files)
+    df = df[df['file_name'] != 'sitemapindex.xml']
     save_temp_df(df, run_id, DOWNLOADED_SITEMAPS_CSV)
     return df
 
