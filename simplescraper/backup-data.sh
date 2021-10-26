@@ -10,3 +10,5 @@ mv "${filename}" "${BACKUP_DIR}"
 
 duration=$SECONDS
 echo "${0##*/}: $((duration / 60)) minutes and $((duration % 60)) seconds elapsed."
+
+say -v Zuzana A je to
