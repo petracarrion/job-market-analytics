@@ -34,7 +34,7 @@ async def download_urls(df):
     if df.empty:
         return
     async with async_playwright() as p:
-        browser = await p.chromium.launch(headless=False, slow_mo=250)
+        browser = await p.chromium.launch(headless=True, slow_mo=250)
         try:
             chunk_pos = df['chunk_pos'].values[0]
             num_chunks = df['num_chunks'].values[0]
