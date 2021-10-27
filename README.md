@@ -1,6 +1,6 @@
 # Job Market Analytics
 
-My aim with this project is to create and end-to-end Data Platform to explore and learn new technologies.
+The aim of this project is to develop an end-to-end Data Platform to explore and learn new technologies.
 
 ## Architecture
 
