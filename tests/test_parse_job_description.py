@@ -13,7 +13,7 @@ def load_file(file_path):
 
 @pytest.mark.parametrize('test_case', ['test_case_7610188', 'test_case_7610222', 'test_case_7609275'])
 def test_parse_job_description(test_case):
-    input_content = load_file('input/' + test_case + '.html')
+    input_content = load_file('input/' + test_case + '.txt')
 
     result_content = parse_job_description(input_content)
     # temp = json.dumps(result_content, indent=2, ensure_ascii=False)
