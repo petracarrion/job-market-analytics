@@ -132,3 +132,4 @@ dmypy.json
 temp/
 .idea/
 _trial_temp/
+.env

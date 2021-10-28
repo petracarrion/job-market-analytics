@@ -1,0 +1,41 @@
+version: '3.5'
+
+# Inspired by https://github.com/khezen/compose-postgres/blob/master/docker-compose.yml
+services:
+  postgres:
+      image: postgres:14.0
+      environment:
+        POSTGRES_USER: ${POSTGRES_USER}
+        POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+        POSTGRES_DB: ${POSTGRES_DB}
+      networks:
+        - postgres
+      restart: always
+      env_file: .env.example
+      logging:
+        options:
+          max-size: 10m
+          max-file: "3"
+      ports:
+      - '5432:5432'
+      volumes:
+        - ${POSTGRES_VOLUME}:/var/lib/postgresql/data
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+    - '2345:80'
+    volumes:
+      - ${PGADMIN_VOLUME}:/var/lib/pgadmin
+    networks:
+      - postgres
+    restart: unless-stopped
+    depends_on:
+      - "postgres"
+
+networks:
+  postgres:
+    driver: bridge
