@@ -1,0 +1,8 @@
+tap "homebrew/bundle"
+tap "homebrew/core"
+brew "openblas"
+brew "parquet-tools"
+brew "postgresql"
+brew "rdfind"
+brew "rust"
+brew "wget"
