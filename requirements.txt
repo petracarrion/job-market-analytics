@@ -4,26 +4,41 @@
 #
 #    pip-compile --allow-unsafe requirements.in
 #
+agate==1.6.1
+    # via dbt-core
 astor==0.8.1
     # via wemake-python-styleguide
 attrs==21.2.0
     # via
     #   flake8-bugbear
     #   flake8-eradicate
+    #   jsonschema
     #   pytest
     #   wemake-python-styleguide
+babel==2.9.1
+    # via agate
 bandit==1.7.0
     # via flake8-bandit
 beautifulsoup4==4.10.0
     # via -r requirements.in
 certifi==2021.10.8
     # via requests
+cffi==1.15.0
+    # via dbt-core
 charset-normalizer==2.0.7
     # via requests
 click==8.0.3
     # via pip-tools
+colorama==0.4.4
+    # via dbt-core
 darglint==1.8.1
     # via wemake-python-styleguide
+dbt-core==0.21.0
+    # via dbt-postgres
+dbt-extractor==0.4.0
+    # via dbt-core
+dbt-postgres==0.21.0
+    # via -r requirements.in
 docutils==0.17.1
     # via restructuredtext-lint
 eradicate==2.0.0
@@ -78,26 +93,60 @@ gitpython==3.1.24
     # via bandit
 greenlet==1.1.2
     # via playwright
+hologram==0.0.14
+    # via dbt-core
 idna==3.3
-    # via requests
+    # via
+    #   dbt-core
+    #   requests
+importlib-metadata==4.8.1
+    # via jsonschema
 iniconfig==1.1.1
     # via pytest
+isodate==0.6.0
+    # via
+    #   agate
+    #   dbt-core
 isort==5.9.3
     # via flake8-isort
+jinja2==2.11.3
+    # via dbt-core
+json-rpc==1.13.0
+    # via dbt-core
+jsonschema==3.1.1
+    # via hologram
+leather==0.3.4
+    # via agate
+logbook==1.5.3
+    # via dbt-core
 loguru==0.5.3
     # via -r requirements.in
 lxml==4.6.3
     # via -r requirements.in
+markupsafe==2.0.1
+    # via jinja2
+mashumaro==2.5
+    # via dbt-core
 mccabe==0.6.1
     # via flake8
+minimal-snowplow-tracker==0.0.2
+    # via dbt-core
+msgpack==1.0.2
+    # via mashumaro
+networkx==2.6.3
+    # via dbt-core
 numpy==1.21.3
     # via
     #   pandas
     #   pyarrow
-packaging==21.0
-    # via pytest
+packaging==20.9
+    # via
+    #   dbt-core
+    #   pytest
 pandas==1.3.4
     # via -r requirements.in
+parsedatetime==2.6
+    # via agate
 pbr==5.6.0
     # via stevedore
 pep517==0.12.0
@@ -110,6 +159,8 @@ playwright==1.16.0
     # via -r requirements.in
 pluggy==1.0.0
     # via pytest
+psycopg2-binary==2.9.1
+    # via dbt-postgres
 py==1.10.0
     # via pytest
 pyarrow==5.0.0
@@ -119,6 +170,8 @@ pycodestyle==2.7.0
     #   flake8
     #   flake8-bandit
     #   flake8-debugger
+pycparser==2.20
+    # via cffi
 pydocstyle==6.1.1
     # via flake8-docstrings
 pyee==8.2.2
@@ -131,24 +184,45 @@ pygments==2.10.0
     #   wemake-python-styleguide
 pyparsing==2.4.7
     # via packaging
+pyrsistent==0.18.0
+    # via jsonschema
 pytest==6.2.5
     # via -r requirements.in
 python-dateutil==2.8.2
-    # via pandas
+    # via
+    #   hologram
+    #   pandas
 python-dotenv==0.19.1
     # via -r requirements.in
+python-slugify==5.0.2
+    # via agate
+pytimeparse==1.1.8
+    # via agate
 pytz==2021.3
-    # via pandas
+    # via
+    #   babel
+    #   pandas
 pyyaml==6.0
-    # via bandit
+    # via
+    #   bandit
+    #   dbt-core
+    #   mashumaro
 requests==2.26.0
-    # via -r requirements.in
+    # via
+    #   -r requirements.in
+    #   dbt-core
+    #   minimal-snowplow-tracker
 restructuredtext-lint==1.3.2
     # via flake8-rst-docstrings
 six==1.16.0
     # via
+    #   agate
     #   bandit
     #   flake8-debugger
+    #   isodate
+    #   jsonschema
+    #   leather
+    #   minimal-snowplow-tracker
     #   python-dateutil
 smmap==4.0.0
     # via gitdb
@@ -156,17 +230,23 @@ snowballstemmer==2.1.0
     # via pydocstyle
 soupsieve==2.2.1
     # via beautifulsoup4
+sqlparse==0.4.2
+    # via dbt-core
 stevedore==3.5.0
     # via bandit
 testfixtures==6.18.3
     # via flake8-isort
+text-unidecode==1.3
+    # via python-slugify
 toml==0.10.2
     # via pytest
 tomli==1.2.1
     # via pep517
 typing-extensions==3.10.0.2
     # via
+    #   dbt-core
     #   gitpython
+    #   mashumaro
     #   playwright
     #   wemake-python-styleguide
 urllib3==1.26.7
@@ -175,13 +255,19 @@ websockets==10.0
     # via playwright
 wemake-python-styleguide==0.15.3
     # via -r requirements.in
+werkzeug==2.0.2
+    # via dbt-core
 wheel==0.37.0
     # via pip-tools
 xmltodict==0.12.0
     # via -r requirements.in
+zipp==3.6.0
+    # via importlib-metadata
 
 # The following packages are considered to be unsafe in a requirements file:
 pip==21.3.1
     # via pip-tools
 setuptools==58.2.0
-    # via pip-tools
+    # via
+    #   jsonschema
+    #   pip-tools
