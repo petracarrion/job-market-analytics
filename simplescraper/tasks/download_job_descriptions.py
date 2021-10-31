@@ -150,7 +150,7 @@ def download_job_descriptions(run_id, df_to_download):
         loop.close()
 
     elapsed_time = time.time() - start_time
-    logger.info(f'Finished')
+    logger.success(f'Finished: {total_count} urls')
     logger.info(f'Elapsed time: {elapsed_time:.2f} seconds')
     logger.info(f'Downloads per second: {total_count / elapsed_time:.2f}')
 
