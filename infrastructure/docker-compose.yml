@@ -1,9 +1,11 @@
-version: '3.5'
+version: '3.8'
 
 # Inspired by https://github.com/khezen/compose-postgres/blob/master/docker-compose.yml
 services:
   postgres:
-      image: postgres:14.0
+      build:
+        context: ./postgres-parquet-fdw
+        target: postgres-parquet-fdw
       environment:
         POSTGRES_USER: ${POSTGRES_USER}
         POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -20,7 +22,7 @@ services:
       - '5432:5432'
       volumes:
         - ${POSTGRES_VOLUME}:/var/lib/postgresql/data
-        - ${POSTGRES_CLEANSED_VOLUME}:/mnt/cleansed
+        - ${POSTGRES_PARQUET_FDW_VOLUME}:/var/lib/parquet-fdw/data
   pgadmin:
     image: dpage/pgadmin4
     environment:
