@@ -1,3 +1,5 @@
+import hashlib
+
 import bs4
 from loguru import logger
 
@@ -7,6 +9,8 @@ from common.storage import get_run_id, load_raw_file, save_cleansed_df
 from tasks.list_downloaded_sitemaps import list_downloaded_sitemaps
 from tasks.list_parsed_sitemaps import list_parsed_sitemaps
 from tasks.list_sitemaps_to_parse import list_sitemaps_to_parse
+
+HASHKEY_SEPARATOR = ';'
 
 DEBUG = False
 
@@ -37,10 +41,14 @@ def parse_sitemaps():
     if df.empty:
         logger.info('Nothing to parse')
         return
+    df = df.sort_values(by=['timestamp', 'file_name'])
     df['url'] = df.apply(load_and_parse, axis=1)
     df = df.explode('url')
-    df['job_id'] = extract_job_id(df['url'])
     df[['year', 'moth', 'day']] = df['timestamp'].str.split('-', 2, expand=True)
+    df['job_id'] = extract_job_id(df['url'])
+    df['sitemap_hashkey'] = df.apply(
+        lambda row: hashlib.md5(f'{row["job_id"]}{HASHKEY_SEPARATOR}{row["timestamp"]}'.encode('utf-8')).hexdigest(),
+        axis=1)
 
     save_cleansed_df(df, SITEMAP)
 
