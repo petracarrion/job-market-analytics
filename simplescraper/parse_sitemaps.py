@@ -6,6 +6,7 @@ from loguru import logger
 from common.entity import SITEMAP
 from common.logging import configure_logger
 from common.storage import get_run_id, load_raw_file, save_cleansed_df
+from tasks.chunk_sitemaps_to_parse import chunk_sitemaps_to_parse
 from tasks.list_downloaded_sitemaps import list_downloaded_sitemaps
 from tasks.list_parsed_sitemaps import list_parsed_sitemaps
 from tasks.list_sitemaps_to_parse import list_sitemaps_to_parse
@@ -41,16 +42,18 @@ def parse_sitemaps():
     if df.empty:
         logger.info('Nothing to parse')
         return
-    df = df.sort_values(by=['timestamp', 'file_name'])
-    df['url'] = df.apply(load_and_parse, axis=1)
-    df = df.explode('url')
-    df[['year', 'moth', 'day']] = df['timestamp'].str.split('-', 2, expand=True)
-    df['job_id'] = extract_job_id(df['url'])
-    df['sitemap_hashkey'] = df.apply(
-        lambda row: hashlib.md5(f'{row["job_id"]}{HASHKEY_SEPARATOR}{row["timestamp"]}'.encode('utf-8')).hexdigest(),
-        axis=1)
+    dfs = chunk_sitemaps_to_parse(run_id, df)
+    for df in dfs:
+        df = df.sort_values(by=['timestamp', 'file_name'])
+        df['url'] = df.apply(load_and_parse, axis=1)
+        df = df.explode('url')
+        df[['year', 'moth', 'day']] = df['timestamp'].str.split('-', 2, expand=True)
+        df['job_id'] = extract_job_id(df['url'])
+        df['sitemap_hashkey'] = df.apply(
+            lambda row: hashlib.md5(f'{row["job_id"]}{HASHKEY_SEPARATOR}{row["timestamp"]}'.encode('utf-8')).hexdigest(),
+            axis=1)
 
-    save_cleansed_df(df, SITEMAP)
+        save_cleansed_df(df, SITEMAP)
 
 
 if __name__ == "__main__":
