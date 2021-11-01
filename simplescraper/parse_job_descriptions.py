@@ -1,3 +1,4 @@
+import hashlib
 import os
 
 import pandas as pd
@@ -5,6 +6,7 @@ import pandas as pd
 from common.entity import JOB_DESCRIPTION
 from common.logging import get_logger, configure_logger
 from common.storage import get_run_id, load_raw_file, save_cleansed_df
+from parse_sitemaps import HASHKEY_SEPARATOR
 from tasks.chunk_job_descriptions_to_parse import chunk_job_descriptions_to_parse
 from tasks.list_downloaded_job_descriptions import list_downloaded_job_descriptions
 from tasks.list_job_descriptions_to_parse import list_job_descriptions_to_parse
@@ -55,6 +57,10 @@ def parse_job_descriptions():
         df = df.drop(columns=['parsed_content'])
         df[['year', 'moth', 'day']] = df['timestamp'].str.split('-', 2, expand=True)
         df = df.drop(columns=['chunk_id', 'pos_in_chunk', 'chunk_size'])
+        df['job_description_hashkey'] = df.apply(
+            lambda row: hashlib.md5(
+                f'{row["job_id"]}{HASHKEY_SEPARATOR}{row["timestamp"]}'.encode('utf-8')).hexdigest(),
+            axis=1)
 
         save_cleansed_df(df, JOB_DESCRIPTION)
 
