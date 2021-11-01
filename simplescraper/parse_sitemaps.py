@@ -33,7 +33,10 @@ def parse_sitemaps():
     df_parsed = list_parsed_sitemaps(run_id)
     df = list_sitemaps_to_parse(run_id, df_downloaded, df_parsed)
     if DEBUG:
-        df = df[df['timestamp'] == '2021-10-20']
+        df = df[df['timestamp'] == '2021-11-01']
+    if df.empty:
+        logger.info('Nothing to parse')
+        return
     df['url'] = df.apply(load_and_parse, axis=1)
     df = df.explode('url')
     df['job_id'] = extract_job_id(df['url'])
