@@ -15,6 +15,7 @@ import pathlib
 import pandas as pd
 import pyarrow as pa
 import pyarrow.parquet as pq
+from pyarrow import ArrowInvalid
 
 from common.entity import Entity
 from common.env_variables import DATA_SOURCE_NAME, RAW_DIR, CLEANSED_DIR, TEMP_DIR
@@ -116,5 +117,5 @@ def load_cleansed_df(entity: Entity, columns=None, filters=None) -> pd.DataFrame
     try:
         table = pq.read_table(root_path, columns, filters=filters, use_legacy_dataset=False)
         return table.to_pandas()
-    except FileNotFoundError:
+    except (FileNotFoundError, ArrowInvalid):
         return pd.DataFrame(columns=columns)
