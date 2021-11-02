@@ -47,9 +47,9 @@ def parse_sitemaps():
         df = df.sort_values(by=['timestamp', 'file_name'])
         df['url'] = df.apply(load_and_parse, axis=1)
         df = df.explode('url')
-        df[['year', 'moth', 'day']] = df['timestamp'].str.split('-', 2, expand=True)
+        df[['year', 'month', 'day']] = df['timestamp'].str.split('-', 2, expand=True)
         df['job_id'] = extract_job_id(df['url'])
-        df['sitemap_hashkey'] = df.apply(
+        df['sitemap_ingestion_hashkey'] = df.apply(
             lambda row: hashlib.md5(f'{row["job_id"]}{HASHKEY_SEPARATOR}{row["timestamp"]}'.encode('utf-8')).hexdigest(),
             axis=1)
 

@@ -55,9 +55,9 @@ def parse_job_descriptions():
         df['parsed_content'] = df.apply(load_and_parse, axis=1)
         df = df.join(pd.json_normalize(df['parsed_content']))
         df = df.drop(columns=['parsed_content'])
-        df[['year', 'moth', 'day']] = df['timestamp'].str.split('-', 2, expand=True)
+        df[['year', 'month', 'day']] = df['timestamp'].str.split('-', 2, expand=True)
         df = df.drop(columns=['chunk_id', 'pos_in_chunk', 'chunk_size'])
-        df['job_description_hashkey'] = df.apply(
+        df['job_description_ingestion_hashkey'] = df.apply(
             lambda row: hashlib.md5(
                 f'{row["job_id"]}{HASHKEY_SEPARATOR}{row["timestamp"]}'.encode('utf-8')).hexdigest(),
             axis=1)

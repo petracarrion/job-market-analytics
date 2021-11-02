@@ -101,13 +101,21 @@ def load_temp_df(run_id: str, file_name: str) -> pd.DataFrame:
     return pd.read_csv(os.path.join(TEMP_DIR, run_id, file_name))
 
 
+def list_cleansed_files(entity: Entity, relative_paths=True):
+    dir_path = os.path.join(CLEANSED_DIR, DATA_SOURCE_NAME, entity.name)
+    file_list = [f for f in glob.iglob(dir_path + '/**/*.parquet', recursive=True) if os.path.isfile(f)]
+    if relative_paths:
+        file_list = [file_path.replace(dir_path + '/', '') for file_path in file_list]
+    return file_list
+
+
 def save_cleansed_df(df: pd.DataFrame, entity: Entity):
     # noinspection PyArgumentList
     table: pa.Table = pa.Table.from_pandas(df, preserve_index=False)
     root_path = os.path.join(LAYER_DIR[CLEANSED_LAYER], DATA_SOURCE_NAME, entity.name)
     pq.write_to_dataset(table,
                         root_path,
-                        partition_cols=['year', 'moth', 'day'],
+                        partition_cols=['year', 'month', 'day'],
                         use_legacy_dataset=False)
 
 
