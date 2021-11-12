@@ -12,6 +12,7 @@ def create_staging_tables(entity: Entity):
 
     file_list = list_cleansed_files(entity)
     file_list = [f'{PARQUET_DFW_DIR}{entity.name}/{file_path}' for file_path in file_list]
+    file_list = sorted(file_list)
     file_list = ' '.join(file_list)
 
     sql_stamment = f'''
