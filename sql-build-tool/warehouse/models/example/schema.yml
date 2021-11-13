@@ -1,21 +1,39 @@
 
 version: 2
 
-models:
-  - name: my_first_dbt_model
-    description: "A starter dbt model"
-    columns:
-      - name: id
-        description: "The primary key for this table"
-        tests:
-          - unique
-          - not_null
+sources:
+  - name: public
+    tables:
+      - name: stg_sitemap
+        description: "The Staging Sitemap Source"
+        columns:
+          - name: sitemap_ingestion_hashkey
+            description: "The Sitemap Ingestion Hashkey"
+          - name: job_id
+            description: "The Job Id"
+          - name: timestamp
+            description: The ingestion timestamp
+          - name: url
+            description: "The URL"
+      - name: stg_job_description
+        description: "The Staging Sitemap Source"
+        columns:
+          - name: job_description_ingestion_hashkey
+            description: "The Job Description Ingestion Hashkey"
+          - name: job_id
+            description: "The Job Id"
+          - name: timestamp
+            description: The ingestion timestamp
+          - name: url
+            description: "The URL"
+          - name: file_name
+            description: "The File Name for Lineage Purposes"
 
-  - name: my_second_dbt_model
-    description: "A starter dbt model"
+models:
+  - name: hub_job_offer
+    description: "The Job Offer Model"
     columns:
-      - name: id
-        description: "The primary key for this table"
+      - name: job_id
+        description: "The Job ID"
         tests:
-          - unique
           - not_null
