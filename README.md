@@ -42,7 +42,7 @@ In order to compute the data, we use two different approaches.
 
 ## Frequently Asked Questions
 
-### What questions can I answer with this project?
+### What questions can be answered with this project?
 
 Here are some examples of what we can answer:
 
