@@ -30,8 +30,8 @@ sources:
             description: "The File Name for Lineage Purposes"
 
 models:
-  - name: hub_job_offer
-    description: "The Job Offer Model"
+  - name: hub_job
+    description: "The Job Hub Model"
     columns:
       - name: job_id
         description: "The Job ID"
