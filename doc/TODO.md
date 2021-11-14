@@ -5,6 +5,8 @@
 - [ ] Add a check for the network connection before we start crawling
 - [ ] Add orchestration with Airflow
 - [ ] Create the Data Vault
+- [ ] Add more granularity to the ingestion time in the raw data
+  - At least at the second level using the ingestion task start time
 
 ## Done
 
