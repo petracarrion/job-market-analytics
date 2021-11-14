@@ -70,3 +70,9 @@ libraries are available like [Pyarrow](https://arrow.apache.org/docs/python/parq
 
 PostgreSQL is a very robust database with standard SQL that can run locally and its performance is good enough for the
 current data size and number of columns.
+
+### How big is your data?
+
+It is around 30 GB in raw format after the initial load and being scraping the web source for 6 weeks, and it grows
+around 500 MB every day. After cleansing and compressing the data to Parquet is around 30 times smaller, since we can
+get rid of a great deal of HTML, CSS and JS because it does not provide any extra information for my use cases.
