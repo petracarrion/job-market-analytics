@@ -2,21 +2,25 @@
 
 The aim of this project is to develop an end-to-end Data Platform to explore and learn new technologies.
 
+
 ## Architecture
 
 ![Architecture Overview](doc/architecture-overview.drawio.svg)
 
+
 ## Storage
+
 
 ### Data Lake
 
 The Data Lake is basically a file system on my local computer, but could be easily transfered to a Cloud Blob Storage (
 like AWS S3 or Azure Blob Storage) if needed. The current Data Lake we have two layers:
 
-- The Raw Layer, where the information from the data source are stored in the same file format as ingested (e.g. HTML or
+- The **Raw Layer**, where the information from the data source are stored in the same file format as ingested (e.g. HTML or
   XML).
-- The Cleansed Layer, where we store the information in Parquet, which means that the information is stored in a tabular
+- The **Cleansed Layer**, where we store the information in Parquet, which means that the information is stored in a tabular
   format with well-defined columns.
+
 
 ### Data Warehouse
 
@@ -25,7 +29,18 @@ might not be the best choice for a datawarehouse since it is row-column-oriented
 of columns and a relative small data size. Another advantage of PostgreSQL is that I can run it easily on my computer
 via Docker so that I can avoid cloud service costs. We will divide the datawarehouse in 3 schemas:
 
-- Staging, which are basically foreign tables referencing the Parquet files on the Data Lake Cleansed Layer.
-- Data Vault, where the data is modelled and historized using
+- **Staging**, which are basically foreign tables referencing the Parquet files on the Data Lake Cleansed Layer.
+- **Data Vault**, where the data is modelled and historized using
   the [Data Vault Specification](https://danlinstedt.com/wp-content/uploads/2018/06/DVModelingSpecs2-0-1.pdf).
-- Data Mart, which will be the consuming layer for our BI Tool.
+- **Data Mart**, which will be the consuming layer for our BI Tool.
+
+
+## Computing
+
+In order to compute the data, we use two different approaches.
+
+- **Python** for the data ingestion, when we crawl and scrape data directly from the data source. And also for the data
+  transformation from the Raw to the Cleansed layer. All Python code is divided in atomic tasks and these will be
+  automated by [Airflow](https://airflow.apache.org/).
+- **SQL** for the transformations of the data inside the Data Warehouse. The SQL tasks are automated and orchestrated
+  by [dbt](https://www.getdbt.com/).
