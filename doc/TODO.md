@@ -7,6 +7,7 @@
 - [ ] Create the Data Vault
 - [ ] Add more granularity to the ingestion time in the raw data
   - At least at the second level using the ingestion task start time
+- [ ] Save the whole html document from the source instead of just a fragment of it
 
 ## Done
 
