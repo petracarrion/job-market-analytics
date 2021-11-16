@@ -9,6 +9,7 @@
     - At least at the second level using the ingestion task start time
 - [ ] Save the whole html document from the source instead of just a fragment of it, so that no information is lost if
   the HTML format changes
+- [ ] Add logging on the sitemap scraper
 
 ## Done
 
