@@ -4,7 +4,7 @@ import os
 import pandas as pd
 
 from common.entity import JOB_DESCRIPTION
-from common.logging import get_logger, configure_logger
+from common.logging import logger, configure_logger
 from common.storage import get_run_id, load_raw_file, save_cleansed_df
 from parse_sitemaps import HASHKEY_SEPARATOR
 from tasks.chunk_job_descriptions_to_parse import chunk_job_descriptions_to_parse
@@ -14,8 +14,6 @@ from tasks.list_parsed_job_descriptions import list_parsed_job_descriptions
 from tasks.parse_job_description import parse_job_description
 
 DEBUG = True
-
-logger = get_logger()
 
 
 def load_and_parse(row) -> str:

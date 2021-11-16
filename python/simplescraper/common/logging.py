@@ -9,5 +9,4 @@ def configure_logger(run_id):
     logger.add(os.path.join(TEMP_DIR, run_id, '00_pipeline_run.log'))
 
 
-def get_logger():
-    return logger
+logger = logger

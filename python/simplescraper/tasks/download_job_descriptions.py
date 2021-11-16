@@ -6,12 +6,10 @@ from playwright.async_api import async_playwright, Error, TimeoutError
 
 from common.entity import JOB_DESCRIPTION
 from common.env_variables import DATA_SOURCE_URL, SEMAPHORE_COUNT, MAX_CHUNK_SIZE, LATEST_RUN_ID
-from common.logging import get_logger
+from common.logging import logger
 from common.storage import save_raw_file, load_temp_df, JOB_DESCRIPTIONS_TO_DOWNLOAD_CSV
 
 TAB_HITS = 30
-
-logger = get_logger()
 
 
 class PageNotFound(Exception):

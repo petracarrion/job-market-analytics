@@ -9,12 +9,12 @@
     - At least at the second level using the ingestion task start time
 - [ ] Save the whole html document from the source instead of just a fragment of it, so that no information is lost if
   the HTML format changes
-- [ ] Add logging on the sitemap scraper
 - [ ] Add a file in the raw layer with the job execution information for each execution
 
 ## Done
 
+- [x] Add logging to the sitemap scraper
 - [x] Find a way to pass the list of parquet files to PostgreSQL.
-    - Result: Use Python to create the staging fdw staging tables referencing the parquet files
+  - Result: Use Python to create the staging fdw staging tables referencing the parquet files
 - [x] Add the _job_id_ to the _sitemap_ and _job_description_ on the cleansed layer
 - [x] Create a _ingestion_id_ with the hash of the _job_id_ and _timestap_ on the cleansed layer
