@@ -6,13 +6,13 @@
 - [ ] Add orchestration with Airflow
 - [ ] Create the Data Vault
 - [ ] Add more granularity to the ingestion time in the raw data
-    - At least at the second level using the ingestion task start time
-- [ ] Save the whole html document from the source instead of just a fragment of it, so that no information is lost if
-  the HTML format changes
+  - At least at the second level using the ingestion task start time
 - [ ] Add a file in the raw layer with the job execution information for each execution
 
 ## Done
 
+- [x] Save the whole html document from the source instead of just a fragment of it, so that no information is lost if
+  the HTML format changes
 - [x] Add logging to the sitemap scraper
 - [x] Find a way to pass the list of parquet files to PostgreSQL.
   - Result: Use Python to create the staging fdw staging tables referencing the parquet files

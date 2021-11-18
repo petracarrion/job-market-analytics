@@ -64,10 +64,8 @@ async def download_urls(df):
                         for i in range(TAB_HITS):
                             await page.keyboard.press('Tab')
                         await page.wait_for_selector('.listing-content', timeout=10000, state='attached')
-                    listing_content = await page.query_selector('.listing-content')
-                    listing_content_html = await listing_content.inner_html()
-                    listing_content_html = listing_content_html.replace('\xad', '')
-                    save_raw_file(listing_content_html, JOB_DESCRIPTION, file_name)
+                    page_content = await page.content()
+                    save_raw_file(page_content, JOB_DESCRIPTION, file_name)
                     logger.success(f'Chunk {chunk_id}: Dowloaded   ({pos_in_chunk}/{chunk_size}): {url}')
                 except TimeoutError:
                     logger.warning(f'TimeoutError: Timeout error while requesting the page {url}')
