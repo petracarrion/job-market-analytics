@@ -59,7 +59,7 @@ over-engineered on purpose.
 
 ### Are you planning to create a public Web or Mobile Application with this?
 
-No, at least, not at the moment. This is just for educative purposes.
+No, at least not at the moment. This is just for educative purposes.
 
 ### Why did you choose Parquet as file format for the Cleansed Layer in the Data Lake?
 
