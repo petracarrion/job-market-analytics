@@ -1,4 +1,3 @@
-
 class Entity:
     def __init__(self, name, stg_columns):
         self.name = name

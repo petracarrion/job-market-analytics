@@ -13,7 +13,7 @@ REQUEST_HEADERS = {
     "sec-fetch-site": "none",
     "sec-fetch-user": "?1",
     "upgrade-insecure-requests": "1"
-  }
+}
 
 
 def get_url_content(url):
