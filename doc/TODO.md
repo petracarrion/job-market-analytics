@@ -15,6 +15,7 @@
     - number of urls downloaded
     - number of failed urls
     - failed urls (a list of string)
+- [ ] Allow one retry after the browser crashes
 
 ## Done
 
