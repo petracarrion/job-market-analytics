@@ -7,7 +7,7 @@
 - [ ] Create the Data Vault
 - [ ] Add more granularity to the ingestion time in the raw data
   - At least at the second level using the ingestion task start time
-- [ ] Add a file in the raw layer with the job execution information for each execution
+- [ ] Add a file in the raw layer with the scrape run information for each execution
   - This file could be in JSON format and have the following fields:
     - run_id
     - timestamp
