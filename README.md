@@ -30,6 +30,10 @@ via Docker so that I can avoid cloud service costs. We will divide the datawareh
   the [Data Vault Specification](https://danlinstedt.com/wp-content/uploads/2018/06/DVModelingSpecs2-0-1.pdf).
 - **Data Mart**, which will be the consuming layer for our BI Tool.
 
+### Data Vault Model
+
+![Data Vault Model](doc/data-vault-model.drawio.svg)
+
 ## Computing
 
 In order to compute the data, we use two different approaches.
