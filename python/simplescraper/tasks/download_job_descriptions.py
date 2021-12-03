@@ -18,11 +18,11 @@ class PageNotFound(Exception):
 
 async def open_first_page(browser):
     page = await browser.new_page()
-    await page.goto(DATA_SOURCE_URL)
+    await page.goto(DATA_SOURCE_URL, wait_until='domcontentloaded')
     await page.click('#ccmgt_explicit_accept')
     for i in range(TAB_HITS * 2):
         await page.keyboard.press('Tab')
-    await page.goto(DATA_SOURCE_URL + 'de/sitemap/')
+    await page.goto(DATA_SOURCE_URL + 'de/sitemap/', wait_until='domcontentloaded')
     for i in range(TAB_HITS * 2):
         await page.keyboard.press('Tab')
     return page
@@ -49,18 +49,18 @@ async def download_urls(df):
                 try:
                     logger.debug(f'Chunk {chunk_id}: Downloading ({pos_in_chunk}/{chunk_size}): {url}')
                     try:
-                        response = await page.goto(url)
+                        response = await page.goto(url, wait_until='domcontentloaded')
                         for i in range(TAB_HITS):
                             await page.keyboard.press('Tab')
                         if response.status >= 400 and response.status >= 400 < 500:
                             raise PageNotFound('Page not found')
                         await page.wait_for_selector('.listing-content', timeout=5000, state='attached')
-                    except TimeoutError:
-                        logger.warning(f'TimeoutError: second try for {url}')
-                        await page.goto(DATA_SOURCE_URL + 'de/sitemap/')
+                    except TimeoutError as err:
+                        logger.warning(f'TimeoutError: second try for {url} because of the following error: {err}')
+                        await page.goto(DATA_SOURCE_URL + 'de/sitemap/', wait_until='domcontentloaded')
                         for i in range(TAB_HITS):
                             await page.keyboard.press('Tab')
-                        await page.goto(url)
+                        await page.goto(url, wait_until='domcontentloaded')
                         for i in range(TAB_HITS):
                             await page.keyboard.press('Tab')
                         await page.wait_for_selector('.listing-content', timeout=10000, state='attached')
