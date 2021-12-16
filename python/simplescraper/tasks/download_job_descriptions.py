@@ -66,7 +66,7 @@ async def download_urls(df):
                         await page.wait_for_selector('.listing-content', timeout=10000, state='attached')
                     page_content = await page.content()
                     save_raw_file(page_content, JOB_DESCRIPTION, file_name)
-                    logger.success(f'Chunk {chunk_id}: Dowloaded   ({pos_in_chunk}/{chunk_size}): {url}')
+                    logger.success(f'Chunk {chunk_id}: downloaded   ({pos_in_chunk}/{chunk_size}): {url}')
                 except TimeoutError:
                     logger.warning(f'TimeoutError: Timeout error while requesting the page {url}')
                 except AttributeError:
@@ -106,11 +106,11 @@ async def safe_download_urls(urls):
         return await download_urls(urls)
 
 
-async def run_async_tasks(chucks):
+async def run_async_tasks(chunks):
     tasks = [
         asyncio.ensure_future(safe_download_urls(chunk))  # creating task starts coroutine
         for chunk
-        in chucks
+        in chunks
     ]
     await asyncio.gather(*tasks)
 
@@ -136,7 +136,7 @@ def download_job_descriptions(run_id, df_to_download):
     start_time = time.time()
     logger.info(f'Starting downloading job descriptions for job: {run_id}')
     logger.info(f'Concurrent tasks: {SEMAPHORE_COUNT}')
-    logger.info(f'Urls to dowload: {total_count}')
+    logger.info(f'Urls to download: {total_count}')
 
     loop = asyncio.get_event_loop()
     try:
