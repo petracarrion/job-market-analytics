@@ -1,3 +1,5 @@
+import os
+
 from common.logging import configure_logger
 from common.storage import get_run_id
 from tasks.download_job_descriptions import download_job_descriptions
@@ -14,7 +16,7 @@ def scraper_data_source():
     df_to_download = list_job_descriptions_to_download(run_id, df_sitemap, df_downloaded)
     download_job_descriptions(run_id, df_to_download)
 
-    # os.system('say -v Zuzana A je to')
+    os.system('say -v Fiona b')
 
 
 if __name__ == "__main__":
