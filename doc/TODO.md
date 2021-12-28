@@ -2,7 +2,6 @@
 
 ## Open
 
-- [ ] Add a check for the network connection before we start crawling
 - [ ] Add orchestration with Airflow
 - [ ] Create a report that shows how many job offers are online at a given date
 - [ ] Allow one retry after the browser crashes
@@ -20,6 +19,7 @@
 
 ## In Progress
 
+- [ ] Add a check for the network connection before we start crawling
 - [ ] Create the Data Vault
 
 ## Done
