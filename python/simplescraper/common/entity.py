@@ -24,6 +24,11 @@ STG_COLUMNS_JOB_DESCRIPTION = [
     Column('timestamp', 'text'),
     Column('job_id', 'text'),
     Column('url', 'text'),
+    Column('title', 'text'),
+    Column('company_name', 'text'),
+    Column('location', 'text'),
+    Column('work_type', 'text'),
+    Column('description', 'text'),
     Column('file_name', 'text'),
 ]
 
