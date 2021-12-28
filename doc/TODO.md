@@ -19,11 +19,11 @@
 
 ## In Progress
 
-- [ ] Add a check for the network connection before we start crawling
 - [ ] Create the Data Vault
 
 ## Done
 
+- [x] Add a check for the network connection before we start crawling
 - [x] Save the whole html document from the source instead of just a fragment of it, so that no information is lost if
   the HTML format changes
 - [x] Add logging to the sitemap scraper

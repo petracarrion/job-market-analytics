@@ -2,6 +2,11 @@
 
 # Add the following to the cron jobs: 42 * * * * REPLACE_ME/cron_job.sh
 
+scutil --nc list | grep Connected | grep vpn || {
+  echo "Please connect to the VPN"
+  exit 1
+}
+
 SCRIPTPATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 cd "$SCRIPTPATH" || exit
 
