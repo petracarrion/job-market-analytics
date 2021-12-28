@@ -4,6 +4,8 @@
 
 - [ ] Add a check for the network connection before we start crawling
 - [ ] Add orchestration with Airflow
+- [ ] Create a report that shows how many job offers are online at a given date
+- [ ] Allow one retry after the browser crashes
 - [ ] Add more granularity to the ingestion time in the raw data
     - At least at the second level using the ingestion task start time
 - [ ] Add a file in the raw layer with the scrape run information for each execution
@@ -14,7 +16,7 @@
         - number of urls downloaded
         - number of failed urls
         - failed urls (a list of string)
-- [ ] Allow one retry after the browser crashes
+- [ ] Optimize the function to create the chunks
 
 ## In Progress
 
