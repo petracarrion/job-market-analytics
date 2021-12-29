@@ -5,4 +5,4 @@ COPY *.sh /usr/local/bin/
 RUN s1-download-arrow.sh
 RUN s2-install-arrow.sh
 RUN s3-clone-parquet-fdw.sh
-RUN s4-make-parquet-fdw.sh
+RUN s4-install-parquet-fdw.sh

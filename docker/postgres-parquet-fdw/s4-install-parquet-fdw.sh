@@ -6,5 +6,5 @@ apt-get -y install \
      cmake \
      postgresql-server-dev-14
 
-cd parquet_fdw
+cd parquet_fdw || exit
 make install
