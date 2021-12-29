@@ -1,9 +1,9 @@
 import asyncio
-import math
 import time
 
 from playwright.async_api import async_playwright, Error, TimeoutError
 
+from common.chunking import get_chunk_size
 from common.entity import JOB_DESCRIPTION
 from common.env_variables import DATA_SOURCE_URL, SEMAPHORE_COUNT, MAX_CHUNK_SIZE, LATEST_RUN_ID
 from common.logging import logger
@@ -115,13 +115,6 @@ async def run_async_tasks(chunks):
     await asyncio.gather(*tasks)
 
 
-def get_chunk_size(total_count):
-    chunk_size = total_count / SEMAPHORE_COUNT
-    chunk_size = int(math.ceil(chunk_size))
-    chunk_size = min(chunk_size, MAX_CHUNK_SIZE)
-    return chunk_size
-
-
 def download_job_descriptions(run_id, df_to_download):
     df = df_to_download
 
@@ -130,7 +123,7 @@ def download_job_descriptions(run_id, df_to_download):
         exit(0)
 
     total_count = df.shape[0]
-    chunk_size = get_chunk_size(total_count)
+    chunk_size = get_chunk_size(total_count, SEMAPHORE_COUNT, MAX_CHUNK_SIZE)
     chunks = split_dataframe(df, chunk_size)
 
     start_time = time.time()
