@@ -5,7 +5,7 @@ from playwright.async_api import async_playwright, Error, TimeoutError
 
 from common.chunking import get_chunk_size
 from common.entity import JOB_DESCRIPTION
-from common.env_variables import DATA_SOURCE_URL, SEMAPHORE_COUNT, MAX_CHUNK_SIZE, LATEST_RUN_ID
+from common.env_variables import DATA_SOURCE_URL, SEMAPHORE_COUNT, MAX_CHUNK_SIZE, LATEST_RUN_ID, RUN_HEADLESS
 from common.logging import logger
 from common.storage import save_raw_file, load_temp_df, JOB_DESCRIPTIONS_TO_DOWNLOAD_CSV
 
@@ -32,7 +32,7 @@ async def download_urls(df):
     if df.empty:
         return
     async with async_playwright() as p:
-        browser = await p.chromium.launch(headless=False, slow_mo=250)
+        browser = await p.chromium.launch(headless=RUN_HEADLESS, slow_mo=250)
         try:
             chunk_pos = df['chunk_pos'].values[0]
             num_chunks = df['num_chunks'].values[0]
