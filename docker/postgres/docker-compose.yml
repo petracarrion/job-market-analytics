@@ -4,7 +4,7 @@ version: '3.8'
 services:
   postgres:
     build:
-      context: ./postgres-parquet-fdw
+      context: postgres-parquet-fdw
       target: postgres-parquet-fdw
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
