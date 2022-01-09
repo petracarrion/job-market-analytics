@@ -2,7 +2,6 @@
 
 ## Open
 
-- [ ] Add orchestration with Airflow
 - [ ] Create a report that shows how many job offers are online at a given date
 - [ ] Allow one retry after the browser crashes
 - [ ] Add more granularity to the ingestion time in the raw data
@@ -18,10 +17,11 @@
 
 ## In Progress
 
-- [ ] Create the Data Vault
+- [ ] Add orchestration with Airflow
 
 ## Done
 
+- [x] Create the Data Vault
 - [x] Optimize the function to create the chunks
 - [x] Add a check for the network connection before we start crawling
 - [x] Save the whole html document from the source instead of just a fragment of it, so that no information is lost if
