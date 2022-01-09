@@ -22,6 +22,7 @@ services:
       - AIRFLOW_EXECUTOR=CeleryExecutor
       - AIRFLOW_WEBSERVER_HOST=airflow
     volumes:
+      - ${AIRFLOW_DAGS_VOLUME}:/opt/bitnami/airflow/dags
       - ${AIRFLOW_SCHEDULER_VOLUME}:/bitnami
   airflow-worker:
     # TODO: to be reverted to use proper registry/distro on T39132
@@ -37,6 +38,7 @@ services:
       - AIRFLOW_EXECUTOR=CeleryExecutor
       - AIRFLOW_WEBSERVER_HOST=airflow
     volumes:
+      - ${AIRFLOW_DAGS_VOLUME}:/opt/bitnami/airflow/dags
       - ${AIRFLOW_WORKER_VOLUME}:/bitnami
   airflow:
     image: docker.io/bitnami/airflow:2
@@ -56,4 +58,5 @@ services:
     ports:
       - '8080:8080'
     volumes:
+      - ${AIRFLOW_DAGS_VOLUME}:/opt/bitnami/airflow/dags
       - ${AIRFLOW_VOLUME}:/bitnami
