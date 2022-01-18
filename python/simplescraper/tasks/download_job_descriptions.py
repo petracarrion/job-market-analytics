@@ -98,10 +98,8 @@ def split_dataframe(df, chunk_size):
     return chunks
 
 
-sem = asyncio.Semaphore(SEMAPHORE_COUNT)
-
-
 async def safe_download_urls(urls):
+    sem = asyncio.Semaphore(SEMAPHORE_COUNT)
     async with sem:  # semaphore limits num of simultaneous downloads
         return await download_urls(urls)
 
