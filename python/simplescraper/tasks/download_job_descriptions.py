@@ -131,7 +131,8 @@ def download_job_descriptions(run_id, df_to_download):
     logger.info(f'Concurrent tasks: {SEMAPHORE_COUNT}')
     logger.info(f'Urls to download: {total_count}')
 
-    loop = asyncio.get_event_loop()
+    loop = asyncio.SelectorEventLoop()
+    asyncio.set_event_loop(loop)
     try:
         loop.run_until_complete(run_async_tasks(chunks))
     finally:

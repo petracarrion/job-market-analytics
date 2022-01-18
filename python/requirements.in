@@ -1,5 +1,6 @@
 beautifulsoup4
 dbt-postgres
+Flask
 lxml
 loguru
 pandas

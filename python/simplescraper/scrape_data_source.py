@@ -8,7 +8,7 @@ from tasks.list_downloaded_job_descriptions import list_downloaded_job_descripti
 from tasks.list_job_descriptions_to_download import list_job_descriptions_to_download
 
 
-def scraper_data_source():
+def scrape_data_source():
     run_id = get_run_id()
     configure_logger(run_id)
     df_downloaded = list_downloaded_job_descriptions(run_id)
@@ -20,4 +20,4 @@ def scraper_data_source():
 
 
 if __name__ == "__main__":
-    scraper_data_source()
+    scrape_data_source()
