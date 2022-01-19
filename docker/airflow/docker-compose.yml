@@ -19,11 +19,11 @@ services:
       - AIRFLOW_DATABASE_USERNAME=${AIRFLOW_DATABASE_USERNAME}
       - AIRFLOW_DATABASE_PASSWORD=${AIRFLOW_DATABASE_PASSWORD}
       - AIRFLOW_LOAD_EXAMPLES=${AIRFLOW_LOAD_EXAMPLES}
+      - AIRFLOW_CONN_HTTP_DEFAULT=${AIRFLOW_CONN_HTTP_DEFAULT}
       - AIRFLOW_EXECUTOR=CeleryExecutor
       - AIRFLOW_WEBSERVER_HOST=airflow
     volumes:
       - ${AIRFLOW_DAGS_VOLUME}:/opt/bitnami/airflow/dags
-      - ${AIRFLOW_PYTHON_VOLUME}:/bitnami/python
       - ${AIRFLOW_SCHEDULER_VOLUME}:/bitnami
   airflow-worker:
     # TODO: to be reverted to use proper registry/distro on T39132
@@ -36,11 +36,11 @@ services:
       - AIRFLOW_DATABASE_USERNAME=${AIRFLOW_DATABASE_USERNAME}
       - AIRFLOW_DATABASE_PASSWORD=${AIRFLOW_DATABASE_PASSWORD}
       - AIRFLOW_LOAD_EXAMPLES=${AIRFLOW_LOAD_EXAMPLES}
+      - AIRFLOW_CONN_HTTP_DEFAULT=${AIRFLOW_CONN_HTTP_DEFAULT}
       - AIRFLOW_EXECUTOR=CeleryExecutor
       - AIRFLOW_WEBSERVER_HOST=airflow
     volumes:
       - ${AIRFLOW_DAGS_VOLUME}:/opt/bitnami/airflow/dags
-      - ${AIRFLOW_PYTHON_VOLUME}:/bitnami/python
       - ${AIRFLOW_WORKER_VOLUME}:/bitnami
   airflow:
     image: docker.io/bitnami/airflow:2
@@ -51,6 +51,7 @@ services:
       - AIRFLOW_DATABASE_USERNAME=${AIRFLOW_DATABASE_USERNAME}
       - AIRFLOW_DATABASE_PASSWORD=${AIRFLOW_DATABASE_PASSWORD}
       - AIRFLOW_LOAD_EXAMPLES=${AIRFLOW_LOAD_EXAMPLES}
+      - AIRFLOW_CONN_HTTP_DEFAULT=${AIRFLOW_CONN_HTTP_DEFAULT}
       - AIRFLOW_USERNAME=${AIRFLOW_USERNAME}
       - AIRFLOW_PASSWORD=${AIRFLOW_PASSWORD}
       - AIRFLOW_EMAIL=${AIRFLOW_EMAIL}
@@ -61,5 +62,4 @@ services:
       - '8080:8080'
     volumes:
       - ${AIRFLOW_DAGS_VOLUME}:/opt/bitnami/airflow/dags
-      - ${AIRFLOW_PYTHON_VOLUME}:/bitnami/python
       - ${AIRFLOW_VOLUME}:/bitnami

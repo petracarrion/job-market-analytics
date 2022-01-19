@@ -18,10 +18,10 @@
 
 ## In Progress
 
-- [ ] Add orchestration with Airflow
 
 ## Done
 
+- [x] Add orchestration with Airflow
 - [x] Create the Data Vault
 - [x] Optimize the function to create the chunks
 - [x] Add a check for the network connection before we start crawling
