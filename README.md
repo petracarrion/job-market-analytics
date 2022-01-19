@@ -39,8 +39,8 @@ via Docker so that I can avoid cloud service costs. We will divide the datawareh
 In order to compute the data, we use two different approaches.
 
 - **Python** for the data ingestion, when we crawl and scrape data directly from the data source. And also for the data
-  transformation from the Raw to the Cleansed layer. All Python code is divided in atomic tasks and these will be
-  automated by [Airflow](https://airflow.apache.org/).
+  transformation from the Raw to the Cleansed layer. All Python code is divided in atomic tasks and these are
+- orchestrated by [Airflow](https://airflow.apache.org/).
 - **SQL** for the transformations of the data inside the Data Warehouse. The SQL tasks are automated and orchestrated
   by [dbt](https://www.getdbt.com/).
 
