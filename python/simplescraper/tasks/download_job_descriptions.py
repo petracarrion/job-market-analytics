@@ -46,6 +46,9 @@ async def download_urls(df):
                 url = url_dict['url']
                 pos_in_chunk = url_dict['pos_in_chunk']
                 file_name = url.split('/')[-1]
+                if len(file_name) > 255:
+                    logger.error(f'Skipping the following file name until a way to handle it is found: {file_name}')
+                    continue
                 try:
                     logger.debug(f'Chunk {chunk_id}: Downloading ({pos_in_chunk}/{chunk_size}): {url}')
                     try:

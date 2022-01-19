@@ -2,6 +2,7 @@
 
 ## Open
 
+- [ ] Fix bug with file names longer than 255 characters
 - [ ] Create a report that shows how many job offers are online at a given date
 - [ ] Allow one retry after the browser crashes
 - [ ] Add more granularity to the ingestion time in the raw data
