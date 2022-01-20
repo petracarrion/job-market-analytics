@@ -12,7 +12,7 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
     networks:
       - postgres
-    restart: always
+    restart: unless-stopped
     env_file: .env
     logging:
       options:

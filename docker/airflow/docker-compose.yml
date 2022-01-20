@@ -22,6 +22,7 @@ services:
       - AIRFLOW_CONN_HTTP_DEFAULT=${AIRFLOW_CONN_HTTP_DEFAULT}
       - AIRFLOW_EXECUTOR=CeleryExecutor
       - AIRFLOW_WEBSERVER_HOST=airflow
+    restart: unless-stopped
     volumes:
       - ${AIRFLOW_DAGS_VOLUME}:/opt/bitnami/airflow/dags
       - ${AIRFLOW_SCHEDULER_VOLUME}:/bitnami
@@ -39,6 +40,7 @@ services:
       - AIRFLOW_CONN_HTTP_DEFAULT=${AIRFLOW_CONN_HTTP_DEFAULT}
       - AIRFLOW_EXECUTOR=CeleryExecutor
       - AIRFLOW_WEBSERVER_HOST=airflow
+    restart: unless-stopped
     volumes:
       - ${AIRFLOW_DAGS_VOLUME}:/opt/bitnami/airflow/dags
       - ${AIRFLOW_WORKER_VOLUME}:/bitnami
@@ -60,6 +62,7 @@ services:
       - AIRFLOW_EXECUTOR=CeleryExecutor
     ports:
       - '8080:8080'
+    restart: unless-stopped
     volumes:
       - ${AIRFLOW_DAGS_VOLUME}:/opt/bitnami/airflow/dags
       - ${AIRFLOW_VOLUME}:/bitnami
