@@ -6,8 +6,12 @@ from common.storage import load_temp_df, DOWNLOADED_JOB_DESCRIPTIONS_CSV, SITEMA
     JOB_DESCRIPTIONS_TO_DOWNLOAD_CSV
 
 
-def list_job_descriptions_to_download(run_timestamp, df_sitemap_urls, df_downloaded):
+def list_job_descriptions_to_download(run_timestamp, df_sitemap_urls=None, df_downloaded=None):
     logger.info('list_job_descriptions_to_download: start')
+
+    df_sitemap_urls = df_sitemap_urls or load_temp_df(run_timestamp, SITEMAP_URLS_CSV)
+    df_downloaded = df_downloaded or load_temp_df(run_timestamp, DOWNLOADED_JOB_DESCRIPTIONS_CSV)
+
     df_downloaded = df_downloaded[['url']]
     df_downloaded = df_downloaded.drop_duplicates()
     df = df_sitemap_urls[['url']]

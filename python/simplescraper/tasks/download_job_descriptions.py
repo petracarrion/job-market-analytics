@@ -116,12 +116,12 @@ async def run_async_tasks(chunks):
     await asyncio.gather(*tasks)
 
 
-def download_job_descriptions(run_timestamp, df_to_download):
-    df = df_to_download
+def download_job_descriptions(run_timestamp, df_to_download=None):
+    df = df_to_download or load_temp_df(run_timestamp, JOB_DESCRIPTIONS_TO_DOWNLOAD_CSV)
 
     if df.empty:
         logger.info('Nothing to download')
-        exit(0)
+        return
 
     total_count = df.shape[0]
     chunk_size = get_chunk_size(total_count, SEMAPHORE_COUNT, MAX_CHUNK_SIZE)
