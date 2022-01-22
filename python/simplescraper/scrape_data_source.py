@@ -8,8 +8,8 @@ from tasks.list_downloaded_job_descriptions import list_downloaded_job_descripti
 from tasks.list_job_descriptions_to_download import list_job_descriptions_to_download
 
 
-def scrape_data_source():
-    run_timestamp = get_run_timestamp()
+def scrape_data_source(ts=None):
+    run_timestamp = get_run_timestamp(ts)
     configure_logger(run_timestamp)
     df_downloaded = list_downloaded_job_descriptions(run_timestamp)
     df_sitemap = download_sitemap(run_timestamp)

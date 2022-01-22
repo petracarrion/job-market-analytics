@@ -15,10 +15,13 @@ import pathlib
 import pandas as pd
 import pyarrow as pa
 import pyarrow.parquet as pq
+from dateutil import parser
 from pyarrow import ArrowInvalid
 
 from common.entity import Entity
 from common.env_variables import DATA_SOURCE_NAME, RAW_DIR, CLEANSED_DIR, TEMP_DIR
+
+RUN_TIMESTAMP_FORMAT = '%Y/%m/%d/%H-%M-%S'
 
 RAW_LAYER = 'raw'
 CLEANSED_LAYER = 'cleansed'
@@ -56,8 +59,12 @@ def get_current_date():
     return str(datetime.date.today())
 
 
-def get_run_timestamp():
-    return datetime.datetime.today().strftime('%Y/%m/%d/%H-%M-%S')
+def get_run_timestamp(ts=None):
+    if ts is not None:
+        run_timestamp = parser.parse(ts).strftime(RUN_TIMESTAMP_FORMAT)
+    else:
+        run_timestamp = datetime.datetime.today().strftime(RUN_TIMESTAMP_FORMAT)
+    return run_timestamp
 
 
 def _create_dir(file_path):
