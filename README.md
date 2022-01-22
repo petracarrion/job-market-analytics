@@ -44,6 +44,16 @@ In order to compute the data, we use two different approaches.
 - **SQL** for the transformations of the data inside the Data Warehouse. The SQL tasks are automated and orchestrated
   by [dbt](https://www.getdbt.com/).
 
+### Data Source Scraping
+
+In order to download the data from the data source, we run the following Airflow dag:
+
+![Scrape Data Source Dag](doc/scrape_data_source_dag.png)
+
+First, we make sure that we are connected to the VPN, then we download and archive the list of the jobs that online at
+the moment from the sitemap, and we list out which job descriptions we have not downloaded yet, and then we download
+them via browser automation with [Playwright](https://playwright.dev/).
+
 ## Frequently Asked Questions
 
 ### What questions can be answered with this project?

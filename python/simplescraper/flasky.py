@@ -22,7 +22,7 @@ def index():
     return '<a href="/do/check_vpn_status">Check VPN Status</a><br>' \
            '<a href="/do/list_donwloaded_job_descriptions">List Downloaded Descriptions</a><br>' \
            '<a href="/do/download_sitemap">Download Sitemap</a><br>' \
-           '<a href="/do/list_job_descriptions_to_download">List Job Descriptions to Download"</a><br>' \
+           '<a href="/do/list_job_descriptions_to_download">List Job Descriptions to Download</a><br>' \
            '<a href="/do/download_job_descriptions">Download Job Descriptions</a><br>' \
            '<a href="/do/test">Test</a><br>'
 
