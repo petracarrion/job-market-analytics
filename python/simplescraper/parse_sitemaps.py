@@ -5,7 +5,7 @@ from loguru import logger
 
 from common.entity import SITEMAP
 from common.logging import configure_logger
-from common.storage import get_run_id, load_raw_file, save_cleansed_df
+from common.storage import get_run_timestamp, load_raw_file, save_cleansed_df
 from tasks.chunk_sitemaps_to_parse import chunk_sitemaps_to_parse
 from tasks.list_downloaded_sitemaps import list_downloaded_sitemaps
 from tasks.list_parsed_sitemaps import list_parsed_sitemaps
@@ -32,17 +32,17 @@ def extract_job_id(url_column):
 
 
 def parse_sitemaps():
-    run_id = get_run_id()
-    configure_logger(run_id)
-    df_downloaded = list_downloaded_sitemaps(run_id)
-    df_parsed = list_parsed_sitemaps(run_id)
-    df = list_sitemaps_to_parse(run_id, df_downloaded, df_parsed)
+    run_timestamp = get_run_timestamp()
+    configure_logger(run_timestamp)
+    df_downloaded = list_downloaded_sitemaps(run_timestamp)
+    df_parsed = list_parsed_sitemaps(run_timestamp)
+    df = list_sitemaps_to_parse(run_timestamp, df_downloaded, df_parsed)
     if DEBUG:
         df = df[df['timestamp'] == '2021-11-01']
     if df.empty:
         logger.info('Nothing to parse')
         return
-    dfs = chunk_sitemaps_to_parse(run_id, df)
+    dfs = chunk_sitemaps_to_parse(run_timestamp, df)
     for df in dfs:
         df = df.sort_values(by=['timestamp', 'file_name'])
         df['url'] = df.apply(load_and_parse, axis=1)

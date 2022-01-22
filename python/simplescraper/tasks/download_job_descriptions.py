@@ -5,7 +5,7 @@ from playwright.async_api import async_playwright, Error, TimeoutError
 
 from common.chunking import get_chunk_size
 from common.entity import JOB_DESCRIPTION
-from common.env_variables import DATA_SOURCE_URL, SEMAPHORE_COUNT, MAX_CHUNK_SIZE, LATEST_RUN_ID, RUN_HEADLESS
+from common.env_variables import DATA_SOURCE_URL, SEMAPHORE_COUNT, MAX_CHUNK_SIZE, LATEST_RUN_TIMESTAMP, RUN_HEADLESS
 from common.logging import logger
 from common.storage import save_raw_file, load_temp_df, JOB_DESCRIPTIONS_TO_DOWNLOAD_CSV
 
@@ -116,7 +116,7 @@ async def run_async_tasks(chunks):
     await asyncio.gather(*tasks)
 
 
-def download_job_descriptions(run_id, df_to_download):
+def download_job_descriptions(run_timestamp, df_to_download):
     df = df_to_download
 
     if df.empty:
@@ -128,7 +128,7 @@ def download_job_descriptions(run_id, df_to_download):
     chunks = split_dataframe(df, chunk_size)
 
     start_time = time.time()
-    logger.info(f'Starting downloading job descriptions for job: {run_id}')
+    logger.info(f'Starting downloading job descriptions for job: {run_timestamp}')
     logger.info(f'Concurrent tasks: {SEMAPHORE_COUNT}')
     logger.info(f'Urls to download: {total_count}')
 
@@ -148,6 +148,6 @@ def download_job_descriptions(run_id, df_to_download):
 
 if __name__ == '__main__':
     download_job_descriptions(
-        LATEST_RUN_ID,
-        load_temp_df(LATEST_RUN_ID, JOB_DESCRIPTIONS_TO_DOWNLOAD_CSV),
+        LATEST_RUN_TIMESTAMP,
+        load_temp_df(LATEST_RUN_TIMESTAMP, JOB_DESCRIPTIONS_TO_DOWNLOAD_CSV),
     )
