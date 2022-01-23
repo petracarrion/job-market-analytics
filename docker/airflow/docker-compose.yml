@@ -5,6 +5,7 @@ services:
     image: docker.io/bitnami/redis:6.0
     volumes:
       - ${REDIS_VOLUME}:/bitnami
+    restart: unless-stopped
     environment:
       # ALLOW_EMPTY_PASSWORD is recommended only for development.
       - ALLOW_EMPTY_PASSWORD=yes
