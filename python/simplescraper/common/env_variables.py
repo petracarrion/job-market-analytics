@@ -13,6 +13,7 @@ DATA_SOURCE_URL = os.getenv('DATA_SOURCE_URL')
 
 SEMAPHORE_COUNT: int = int(os.getenv('SEMAPHORE_COUNT'))
 MAX_CHUNK_SIZE: int = int(os.getenv('MAX_CHUNK_SIZE'))
+MIN_TO_DOWNLOAD: int = int(os.getenv('MIN_TO_DOWNLOAD'))
 
 LATEST_RUN_TIMESTAMP = os.getenv('LATEST_RUN_TIMESTAMP')
 

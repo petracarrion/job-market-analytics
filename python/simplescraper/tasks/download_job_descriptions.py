@@ -5,7 +5,8 @@ from playwright.async_api import async_playwright, Error, TimeoutError
 
 from common.chunking import get_chunk_size
 from common.entity import JOB_DESCRIPTION
-from common.env_variables import DATA_SOURCE_URL, SEMAPHORE_COUNT, MAX_CHUNK_SIZE, LATEST_RUN_TIMESTAMP, RUN_HEADLESS
+from common.env_variables import DATA_SOURCE_URL, SEMAPHORE_COUNT, MAX_CHUNK_SIZE, LATEST_RUN_TIMESTAMP, RUN_HEADLESS, \
+    MIN_TO_DOWNLOAD
 from common.logging import logger
 from common.storage import save_raw_file, load_temp_df, JOB_DESCRIPTIONS_TO_DOWNLOAD_CSV
 
@@ -119,11 +120,12 @@ async def run_async_tasks(chunks):
 def download_job_descriptions(run_timestamp, df_to_download=None):
     df = df_to_download or load_temp_df(run_timestamp, JOB_DESCRIPTIONS_TO_DOWNLOAD_CSV)
 
-    if df.empty:
-        logger.info('Nothing to download')
+    total_count = df.shape[0]
+
+    if total_count < MIN_TO_DOWNLOAD:
+        logger.info(f'Not enough to download: {total_count}')
         return
 
-    total_count = df.shape[0]
     chunk_size = get_chunk_size(total_count, SEMAPHORE_COUNT, MAX_CHUNK_SIZE)
     chunks = split_dataframe(df, chunk_size)
 
