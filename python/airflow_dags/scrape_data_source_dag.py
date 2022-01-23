@@ -10,6 +10,14 @@ with DAG('scrape_data_source_dag',
          schedule_interval='0 * * * *',
          start_date=datetime(2022, 1, 1),
          catchup=False) as dag:
+    def run_flasky_task(endpoint):
+        context = get_current_context()
+        data = {
+            'ts': context['ts'],
+        }
+        HttpHook().run(endpoint, data)
+
+
     @task(task_id="check_vpn_status_task")
     def check_vpn_status_task():
         HttpHook(method='GET').run('do/check_vpn_status')
@@ -17,38 +25,22 @@ with DAG('scrape_data_source_dag',
 
     @task(task_id="list_downloaded_job_descriptions_task")
     def list_downloaded_job_descriptions_task():
-        context = get_current_context()
-        data = {
-            'ts': context['ts'],
-        }
-        HttpHook().run('do/list_downloaded_job_descriptions', data)
+        run_flasky_task('do/list_downloaded_job_descriptions')
 
 
     @task(task_id="download_sitemap_task")
     def download_sitemap_task():
-        context = get_current_context()
-        data = {
-            'ts': context['ts'],
-        }
-        HttpHook().run('do/download_sitemap', data)
+        run_flasky_task('do/download_sitemap')
 
 
     @task(task_id="list_job_descriptions_to_download_task")
     def list_job_descriptions_to_download_task():
-        context = get_current_context()
-        data = {
-            'ts': context['ts'],
-        }
-        HttpHook().run('do/list_job_descriptions_to_download', data)
+        run_flasky_task('do/list_job_descriptions_to_download')
 
 
     @task(task_id="download_job_descriptions_task")
     def download_job_descriptions_task():
-        context = get_current_context()
-        data = {
-            'ts': context['ts'],
-        }
-        HttpHook().run('do/download_job_descriptions', data)
+        run_flasky_task('do/download_job_descriptions')
 
 
     check_vpn_status_task() >> [
