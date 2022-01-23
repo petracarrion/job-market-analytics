@@ -29,7 +29,7 @@ async def open_first_page(browser):
     return page
 
 
-async def download_urls(df):
+async def download_urls(df, run_timestamp):
     if df.empty:
         return
     async with async_playwright() as p:
@@ -69,7 +69,7 @@ async def download_urls(df):
                             await page.keyboard.press('Tab')
                         await page.wait_for_selector('.listing-content', timeout=10000, state='attached')
                     page_content = await page.content()
-                    save_raw_file(page_content, JOB_DESCRIPTION, file_name)
+                    save_raw_file(page_content, JOB_DESCRIPTION, run_timestamp, file_name)
                     logger.success(f'Chunk {chunk_id}: downloaded   ({pos_in_chunk}/{chunk_size}): {url}')
                 except TimeoutError:
                     logger.warning(f'TimeoutError: Timeout error while requesting the page {url}')
@@ -102,15 +102,15 @@ def split_dataframe(df, chunk_size):
     return chunks
 
 
-async def safe_download_urls(urls):
+async def safe_download_urls(urls, run_timestamp):
     sem = asyncio.Semaphore(SEMAPHORE_COUNT)
     async with sem:  # semaphore limits num of simultaneous downloads
-        return await download_urls(urls)
+        return await download_urls(urls, run_timestamp)
 
 
-async def run_async_tasks(chunks):
+async def run_async_tasks(chunks, run_timestamp):
     tasks = [
-        asyncio.ensure_future(safe_download_urls(chunk))  # creating task starts coroutine
+        asyncio.ensure_future(safe_download_urls(chunk, run_timestamp))  # creating task starts coroutine
         for chunk
         in chunks
     ]
@@ -137,7 +137,7 @@ def download_job_descriptions(run_timestamp, df_to_download=None):
     loop = asyncio.SelectorEventLoop()
     asyncio.set_event_loop(loop)
     try:
-        loop.run_until_complete(run_async_tasks(chunks))
+        loop.run_until_complete(run_async_tasks(chunks, run_timestamp))
     finally:
         loop.run_until_complete(loop.shutdown_asyncgens())
         loop.close()

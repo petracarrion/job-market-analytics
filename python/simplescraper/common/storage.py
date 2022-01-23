@@ -51,12 +51,8 @@ def list_raw_files(data_source, entity: Entity):
     file_list = [{
         'timestamp': f.split('/')[-2],
         'file_name': f.split('/')[-1],
-    } for f in glob.iglob(dir_path + '/*/*', recursive=True) if os.path.isfile(f)]
+    } for f in glob.iglob(dir_path + '/**/*', recursive=True) if os.path.isfile(f)]
     return file_list
-
-
-def get_current_date():
-    return str(datetime.date.today())
 
 
 def get_run_timestamp(ts=None):
@@ -78,19 +74,18 @@ def _save_file(content, file_path):
         f.write(content)
 
 
-def save_file(layer, content, entity: Entity, timestamp, file_name):
-    file_path = os.path.join(LAYER_DIR[layer], DATA_SOURCE_NAME, entity.name, timestamp, file_name)
+def save_file(layer, content, entity: Entity, run_timestamp, file_name):
+    file_path = os.path.join(LAYER_DIR[layer], DATA_SOURCE_NAME, entity.name, run_timestamp, file_name)
     _create_dir(file_path)
     _save_file(content, file_path)
 
 
-def save_raw_file(content, entity: Entity, file_name):
-    timestamp = get_current_date()
-    save_file(RAW_LAYER, content, entity, timestamp, file_name)
+def save_raw_file(content, entity: Entity, run_timestamp: str, file_name):
+    save_file(RAW_LAYER, content, entity, run_timestamp, file_name)
 
 
-def load_raw_file(entity: Entity, timestamp, file_name):
-    file_path = os.path.join(LAYER_DIR[RAW_LAYER], DATA_SOURCE_NAME, entity.name, timestamp, file_name)
+def load_raw_file(entity: Entity, run_timestamp, file_name):
+    file_path = os.path.join(LAYER_DIR[RAW_LAYER], DATA_SOURCE_NAME, entity.name, run_timestamp, file_name)
     with open(file_path, 'r') as f:
         content = f.read()
     return content

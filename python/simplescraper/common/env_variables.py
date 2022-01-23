@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+DATA_DIR = os.getenv('DATA_DIR')
 RAW_DIR = os.getenv('RAW_DIR')
 CLEANSED_DIR = os.getenv('CLEANSED_DIR')
 TEMP_DIR = os.getenv('TEMP_DIR')
