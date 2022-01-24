@@ -2,6 +2,7 @@
 
 ## Open
 
+- [ ] Fix logs in Flasky
 - [ ] Fix bug with file names longer than 255 characters
 - [ ] Create a report that shows how many job offers are online at a given date
 - [ ] Allow one retry after the browser crashes
