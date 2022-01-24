@@ -16,10 +16,10 @@
 
 ## In Progress
 
-- [ ] Add more granularity to the ingestion time in the raw data
 
 ## Done
 
+- [x] Add more granularity to the ingestion time in the raw data
 - [x] Add orchestration with Airflow
 - [x] Create the Data Vault
 - [x] Optimize the function to create the chunks
