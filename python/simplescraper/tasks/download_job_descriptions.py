@@ -33,12 +33,13 @@ async def download_urls(df, run_timestamp):
     if df.empty:
         return
     async with async_playwright() as p:
+        chunk_pos = df['chunk_pos'].values[0]
+        chunk_pos = str(chunk_pos).rjust(2)
+        num_chunks = df['num_chunks'].values[0]
+        chunk_size = df['chunk_size'].values[0]
+        chunk_id = f'{chunk_pos}/{num_chunks}'
         browser = await p.chromium.launch(headless=RUN_HEADLESS, slow_mo=250)
         try:
-            chunk_pos = df['chunk_pos'].values[0]
-            num_chunks = df['num_chunks'].values[0]
-            chunk_size = df['chunk_size'].values[0]
-            chunk_id = f'{chunk_pos}/{num_chunks}'
             logger.info(f'Starting chunk {chunk_id} with size of {chunk_size}')
             start_time = time.time()
             page = await open_first_page(browser)
@@ -60,7 +61,8 @@ async def download_urls(df, run_timestamp):
                             raise PageNotFound('Page not found')
                         await page.wait_for_selector('.listing-content', timeout=5000, state='attached')
                     except TimeoutError as err:
-                        logger.warning(f'TimeoutError: second try for {url} because of the following error: {err}')
+                        logger.warning(
+                            f'Chunk {chunk_id}: TimeoutError: second try for {url} because of the following error: {err}')
                         await page.goto(DATA_SOURCE_URL + 'de/sitemap/', wait_until='domcontentloaded')
                         for i in range(TAB_HITS):
                             await page.keyboard.press('Tab')
@@ -70,15 +72,15 @@ async def download_urls(df, run_timestamp):
                         await page.wait_for_selector('.listing-content', timeout=10000, state='attached')
                     page_content = await page.content()
                     save_raw_file(page_content, JOB_DESCRIPTION, run_timestamp, file_name)
-                    logger.success(f'Chunk {chunk_id}: downloaded   ({pos_in_chunk}/{chunk_size}): {url}')
+                    logger.success(f'Chunk {chunk_id}: Downloaded   ({pos_in_chunk}/{chunk_size}): {url}')
                 except TimeoutError:
-                    logger.warning(f'TimeoutError: Timeout error while requesting the page {url}')
+                    logger.warning(f'Chunk {chunk_id}: TimeoutError: Timeout error while requesting the page {url}')
                 except AttributeError:
-                    logger.warning(f'AttributeError: it seems the following URL is gone {url}')
+                    logger.warning(f'Chunk {chunk_id}: AttributeError: it seems the following URL is gone {url}')
                 except PageNotFound:
-                    logger.warning(f'PageNotFound: the following URL is no longer available {url}')
+                    logger.warning(f'Chunk {chunk_id}: PageNotFound: the following URL is no longer available {url}')
         except Error:
-            logger.error('It seems that the browser crashed.')
+            logger.error('Chunk {chunk_id}: It seems that the browser crashed.')
         finally:
             await browser.close()
 
