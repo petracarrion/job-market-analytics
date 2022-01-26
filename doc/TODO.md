@@ -2,6 +2,7 @@
 
 ## Open
 
+- [ ] Do not let Flasky start a process behind an endpoint, if a process is still running
 - [ ] Fix bug with file names longer than 255 characters
 - [ ] Create a report that shows how many job offers are online at a given date
 - [ ] Allow one retry after the browser crashes
