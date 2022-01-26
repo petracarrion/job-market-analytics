@@ -2,7 +2,7 @@ import os
 
 from flask import Flask, request
 
-from common.logging import logger
+from common.logging import logger, configure_logger
 from common.storage import get_run_timestamp
 from tasks.download_job_descriptions import download_job_descriptions
 from tasks.download_sitemap import download_sitemap
@@ -40,6 +40,7 @@ def do_list_downloaded_urls():
     if request.method == 'POST':
         ts = request.form.get('ts')
         run_timestamp = get_run_timestamp(ts)
+        configure_logger(run_timestamp)
         list_downloaded_job_descriptions(run_timestamp)
         return {'result_status': 'success'}, 200
     elif request.method == 'GET':
@@ -55,6 +56,7 @@ def do_download_sitemap():
         if is_connected_to_vpn():
             ts = request.form.get('ts')
             run_timestamp = get_run_timestamp(ts)
+            configure_logger(run_timestamp)
             download_sitemap(run_timestamp)
             return {'result_status': 'success'}, 200
         else:
@@ -72,6 +74,7 @@ def do_list_job_descriptions_to_download():
         if is_connected_to_vpn():
             ts = request.form.get('ts')
             run_timestamp = get_run_timestamp(ts)
+            configure_logger(run_timestamp)
             list_job_descriptions_to_download(run_timestamp)
             return {'result_status': 'success'}, 200
         else:
@@ -89,6 +92,7 @@ def do_download_job_descriptions():
         if is_connected_to_vpn():
             ts = request.form.get('ts')
             run_timestamp = get_run_timestamp(ts)
+            configure_logger(run_timestamp)
             download_job_descriptions(run_timestamp)
             return {'result_status': 'success'}, 200
         else:

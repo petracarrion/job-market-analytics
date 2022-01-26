@@ -2,7 +2,6 @@
 
 ## Open
 
-- [ ] Fix logs in Flasky
 - [ ] Fix bug with file names longer than 255 characters
 - [ ] Create a report that shows how many job offers are online at a given date
 - [ ] Allow one retry after the browser crashes
@@ -22,6 +21,7 @@
 
 ## Done
 
+- [x] Fix logs in Flasky
 - [x] Add more granularity to the ingestion time in the raw data
 - [x] Add orchestration with Airflow
 - [x] Create the Data Vault
