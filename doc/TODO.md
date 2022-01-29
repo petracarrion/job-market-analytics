@@ -16,6 +16,7 @@
         - failed urls (a list of string)
 - [ ] Implement use case: Technology trends
 - [ ] Implement use case: Number of jobs relative to city population
+- [ ] Replace the PostgreSQL ingestion with CSV instead of Parquet
 
 ## In Progress
 
