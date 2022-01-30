@@ -4,7 +4,6 @@
 
 - [ ] Do not let Flasky start a process behind an endpoint, if a process is still running
 - [ ] Fix bug with file names longer than 255 characters
-- [ ] Create a report that shows how many job offers are online at a given date
 - [ ] Allow one retry after the browser crashes
 - [ ] Add a file in the raw layer with the scrape run information for each execution
     - This file could be in JSON format and have the following fields:
@@ -20,6 +19,7 @@
 
 ## In Progress
 
+- [ ] Create a report that shows how many job offers are online at a given time
 
 ## Done
 
