@@ -45,12 +45,13 @@ async def download_urls(df, run_timestamp):
             page = await open_first_page(browser)
             url_dicts = df.to_dict('records')
             for url_dict in url_dicts:
-                url = url_dict['url']
                 pos_in_chunk = url_dict['pos_in_chunk']
-                file_name = url.split('/')[-1]
-                if len(file_name) > 255:
-                    logger.error(f'Skipping the following file name until a way to handle it is found: {file_name}')
-                    continue
+                url = url_dict['url']
+                job_id = url.rsplit('--', 1)
+                job_id = job_id[1]
+                job_id = job_id.split('-')
+                job_id = job_id[0]
+                file_name = f'{job_id}.html'
                 try:
                     logger.debug(f'Chunk {chunk_id}: Downloading ({pos_in_chunk}/{chunk_size}): {url}')
                     try:

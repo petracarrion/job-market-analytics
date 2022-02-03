@@ -12,10 +12,12 @@ def list_job_descriptions_to_download(run_timestamp, df_sitemap_urls=None, df_do
     df_sitemap_urls = df_sitemap_urls or load_temp_df(run_timestamp, SITEMAP_URLS_CSV)
     df_downloaded = df_downloaded or load_temp_df(run_timestamp, DOWNLOADED_JOB_DESCRIPTIONS_CSV)
 
-    df_downloaded = df_downloaded[['url']]
+    df_downloaded = df_downloaded[['id']]
     df_downloaded = df_downloaded.drop_duplicates()
-    df = df_sitemap_urls[['url']]
+    df = df_sitemap_urls[['id']]
     df = pd.concat([df, df_downloaded, df_downloaded]).drop_duplicates(keep=False)
+    df = df.merge(df_sitemap_urls)
+    df = df[['url']]
 
     save_temp_df(df, run_timestamp, JOB_DESCRIPTIONS_TO_DOWNLOAD_CSV)
     logger.info('list_job_descriptions_to_download: end')
@@ -23,8 +25,4 @@ def list_job_descriptions_to_download(run_timestamp, df_sitemap_urls=None, df_do
 
 
 if __name__ == "__main__":
-    list_job_descriptions_to_download(
-        LATEST_RUN_TIMESTAMP,
-        load_temp_df(LATEST_RUN_TIMESTAMP, SITEMAP_URLS_CSV),
-        load_temp_df(LATEST_RUN_TIMESTAMP, DOWNLOADED_JOB_DESCRIPTIONS_CSV)
-    )
+    list_job_descriptions_to_download(LATEST_RUN_TIMESTAMP)
