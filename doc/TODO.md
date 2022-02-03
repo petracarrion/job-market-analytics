@@ -18,11 +18,11 @@
 
 ## In Progress
 
-- [ ] Fix bug with file names longer than 255 characters
 - [ ] Create a report that shows how many job offers are online at a given time
 
 ## Done
 
+- [x] Fix bug with file names longer than 255 characters
 - [x] Fix logs in Flasky
 - [x] Add more granularity to the ingestion time in the raw data
 - [x] Add orchestration with Airflow
