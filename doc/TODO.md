@@ -2,6 +2,7 @@
 
 ## Open
 
+- [ ] For the scrape data source dag, find a better timestamp to use than the logical timestamp
 - [ ] Do not let Flasky start a process behind an endpoint, if a process is still running
 - [ ] Allow one retry after the browser crashes
 - [ ] Add a file in the raw layer with the scrape run information for each execution
