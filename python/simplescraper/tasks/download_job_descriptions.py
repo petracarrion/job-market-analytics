@@ -105,15 +105,15 @@ def split_dataframe(df, chunk_size):
     return chunks
 
 
-async def safe_download_urls(urls, run_timestamp):
-    sem = asyncio.Semaphore(SEMAPHORE_COUNT)
+async def safe_download_urls(urls, run_timestamp, sem):
     async with sem:  # semaphore limits num of simultaneous downloads
         return await download_urls(urls, run_timestamp)
 
 
 async def run_async_tasks(chunks, run_timestamp):
+    sem = asyncio.Semaphore(SEMAPHORE_COUNT)
     tasks = [
-        asyncio.ensure_future(safe_download_urls(chunk, run_timestamp))  # creating task starts coroutine
+        asyncio.ensure_future(safe_download_urls(chunk, run_timestamp, sem))  # creating task starts coroutine
         for chunk
         in chunks
     ]
