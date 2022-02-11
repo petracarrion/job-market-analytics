@@ -26,12 +26,12 @@ services:
       - AIRFLOW__CORE__MAX_ACTIVE_RUNS_PER_DAG=${AIRFLOW__CORE__MAX_ACTIVE_RUNS_PER_DAG}
       - AIRFLOW_EXECUTOR=CeleryExecutor
       - AIRFLOW_WEBSERVER_HOST=airflow
-    #    healthcheck:
-    #      test: [ "CMD-SHELL", 'airflow jobs check --job-type SchedulerJob --hostname "$${HOSTNAME}"' ]
-    #      interval: 10s
-    #      timeout: 10s
-    #      retries: 5
-    #      start_period: 5m
+    healthcheck:
+      test: [ "CMD-SHELL", 'airflow jobs check --job-type SchedulerJob --hostname "$${HOSTNAME}"' ]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 5m
     restart: unless-stopped
     volumes:
       - ${AIRFLOW_DAGS_VOLUME}:/opt/bitnami/airflow/dags
