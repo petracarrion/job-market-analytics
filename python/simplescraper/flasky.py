@@ -38,14 +38,14 @@ def do_check_vpn_status():
 @app.route('/do/list_downloaded_job_descriptions', methods=['GET', 'POST'])
 def do_list_downloaded_urls():
     if request.method == 'POST':
-        ts = request.form.get('ts')
-        run_timestamp = get_run_timestamp(ts)
+        data_interval_end = request.form.get('data_interval_end')
+        run_timestamp = get_run_timestamp(data_interval_end)
         configure_logger(run_timestamp)
         list_downloaded_job_descriptions(run_timestamp)
         return {'result_status': 'success'}, 200
     elif request.method == 'GET':
         return '<form method="POST">' \
-               '  <div><label>ts: <input type="text" name="ts"></label></div>' \
+               '  <div><label>data_interval_end: <input type="text" name="data_interval_end"></label></div>' \
                '  <input type="submit" value="Submit">' \
                '</form>'
 
@@ -54,8 +54,8 @@ def do_list_downloaded_urls():
 def do_download_sitemap():
     if request.method == 'POST':
         if is_connected_to_vpn():
-            ts = request.form.get('ts')
-            run_timestamp = get_run_timestamp(ts)
+            data_interval_end = request.form.get('data_interval_end')
+            run_timestamp = get_run_timestamp(data_interval_end)
             configure_logger(run_timestamp)
             download_sitemap(run_timestamp)
             return {'result_status': 'success'}, 200
@@ -63,7 +63,7 @@ def do_download_sitemap():
             return {'result_status': 'failed'}, 400
     elif request.method == 'GET':
         return '<form method="POST">' \
-               '  <div><label>ts: <input type="text" name="ts"></label></div>' \
+               '  <div><label>data_interval_end: <input type="text" name="data_interval_end"></label></div>' \
                '  <input type="submit" value="Submit">' \
                '</form>'
 
@@ -72,8 +72,8 @@ def do_download_sitemap():
 def do_list_job_descriptions_to_download():
     if request.method == 'POST':
         if is_connected_to_vpn():
-            ts = request.form.get('ts')
-            run_timestamp = get_run_timestamp(ts)
+            data_interval_end = request.form.get('data_interval_end')
+            run_timestamp = get_run_timestamp(data_interval_end)
             configure_logger(run_timestamp)
             list_job_descriptions_to_download(run_timestamp)
             return {'result_status': 'success'}, 200
@@ -81,7 +81,7 @@ def do_list_job_descriptions_to_download():
             return {'result_status': 'failed'}, 400
     elif request.method == 'GET':
         return '<form method="POST">' \
-               '  <div><label>ts: <input type="text" name="ts"></label></div>' \
+               '  <div><label>data_interval_end: <input type="text" name="data_interval_end"></label></div>' \
                '  <input type="submit" value="Submit">' \
                '</form>'
 
@@ -90,8 +90,8 @@ def do_list_job_descriptions_to_download():
 def do_download_job_descriptions():
     if request.method == 'POST':
         if is_connected_to_vpn():
-            ts = request.form.get('ts')
-            run_timestamp = get_run_timestamp(ts)
+            data_interval_end = request.form.get('data_interval_end')
+            run_timestamp = get_run_timestamp(data_interval_end)
             configure_logger(run_timestamp)
             download_job_descriptions(run_timestamp)
             return {'result_status': 'success'}, 200
@@ -99,7 +99,7 @@ def do_download_job_descriptions():
             return {'result_status': 'failed'}, 400
     elif request.method == 'GET':
         return '<form method="POST">' \
-               '  <div><label>ts: <input type="text" name="ts"></label></div>' \
+               '  <div><label>data_interval_end: <input type="text" name="data_interval_end"></label></div>' \
                '  <input type="submit" value="Submit">' \
                '</form>'
 
@@ -110,10 +110,10 @@ def do_test():
         logger.info(request.form)
         return {
                    'result_status': 'success',
-                   'run_ts': 'TODO',
+                   'run_timestamp': 'TODO',
                }, 200
     elif request.method == 'GET':
         return '<form method="POST">' \
-               '  <div><label>ts: <input type="text" name="ts"></label></div>' \
+               '  <div><label>data_interval_end: <input type="text" name="data_interval_end"></label></div>' \
                '  <input type="submit" value="Submit">' \
                '</form>'

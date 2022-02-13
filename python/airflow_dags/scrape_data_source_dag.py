@@ -13,7 +13,7 @@ with DAG('scrape_data_source_dag',
     def run_flasky_task(endpoint):
         context = get_current_context()
         data = {
-            'ts': context['ts'],
+            'data_interval_end': context['data_interval_end'],
         }
         HttpHook().run(endpoint, data)
 

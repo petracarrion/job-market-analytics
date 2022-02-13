@@ -2,7 +2,6 @@
 
 ## Open
 
-- [ ] For the scrape data source dag, find a better timestamp to use than the logical timestamp
 - [ ] Do not let Flasky start a process behind an endpoint, if a process is still running
 - [ ] Allow one retry after the browser crashes
 - [ ] Add a file in the raw layer with the scrape run information for each execution
@@ -23,6 +22,7 @@
 
 ## Done
 
+- [x] Find a better timestamp to use than the logical timestamp for the scrape data source dag
 - [x] Fix bug with file names longer than 255 characters
 - [x] Fix logs in Flasky
 - [x] Add more granularity to the ingestion time in the raw data
