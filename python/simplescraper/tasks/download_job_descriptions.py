@@ -126,7 +126,7 @@ def download_job_descriptions(run_timestamp, df_to_download=None):
     total_count = df.shape[0]
 
     if total_count < MIN_TO_DOWNLOAD:
-        logger.info(f'Not enough to download: {total_count}')
+        logger.success(f'Not enough to download: {total_count}')
         return
 
     chunk_size = get_chunk_size(total_count, SEMAPHORE_COUNT, MAX_CHUNK_SIZE)
