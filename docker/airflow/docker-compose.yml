@@ -28,7 +28,7 @@ services:
       - AIRFLOW_WEBSERVER_HOST=airflow
     healthcheck:
       test: [ "CMD-SHELL", 'airflow jobs check --job-type SchedulerJob --hostname "$${HOSTNAME}"' ]
-      interval: 1m
+      interval: 10m
       timeout: 20s
       retries: 5
       start_period: 1m
