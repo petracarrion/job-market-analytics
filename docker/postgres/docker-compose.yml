@@ -12,7 +12,7 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
     networks:
       - postgres
-    restart: unless-stopped
+    restart: always
     env_file: .env
     logging:
       options:
@@ -35,7 +35,7 @@ services:
       - ${PGADMIN_VOLUME}:/var/lib/pgadmin
     networks:
       - postgres
-    restart: unless-stopped
+    restart: always
     depends_on:
       - "postgres"
 
