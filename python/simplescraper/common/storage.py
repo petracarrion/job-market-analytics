@@ -49,9 +49,9 @@ SITEMAPS_TO_PARSE_CSV = '33_sitemaps_to_parse.csv'
 def list_raw_files(data_source, entity: Entity):
     dir_path = os.path.join(RAW_DIR, data_source, entity.name)
     file_list = [{
-        'timestamp': f.split('/')[-2],
+        'run_timestamp': '/'.join(f.split('/')[-5:-1]),
         'file_name': f.split('/')[-1],
-    } for f in glob.iglob(dir_path + '/**/*', recursive=True) if os.path.isfile(f)]
+    } for f in glob.iglob(dir_path + '/**/*', recursive=True) if os.path.isfile(f) and 'latest' not in f]
     return file_list
 
 
@@ -117,7 +117,7 @@ def save_cleansed_df(df: pd.DataFrame, entity: Entity):
     root_path = os.path.join(LAYER_DIR[CLEANSED_LAYER], DATA_SOURCE_NAME, entity.name)
     pq.write_to_dataset(table,
                         root_path,
-                        partition_cols=['year', 'month', 'day'],
+                        partition_cols=['year', 'month', 'day', 'time'],
                         use_legacy_dataset=False)
 
 

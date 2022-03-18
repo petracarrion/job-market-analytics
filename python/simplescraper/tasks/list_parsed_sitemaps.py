@@ -6,7 +6,8 @@ from common.storage import load_cleansed_df, save_temp_df, PARSED_SITEMAPS_CSV
 
 
 def list_parsed_sitemaps(run_timestamp) -> pd.DataFrame:
-    df = load_cleansed_df(SITEMAP, columns=['timestamp', 'file_name'])
+    df = load_cleansed_df(SITEMAP, columns=['run_timestamp', 'file_name'])
+    df = df.drop_duplicates()
     save_temp_df(df, run_timestamp, PARSED_SITEMAPS_CSV)
     return df
 
