@@ -42,7 +42,7 @@ JOB_DESCRIPTIONS_TO_DOWNLOAD_CSV = '13_job_descriptions_to_download.csv'
 PARSED_JOB_DESCRIPTIONS_CSV = '21_parsed_job_descriptions.csv'
 JOB_DESCRIPTIONS_TO_PARSE_CSV = '22_job_descriptions_to_parse.csv'
 DOWNLOADED_SITEMAPS_CSV = '31_downloaded_sitemaps.csv'
-PARSED_SITEMAPS_CSV = '32_parsed_sitemaps.csv'
+PARSED_SITEMAP_DATES_CSV = '32_parsed_sitemap_dates.csv'
 SITEMAPS_TO_PARSE_CSV = '33_sitemaps_to_parse.csv'
 
 
@@ -117,7 +117,7 @@ def save_cleansed_df(df: pd.DataFrame, entity: Entity):
     root_path = os.path.join(LAYER_DIR[CLEANSED_LAYER], DATA_SOURCE_NAME, entity.name)
     pq.write_to_dataset(table,
                         root_path,
-                        partition_cols=['year', 'month', 'day', 'time'],
+                        partition_cols=['year', 'month', 'day'],
                         use_legacy_dataset=False)
 
 
