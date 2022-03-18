@@ -13,7 +13,7 @@ from tasks.list_sitemaps_to_parse import list_sitemaps_to_parse
 
 HASHKEY_SEPARATOR = ';'
 
-DEBUG = True
+DEBUG = False
 
 
 def load_and_parse(row):
@@ -53,8 +53,6 @@ def parse_sitemaps():
             lambda row: hashlib.md5(
                 f'{row["job_id"]}{HASHKEY_SEPARATOR}{row["run_timestamp"]}'.encode('utf-8')).hexdigest(),
             axis=1)
-
-        df = df.convert_dtypes()
 
         save_cleansed_df(df, SITEMAP)
 
