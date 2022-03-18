@@ -54,6 +54,7 @@ def parse_sitemaps():
                 f'{row["job_id"]}{HASHKEY_SEPARATOR}{row["run_timestamp"]}'.encode('utf-8')).hexdigest(),
             axis=1)
 
+        logger.info(f'Saving cleansed: {df["run_timestamp"].iloc[0]}')
         save_cleansed_df(df, SITEMAP)
 
 
