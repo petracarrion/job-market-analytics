@@ -15,6 +15,7 @@
 - [ ] Implement use case: Technology trends
 - [ ] Implement use case: Number of jobs relative to city population
 - [ ] Replace the PostgreSQL ingestion with CSV instead of Parquet
+- [ ] Create separated virtual environments for dbt and airflow
 
 ## In Progress
 

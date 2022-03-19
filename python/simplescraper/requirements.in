@@ -1,11 +1,13 @@
 beautifulsoup4
-dbt-postgres
 Flask
+jupyter
+kaleido
 lxml
 loguru
 pandas
 pip-tools
 playwright
+plotly-express
 pyarrow
 pytest
 python-dotenv
