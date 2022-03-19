@@ -19,10 +19,10 @@
 
 ## In Progress
 
-- [ ] Create a report that shows how many job offers are online at a given time
 
 ## Done
 
+- [x] Create a report that shows how many job offers are online at a given time
 - [x] Find a better timestamp to use than the logical timestamp for the scrape data source dag
 - [x] Fix bug with file names longer than 255 characters
 - [x] Fix logs in Flasky
