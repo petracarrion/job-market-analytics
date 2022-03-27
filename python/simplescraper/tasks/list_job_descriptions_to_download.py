@@ -15,6 +15,7 @@ def list_job_descriptions_to_download(run_timestamp, df_sitemap_urls=None, df_do
     df_downloaded = df_downloaded[['id']]
     df_downloaded = df_downloaded.drop_duplicates()
     df = df_sitemap_urls[['id']]
+    df = df.drop_duplicates()
     df = pd.concat([df, df_downloaded, df_downloaded]).drop_duplicates(keep=False)
     df = df.merge(df_sitemap_urls)
     df = df[['url']]
