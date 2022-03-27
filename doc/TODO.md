@@ -22,6 +22,7 @@
 
 ## Done
 
+- [x] Download the job description again after a configurable number of days online
 - [x] Create a report that shows how many days a job offer is online
 - [x] Create a report that shows how many job offers are online at a given time
 - [x] Find a better timestamp to use than the logical timestamp for the scrape data source dag
