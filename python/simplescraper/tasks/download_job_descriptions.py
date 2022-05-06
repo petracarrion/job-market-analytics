@@ -126,7 +126,7 @@ def download_job_descriptions(run_timestamp, df_to_download=None):
     total_count = df.shape[0]
 
     if total_count < MIN_TO_DOWNLOAD:
-        logger.success(f'Not enough to download: {total_count}')
+        logger.success(f'Not enough to download: {total_count} for the timestamp {run_timestamp}')
         return
 
     chunk_size = get_chunk_size(total_count, SEMAPHORE_COUNT, MAX_CHUNK_SIZE)
@@ -146,9 +146,9 @@ def download_job_descriptions(run_timestamp, df_to_download=None):
         loop.close()
 
     elapsed_time = time.time() - start_time
-    logger.success(f'Finished: {total_count} urls')
     logger.info(f'Elapsed time: {elapsed_time:.2f} seconds')
     logger.info(f'Downloads per second: {total_count / elapsed_time:.2f}')
+    logger.success(f'Finished: {total_count} urls for the timestamp {run_timestamp}')
 
 
 if __name__ == '__main__':
