@@ -60,10 +60,10 @@ them via browser automation with [Playwright](https://playwright.dev/).
 
 Here are some examples of what we can answer:
 
-- How is a job offer online until it is taken offline?
+- How long is a job offer online until it is taken offline?
 - Which technologies are the most demanded at the momment?
 - How the demand for a particular technology evolves during the time?
-- How many jobs offer remote jobs and how this is evolving during the time?
+- How many jobs offers are remote and how this is evolving during the time?
 - When was a particular job offer first published?
 
 ### Could we answer those questions with a simplier technology stack?
