@@ -9,7 +9,12 @@ def number_of_rows(df: pd.DataFrame):
 
 
 def chunk_job_descriptions_to_parse(run_timestamp, df_to_parse):
-    dfs = [x for _, x in df_to_parse.groupby('run_timestamp')]
+    df = df_to_parse.copy()
+    df[['year', 'month', 'day']] = df['run_timestamp'].str.split('/', 2, expand=True)
+    df[['day', 'hour']] = df['day'].str.split('/', 2, expand=True)
+    df['run_timestamp_date'] = df['year'] + df['month'] + df['day']
+    df = df[['run_timestamp_date', 'run_timestamp', 'file_name', 'id']]
+    dfs = [x for _, x in df.groupby('run_timestamp_date')]
     dfs = sorted(dfs, key=number_of_rows)
     return dfs
 
