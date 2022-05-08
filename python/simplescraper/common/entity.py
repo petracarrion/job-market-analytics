@@ -15,13 +15,13 @@ class Column:
 
 STG_COLUMNS_SITEMAP = [
     Column('sitemap_ingestion_hashkey', 'text'),
-    Column('timestamp', 'text'),
+    Column('run_timestamp', 'text'),
     Column('job_id', 'text'),
     Column('url', 'text'),
 ]
 STG_COLUMNS_JOB_DESCRIPTION = [
     Column('job_description_ingestion_hashkey', 'text'),
-    Column('timestamp', 'text'),
+    Column('run_timestamp', 'text'),
     Column('job_id', 'text'),
     Column('url', 'text'),
     Column('title', 'text'),

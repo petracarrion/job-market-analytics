@@ -9,7 +9,7 @@ def number_of_rows(df: pd.DataFrame):
 
 
 def chunk_job_descriptions_to_parse(run_timestamp, df_to_parse):
-    dfs = [x for _, x in df_to_parse.groupby('timestamp')]
+    dfs = [x for _, x in df_to_parse.groupby('run_timestamp')]
     dfs = sorted(dfs, key=number_of_rows)
     return dfs
 

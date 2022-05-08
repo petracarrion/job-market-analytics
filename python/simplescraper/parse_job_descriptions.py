@@ -17,7 +17,7 @@ DEBUG = True
 
 
 def load_and_parse(row) -> str:
-    timestamp = row['timestamp']
+    timestamp = row['run_timestamp']
     file_name = row['file_name']
     chunk_id = row['chunk_id']
     pos_in_chunk = row['pos_in_chunk']
@@ -53,11 +53,12 @@ def parse_job_descriptions():
         df['parsed_content'] = df.apply(load_and_parse, axis=1)
         df = df.join(pd.json_normalize(df['parsed_content']))
         df = df.drop(columns=['parsed_content'])
-        df[['year', 'month', 'day']] = df['timestamp'].str.split('-', 2, expand=True)
+        df[['year', 'month', 'day']] = df['run_timestamp'].str.split('/', 2, expand=True)
+        df[['day', 'hour']] = df['day'].str.split('/', 2, expand=True)
         df = df.drop(columns=['chunk_id', 'pos_in_chunk', 'chunk_size'])
         df['job_description_ingestion_hashkey'] = df.apply(
             lambda row: hashlib.md5(
-                f'{row["job_id"]}{HASHKEY_SEPARATOR}{row["timestamp"]}'.encode('utf-8')).hexdigest(),
+                f'{row["job_id"]}{HASHKEY_SEPARATOR}{row["run_timestamp"]}'.encode('utf-8')).hexdigest(),
             axis=1)
 
         save_cleansed_df(df, JOB_DESCRIPTION)
