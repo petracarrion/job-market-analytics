@@ -1,0 +1,25 @@
+2022-05-08 21:29:11.685 | DEBUG    | __main__:load_and_parse:27 - Parsing (96/213) 2343/3437: 2022/04/20/09-00-00/8205291.html
+Traceback (most recent call last):
+  File "/Users/carrion/PycharmProjects/job-market-analytics/python/simplescraper/parse_job_descriptions.py", line 70, in <module>
+    parse_job_descriptions()
+  File "/Users/carrion/PycharmProjects/job-market-analytics/python/simplescraper/parse_job_descriptions.py", line 53, in parse_job_descriptions
+    df['parsed_content'] = df.apply(load_and_parse, axis=1)
+  File "/Users/carrion/PycharmProjects/job-market-analytics/venv/lib/python3.8/site-packages/pandas/core/frame.py", line 8740, in apply
+    return op.apply()
+  File "/Users/carrion/PycharmProjects/job-market-analytics/venv/lib/python3.8/site-packages/pandas/core/apply.py", line 688, in apply
+    return self.apply_standard()
+  File "/Users/carrion/PycharmProjects/job-market-analytics/venv/lib/python3.8/site-packages/pandas/core/apply.py", line 812, in apply_standard
+    results, res_index = self.apply_series_generator()
+  File "/Users/carrion/PycharmProjects/job-market-analytics/venv/lib/python3.8/site-packages/pandas/core/apply.py", line 828, in apply_series_generator
+    results[i] = self.f(v)
+  File "/Users/carrion/PycharmProjects/job-market-analytics/python/simplescraper/parse_job_descriptions.py", line 28, in load_and_parse
+    parsed_content = parse_job_description(html_content)
+  File "/Users/carrion/PycharmProjects/job-market-analytics/python/simplescraper/tasks/parse_job_description.py", line 55, in parse_job_description
+    job_description = extract_metadata(soup)
+  File "/Users/carrion/PycharmProjects/job-market-analytics/python/simplescraper/tasks/parse_job_description.py", line 46, in extract_metadata
+    metadata = flatten_metadata(metadata)
+  File "/Users/carrion/PycharmProjects/job-market-analytics/python/simplescraper/tasks/parse_job_description.py", line 24, in flatten_metadata
+    temp_metadata = flatten.pop('metaData')
+KeyError: 'metaData'
+
+Process finished with exit code 1

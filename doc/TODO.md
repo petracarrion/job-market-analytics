@@ -2,6 +2,7 @@
 
 ## Open
 
+- [ ] Fix the issue "metaData-bag.log"
 - [ ] Move Flasky to the cloud
 - [ ] Do not let Flasky start a process behind an endpoint, if a process is still running
 - [ ] Allow one retry after the browser crashes
