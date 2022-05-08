@@ -6,7 +6,7 @@ from common.storage import load_cleansed_df, save_temp_df, PARSED_JOB_DESCRIPTIO
 
 
 def list_parsed_job_descriptions(run_timestamp) -> pd.DataFrame:
-    df = load_cleansed_df(JOB_DESCRIPTION, columns=['run_timestamp', 'file_name'])
+    df = load_cleansed_df(JOB_DESCRIPTION, columns=['run_timestamp', 'file_name', 'id'])
     save_temp_df(df, run_timestamp, PARSED_JOB_DESCRIPTIONS_CSV)
     return df
 
