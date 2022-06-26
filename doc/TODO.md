@@ -2,6 +2,7 @@
 
 ## Open
 
+- [ ] Log the date and time more visible
 - [ ] Fix the issue "metaData-bag.log"
 - [ ] Implement some kind of search/dashboard for external users
 - [ ] Find a better way to avoid Airflow to hang when there are many jobs to download
