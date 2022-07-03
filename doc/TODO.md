@@ -2,6 +2,7 @@
 
 ## Open
 
+- [ ] Check out https://github.com/lightdash/lightdash
 - [ ] Log the date and time more visible
 - [ ] Fix the issue "metaData-bag.log"
 - [ ] Implement some kind of search/dashboard for external users
