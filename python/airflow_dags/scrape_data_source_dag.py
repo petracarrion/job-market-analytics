@@ -18,29 +18,31 @@ with DAG('scrape_data_source_dag',
         HttpHook().run(endpoint, data)
 
 
-    @task(task_id="check_vpn_status_task")
-    def check_vpn_status_task():
+    @task(task_id="check_vpn_status")
+    def check_vpn_status():
         HttpHook(method='GET').run('do/check_vpn_status')
 
 
-    @task(task_id="list_downloaded_job_descriptions_task")
-    def list_downloaded_job_descriptions_task():
+    @task(task_id="list_downloaded_job_descriptions")
+    def list_downloaded_job_descriptions():
         run_flasky_task('do/list_downloaded_job_descriptions')
 
 
-    @task(task_id="download_sitemap_task")
-    def download_sitemap_task():
+    @task(task_id="download_sitemap")
+    def download_sitemap():
         run_flasky_task('do/download_sitemap')
 
 
-    @task(task_id="list_job_descriptions_to_download_task")
-    def list_job_descriptions_to_download_task():
+    @task(task_id="list_job_descriptions_to_download")
+    def list_job_descriptions_to_download():
         run_flasky_task('do/list_job_descriptions_to_download')
 
 
-    @task(task_id="download_job_descriptions_task")
-    def download_job_descriptions_task():
+    @task(task_id="download_job_descriptions")
+    def download_job_descriptions():
         run_flasky_task('do/download_job_descriptions')
 
 
-    check_vpn_status_task() >> list_downloaded_job_descriptions_task() >> download_sitemap_task() >> list_job_descriptions_to_download_task() >> download_job_descriptions_task()
+    check_vpn_status() >> download_sitemap() >> \
+    list_downloaded_job_descriptions() >> list_job_descriptions_to_download() >> download_job_descriptions() >> \
+    list_downloaded_job_descriptions() >> list_job_descriptions_to_download() >> download_job_descriptions()
