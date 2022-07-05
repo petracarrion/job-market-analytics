@@ -80,8 +80,8 @@ async def download_urls(df, run_timestamp):
                     logger.warning(f'Chunk {chunk_id}: AttributeError: it seems the following URL is gone {url}')
                 except PageNotFound:
                     logger.warning(f'Chunk {chunk_id}: PageNotFound: the following URL is no longer available {url}')
-        except Error:
-            logger.error(f'Chunk {chunk_id}: It seems that the browser crashed.')
+        except Error as err:
+            logger.error(f'Chunk {chunk_id}: It seems that the browser crashed because of the following error: {err}')
         finally:
             await browser.close()
 
