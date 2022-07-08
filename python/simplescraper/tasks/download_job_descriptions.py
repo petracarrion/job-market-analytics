@@ -60,7 +60,7 @@ async def download_urls(df, run_timestamp):
                             await page.keyboard.press('Tab')
                         if response.status >= 400 and response.status >= 400 < 500:
                             raise PageNotFound('Page not found')
-                        await page.wait_for_selector('.listing-content', timeout=5000, state='attached')
+                        await page.wait_for_selector('.listing-content', timeout=10000, state='attached')
                     except TimeoutError as err:
                         logger.warning(
                             f'Chunk {chunk_id}: TimeoutError: second try for {url} because of the following error: {err}')
@@ -70,7 +70,7 @@ async def download_urls(df, run_timestamp):
                         await page.goto(url, wait_until='domcontentloaded')
                         for i in range(TAB_HITS):
                             await page.keyboard.press('Tab')
-                        await page.wait_for_selector('.listing-content', timeout=10000, state='attached')
+                        await page.wait_for_selector('.listing-content', timeout=20000, state='attached')
                     page_content = await page.content()
                     save_raw_file(page_content, JOB_DESCRIPTION, run_timestamp, file_name)
                     logger.success(f'Chunk {chunk_id}: Downloaded   ({pos_in_chunk}/{chunk_size}): {url}')
