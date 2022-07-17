@@ -2,6 +2,7 @@
 
 ## Open
 
+- [ ] Try Prefect
 - [ ] Check out https://github.com/lightdash/lightdash and https://superset.apache.org/
 - [ ] Log the date and time more visible
 - [ ] Fix the issue "metaData-bag.log"
