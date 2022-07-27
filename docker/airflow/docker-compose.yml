@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   redis:
-    image: docker.io/bitnami/redis:6.0
+    image: docker.io/bitnami/redis:6.2.7
     volumes:
       - ${REDIS_VOLUME}:/bitnami
     restart: always
@@ -12,7 +12,7 @@ services:
   airflow-scheduler:
     # TODO: to be reverted to use proper registry/distro on T39132
     # image: docker.io/bitnami/airflow-scheduler:2
-    image: docker.io/bitnami/airflow-scheduler:2
+    image: docker.io/bitnami/airflow-scheduler:2.3.3
     environment:
       - AIRFLOW_FERNET_KEY=${AIRFLOW_FERNET_KEY}
       - AIRFLOW_SECRET_KEY=${AIRFLOW_SECRET_KEY}
@@ -39,7 +39,7 @@ services:
   airflow-worker:
     # TODO: to be reverted to use proper registry/distro on T39132
     # image: docker.io/bitnami/airflow-worker:2
-    image: docker.io/bitnami/airflow-worker:2
+    image: docker.io/bitnami/airflow-worker:2.3.3
     environment:
       - AIRFLOW_FERNET_KEY=${AIRFLOW_FERNET_KEY}
       - AIRFLOW_SECRET_KEY=${AIRFLOW_SECRET_KEY}
@@ -64,7 +64,7 @@ services:
       - ${AIRFLOW_DAGS_VOLUME}:/opt/bitnami/airflow/dags
       - ${AIRFLOW_WORKER_VOLUME}:/bitnami
   airflow:
-    image: docker.io/bitnami/airflow:2
+    image: docker.io/bitnami/airflow:2.3.3
     environment:
       - AIRFLOW_FERNET_KEY=${AIRFLOW_FERNET_KEY}
       - AIRFLOW_SECRET_KEY=${AIRFLOW_SECRET_KEY}
