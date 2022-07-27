@@ -45,4 +45,6 @@ with DAG('scrape_data_source_dag',
 
     check_vpn_status() >> download_sitemap() >> \
     list_downloaded_job_descriptions() >> list_job_descriptions_to_download() >> download_job_descriptions() >> \
+    list_downloaded_job_descriptions() >> list_job_descriptions_to_download() >> download_job_descriptions() >> \
+    list_downloaded_job_descriptions() >> list_job_descriptions_to_download() >> download_job_descriptions() >> \
     list_downloaded_job_descriptions() >> list_job_descriptions_to_download() >> download_job_descriptions()
