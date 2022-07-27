@@ -1,4 +1,4 @@
-FROM postgres:14.0 as postgres-parquet-fdw
+FROM postgres:14.1 as postgres-parquet-fdw
 
 COPY *.sh /usr/local/bin/
 
