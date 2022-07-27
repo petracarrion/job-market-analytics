@@ -23,21 +23,21 @@ services:
     volumes:
       - ${POSTGRES_VOLUME}:/var/lib/postgresql/data
       - ${POSTGRES_PARQUET_FDW_VOLUME}:/var/lib/parquet-fdw/data
-  pgadmin:
-    image: dpage/pgadmin4
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
-      PGADMIN_CONFIG_SERVER_MODE: 'False'
-    ports:
-      - '2345:80'
-    volumes:
-      - ${PGADMIN_VOLUME}:/var/lib/pgadmin
-    networks:
-      - postgres
-    restart: always
-    depends_on:
-      - "postgres"
+#  pgadmin:
+#    image: dpage/pgadmin4
+#    environment:
+#      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+#      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+#      PGADMIN_CONFIG_SERVER_MODE: 'False'
+#    ports:
+#      - '2345:80'
+#    volumes:
+#      - ${PGADMIN_VOLUME}:/var/lib/pgadmin
+#    networks:
+#      - postgres
+#    restart: always
+#    depends_on:
+#      - "postgres"
 
 networks:
   postgres:
