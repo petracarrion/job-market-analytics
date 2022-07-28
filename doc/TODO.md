@@ -2,6 +2,9 @@
 
 ## Open
 
+- [ ] Improve logging
+    - Log how many urls to download are
+    - Make the check vpn more visible
 - [ ] Try Prefect
 - [ ] Check out https://github.com/lightdash/lightdash and https://superset.apache.org/
 - [ ] Log the date and time more visible
