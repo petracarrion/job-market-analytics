@@ -19,8 +19,10 @@ def list_job_descriptions_to_download(run_timestamp, df_sitemap_urls=None, df_do
     df = pd.concat([df, df_downloaded, df_downloaded]).drop_duplicates(keep=False)
     df = df.merge(df_sitemap_urls)
     df = df[['url']]
+    total_count = df.shape[0]
 
     save_temp_df(df, run_timestamp, JOB_DESCRIPTIONS_TO_DOWNLOAD_CSV)
+    logger.success(f'URLs to download: {total_count}')
     logger.info('list_job_descriptions_to_download: end')
     return df
 

@@ -29,7 +29,10 @@ def index():
 
 @app.route('/do/check_vpn_status')
 def do_check_vpn_status():
-    if is_connected_to_vpn():
+    logger.info('is_connected_to_vpn: start')
+    is_connected = is_connected_to_vpn()
+    logger.info('is_connected_to_vpn: end')
+    if is_connected:
         return {'result_status': 'success'}, 200
     else:
         return {'result_status': 'failed'}, 400

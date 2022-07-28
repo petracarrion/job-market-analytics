@@ -2,9 +2,6 @@
 
 ## Open
 
-- [ ] Improve logging
-    - Log how many urls to download are
-    - Make the check vpn more visible
 - [ ] Try Prefect
 - [ ] Check out https://github.com/lightdash/lightdash and https://superset.apache.org/
 - [ ] Log the date and time more visible
@@ -32,6 +29,9 @@
 
 ## Done
 
+- [x] Improve logging
+    - Log how many urls to download are
+    - Make the check vpn more visible
 - [x] Download the job description again after a configurable number of days online
 - [x] Create a report that shows how many days a job offer is online
 - [x] Create a report that shows how many job offers are online at a given time
