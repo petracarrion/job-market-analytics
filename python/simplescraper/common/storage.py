@@ -15,11 +15,13 @@ import pathlib
 import pandas as pd
 import pyarrow as pa
 import pyarrow.parquet as pq
+from azure.storage.blob import BlockBlobService
 from dateutil import parser
 from pyarrow import ArrowInvalid
 
 from common.entity import Entity
-from common.env_variables import DATA_SOURCE_NAME, RAW_DIR, CLEANSED_DIR, TEMP_DIR
+from common.env_variables import DATA_SOURCE_NAME, RAW_DIR, CLEANSED_DIR, TEMP_DIR, AZURE_STORAGE_CONNECTION_STRING, \
+    AZURE_STORAGE_CONTAINER_NAME, DATA_DIR
 
 RUN_TIMESTAMP_FORMAT = '%Y/%m/%d/%H-%M-%S'
 
@@ -63,25 +65,31 @@ def get_run_timestamp(ts=None):
     return run_timestamp
 
 
-def _create_dir(file_path):
+def create_dir(file_path):
     dir_path = os.path.dirname(file_path)
     pathlib.Path(dir_path).mkdir(parents=True, exist_ok=True)
 
 
-def _save_file(content, file_path):
+def save_local_file(content, file_path):
+    create_dir(file_path)
     file_type = "w" if isinstance(content, str) else "wb"
     with open(file_path, file_type) as f:
         f.write(content)
 
 
-def save_file(layer, content, entity: Entity, run_timestamp, file_name):
-    file_path = os.path.join(LAYER_DIR[layer], DATA_SOURCE_NAME, entity.name, run_timestamp, file_name)
-    _create_dir(file_path)
-    _save_file(content, file_path)
+def save_remote_file(content, blob_name):
+    blob_service_client = BlockBlobService(connection_string=AZURE_STORAGE_CONNECTION_STRING)
+    if isinstance(content, str):
+        blob_service_client.create_blob_from_text(AZURE_STORAGE_CONTAINER_NAME, blob_name, content)
+    else:
+        blob_service_client.create_blob_from_bytes(AZURE_STORAGE_CONTAINER_NAME, blob_name, content)
 
 
 def save_raw_file(content, entity: Entity, run_timestamp: str, file_name):
-    save_file(RAW_LAYER, content, entity, run_timestamp, file_name)
+    blob_name = os.path.join(RAW_LAYER, DATA_SOURCE_NAME, entity.name, run_timestamp, file_name)
+    file_path = os.path.join(DATA_DIR, blob_name)
+    save_local_file(content, file_path)
+    save_remote_file(content, blob_name)
 
 
 def load_raw_file(entity: Entity, run_timestamp, file_name):
