@@ -62,8 +62,8 @@ x-airflow-common:
     AIRFLOW_CONN_HTTP_DEFAULT: ${AIRFLOW_CONN_HTTP_DEFAULT}
   volumes:
     - ${AIRFLOW_DAGS_VOLUME}:/opt/airflow/dags
-    - ./logs:/opt/airflow/logs
-    - ./plugins:/opt/airflow/plugins
+    - ${AIRFLOW_LOGS_VOLUME}:/opt/airflow/logs
+    - ${AIRFLOW_PLUGINS_VOLUME}:/opt/airflow/plugins
   user: "${AIRFLOW_UID:-50000}:0"
   depends_on:
     &airflow-common-depends-on
