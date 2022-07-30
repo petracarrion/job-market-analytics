@@ -124,7 +124,7 @@ def download_job_descriptions(run_timestamp, df_to_download=None):
     df = df_to_download or load_temp_df(run_timestamp, JOB_DESCRIPTIONS_TO_DOWNLOAD_CSV)
 
     # TODO find a better way to avoid Airflow to hang when there are many jobs to download
-    df = df.head(SEMAPHORE_COUNT * MAX_CHUNK_SIZE)
+    # df = df.head(SEMAPHORE_COUNT * MAX_CHUNK_SIZE)
 
     total_count = df.shape[0]
 
