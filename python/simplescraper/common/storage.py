@@ -21,7 +21,7 @@ from pyarrow import ArrowInvalid
 
 from common.entity import Entity
 from common.env_variables import DATA_SOURCE_NAME, RAW_DIR, CLEANSED_DIR, TEMP_DIR, AZURE_STORAGE_CONNECTION_STRING, \
-    AZURE_STORAGE_CONTAINER_NAME, DATA_DIR
+    AZURE_STORAGE_CONTAINER_NAME, DATA_DIR, UPLOAD_TO_AZURE
 from common.logging import logger
 
 RUN_TIMESTAMP_FORMAT = '%Y/%m/%d/%H-%M-%S'
@@ -79,20 +79,21 @@ def save_local_file(content, file_path):
 
 
 def save_remote_file(content, blob_name):
+    logger.debug(f'save_remote_file start: {blob_name}')
     blob_service_client = BlockBlobService(connection_string=AZURE_STORAGE_CONNECTION_STRING)
     if isinstance(content, str):
         blob_service_client.create_blob_from_text(AZURE_STORAGE_CONTAINER_NAME, blob_name, content)
     else:
         blob_service_client.create_blob_from_bytes(AZURE_STORAGE_CONTAINER_NAME, blob_name, content)
+    logger.success(f'save_remote_file end:   {blob_name}')
 
 
 def save_raw_file(content, entity: Entity, run_timestamp: str, file_name):
     blob_name = os.path.join(RAW_LAYER, DATA_SOURCE_NAME, entity.name, run_timestamp, file_name)
     file_path = os.path.join(DATA_DIR, blob_name)
-    logger.debug(f'save_raw_file start: {blob_name}')
     save_local_file(content, file_path)
-    save_remote_file(content, blob_name)
-    logger.success(f'save_raw_file end:   {blob_name}')
+    if UPLOAD_TO_AZURE:
+        save_remote_file(content, blob_name)
 
 
 def load_raw_file(entity: Entity, run_timestamp, file_name):
