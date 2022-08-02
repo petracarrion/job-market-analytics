@@ -25,7 +25,7 @@
 
 ## In Progress
 
-- [ ] Move Flasky to the cloud
+- [ ] Move the raw storage to the cloud
 
 ## Done
 
