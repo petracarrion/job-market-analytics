@@ -43,5 +43,5 @@ with DAG('scrape_data_source_dag',
         run_flasky_task('do/download_job_descriptions')
 
 
-    check_vpn_status() >> download_sitemap() >> \
-    list_downloaded_job_descriptions() >> list_job_descriptions_to_download() >> download_job_descriptions()
+    check_vpn_status() >> list_downloaded_job_descriptions() >> \
+    download_sitemap() >> list_job_descriptions_to_download() >> download_job_descriptions()
