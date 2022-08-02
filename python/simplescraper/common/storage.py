@@ -22,6 +22,7 @@ from pyarrow import ArrowInvalid
 from common.entity import Entity
 from common.env_variables import DATA_SOURCE_NAME, RAW_DIR, CLEANSED_DIR, TEMP_DIR, AZURE_STORAGE_CONNECTION_STRING, \
     AZURE_STORAGE_CONTAINER_NAME, DATA_DIR
+from common.logging import logger
 
 RUN_TIMESTAMP_FORMAT = '%Y/%m/%d/%H-%M-%S'
 
@@ -88,8 +89,10 @@ def save_remote_file(content, blob_name):
 def save_raw_file(content, entity: Entity, run_timestamp: str, file_name):
     blob_name = os.path.join(RAW_LAYER, DATA_SOURCE_NAME, entity.name, run_timestamp, file_name)
     file_path = os.path.join(DATA_DIR, blob_name)
+    logger.debug(f'save_raw_file start: {blob_name}')
     save_local_file(content, file_path)
     save_remote_file(content, blob_name)
+    logger.success(f'save_raw_file end:   {blob_name}')
 
 
 def load_raw_file(entity: Entity, run_timestamp, file_name):
