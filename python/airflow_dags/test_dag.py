@@ -5,15 +5,16 @@ from airflow.decorators import task
 from airflow.operators.python import get_current_context
 from airflow.providers.http.hooks.http import HttpHook
 
-with DAG('test_dag',
+with DAG('test_dag2',
          description='Test DAG',
-         schedule_interval='*/5 * * * *',
-         start_date=datetime(2022, 1, 1),
-         catchup=False) as dag:
+         schedule_interval='@daily',
+         start_date=datetime(2022, 7, 29),
+         catchup=True) as dag:
     def run_flasky_task(endpoint):
         context = get_current_context()
         data = {
             'data_interval_end': context['data_interval_end'],
+            'execution_date': context['execution_date'],
         }
         HttpHook().run(endpoint, data)
 
