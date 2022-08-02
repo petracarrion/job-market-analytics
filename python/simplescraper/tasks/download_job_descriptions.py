@@ -73,7 +73,7 @@ async def download_urls(df, run_timestamp):
                         await page.wait_for_selector('.listing-content', timeout=20000, state='attached')
                     page_content = await page.content()
                     save_raw_file(page_content, JOB_DESCRIPTION, run_timestamp, file_name)
-                    logger.success(f'Chunk {chunk_id}: Downloaded   ({pos_in_chunk}/{chunk_size}): {url}')
+                    logger.success(f'Chunk {chunk_id}: Downloaded  ({pos_in_chunk}/{chunk_size}): {url}')
                 except TimeoutError:
                     logger.warning(f'Chunk {chunk_id}: TimeoutError: Timeout error while requesting the page {url}')
                 except AttributeError:
