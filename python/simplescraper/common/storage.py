@@ -21,7 +21,7 @@ from pyarrow import ArrowInvalid
 
 from common.entity import Entity
 from common.env_variables import DATA_SOURCE_NAME, RAW_DIR, CLEANSED_DIR, TEMP_DIR, AZURE_STORAGE_CONNECTION_STRING, \
-    AZURE_STORAGE_CONTAINER_NAME, DATA_DIR, UPLOAD_TO_AZURE
+    AZURE_STORAGE_CONTAINER_NAME, DATA_DIR, UPLOAD_TO_AZURE, BACKUP_DIR
 from common.logging import logger
 
 RUN_TIMESTAMP_FORMAT = '%Y/%m/%d/%H-%M-%S'
@@ -55,6 +55,22 @@ def list_raw_files(data_source, entity: Entity):
         'run_timestamp': '/'.join(f.split('/')[-5:-1]),
         'file_name': f.split('/')[-1],
     } for f in glob.iglob(dir_path + '/**/*', recursive=True) if os.path.isfile(f) and 'latest' not in f]
+    return file_list
+
+
+def list_raw_days(data_source, entity: Entity):
+    dir_path = os.path.join(RAW_DIR, data_source, entity.name)
+    file_list = [{
+        'date': ''.join(f.split('/')[-3:]),
+    } for f in glob.iglob(dir_path + '/*/*/*', recursive=True) if os.path.isdir(f) and 'latest' not in f]
+    return file_list
+
+
+def list_backup_days(data_source, entity: Entity):
+    dir_path = os.path.join(BACKUP_DIR, data_source, entity.name)
+    file_list = [{
+        'date': f.split('.')[-3],
+    } for f in glob.iglob(dir_path + '/**/*', recursive=True) if os.path.isfile(f)]
     return file_list
 
 

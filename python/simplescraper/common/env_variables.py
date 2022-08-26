@@ -8,6 +8,7 @@ DATA_DIR = os.getenv('DATA_DIR')
 RAW_DIR = os.getenv('RAW_DIR')
 CLEANSED_DIR = os.getenv('CLEANSED_DIR')
 TEMP_DIR = os.getenv('TEMP_DIR')
+BACKUP_DIR = os.getenv('BACKUP_DIR')
 
 DATA_SOURCE_NAME = os.getenv('DATA_SOURCE_NAME')
 DATA_SOURCE_URL = os.getenv('DATA_SOURCE_URL')

@@ -16,7 +16,7 @@ do
   if [ -d "$source" ]
   then
 
-    target_dir=${BACKUP_DIR}/${entity}/$1/$2
+    target_dir=${BACKUP_DIR}/${DATA_SOURCE_NAME}/${entity}/$1/$2
     target_filename=${target_dir}/${entity}.$1$2$3.tar.gz
     mkdir -p "${target_dir}"
     tar -zcvf "${target_filename}" -C "${source}" .
