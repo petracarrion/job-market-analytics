@@ -29,7 +29,6 @@ def list_missing_previous_dates(entity):
 def backup_missing_previous_days():
     dfs = []
     for entity in ALL_ENTITIES:
-        print(entity)
         df = list_missing_previous_dates(entity)
         dfs.append(df)
     df = pd.concat(dfs, ignore_index=True)
@@ -42,7 +41,6 @@ def backup_missing_previous_days():
         day = date_to_download[6:8]
         print(
             f'/bin/zsh /Users/carrion/PycharmProjects/job-market-analytics/python/simplescraper/backup_day.sh {year} {month} {day}')
-    print(dates_to_download)
 
 
 if __name__ == "__main__":
