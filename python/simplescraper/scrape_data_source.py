@@ -9,7 +9,7 @@ from tasks.list_job_descriptions_to_download import list_job_descriptions_to_dow
 
 
 def scrape_data_source(run_timestamp):
-    configure_logger(run_timestamp)
+    configure_logger(run_timestamp, 'scrape_data_source')
     df_downloaded = list_downloaded_job_descriptions(run_timestamp)
     df_sitemap = download_sitemap(run_timestamp)
     df_to_download = list_job_descriptions_to_download(run_timestamp, df_sitemap, df_downloaded)

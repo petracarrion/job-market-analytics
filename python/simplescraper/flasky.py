@@ -43,7 +43,7 @@ def do_list_downloaded_urls():
     if request.method == 'POST':
         data_interval_end = request.form.get('data_interval_end')
         run_timestamp = get_run_timestamp(data_interval_end)
-        configure_logger(run_timestamp)
+        configure_logger(run_timestamp, 'list_downloaded_job_descriptions')
         list_downloaded_job_descriptions(run_timestamp)
         return {'result_status': 'success'}, 200
     elif request.method == 'GET':
@@ -59,7 +59,7 @@ def do_download_sitemap():
         if is_connected_to_vpn():
             data_interval_end = request.form.get('data_interval_end')
             run_timestamp = get_run_timestamp(data_interval_end)
-            configure_logger(run_timestamp)
+            configure_logger(run_timestamp, 'download_sitemap')
             download_sitemap(run_timestamp)
             return {'result_status': 'success'}, 200
         else:
@@ -77,7 +77,7 @@ def do_list_job_descriptions_to_download():
         if is_connected_to_vpn():
             data_interval_end = request.form.get('data_interval_end')
             run_timestamp = get_run_timestamp(data_interval_end)
-            configure_logger(run_timestamp)
+            configure_logger(run_timestamp, 'list_job_descriptions_to_download')
             list_job_descriptions_to_download(run_timestamp)
             return {'result_status': 'success'}, 200
         else:
@@ -95,7 +95,7 @@ def do_download_job_descriptions():
         if is_connected_to_vpn():
             data_interval_end = request.form.get('data_interval_end')
             run_timestamp = get_run_timestamp(data_interval_end)
-            configure_logger(run_timestamp)
+            configure_logger(run_timestamp, 'download_job_descriptions')
             download_job_descriptions(run_timestamp)
             return {'result_status': 'success'}, 200
         else:

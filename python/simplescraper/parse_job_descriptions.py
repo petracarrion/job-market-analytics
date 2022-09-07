@@ -34,7 +34,7 @@ def load_and_parse(row) -> str:
 
 def parse_job_descriptions():
     run_timestamp = get_run_timestamp()
-    configure_logger(run_timestamp)
+    configure_logger(run_timestamp, 'parse_job_descriptions')
     df_downloaded = list_downloaded_job_descriptions(run_timestamp)
     df_parsed = list_parsed_job_descriptions(run_timestamp)
     df_to_parse = list_job_descriptions_to_parse(run_timestamp, df_downloaded, df_parsed)

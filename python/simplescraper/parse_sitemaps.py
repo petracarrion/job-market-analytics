@@ -44,7 +44,7 @@ def remove_current_date(df, run_timestamp):
 
 
 def parse_sitemaps(run_timestamp):
-    configure_logger(run_timestamp)
+    configure_logger(run_timestamp, 'parse_sitemaps')
     df_downloaded = list_downloaded_sitemaps(run_timestamp)
     df_downloaded[['year', 'month', 'day', 'time']] = df_downloaded['run_timestamp'].str.split('/', 3, expand=True)
     df_downloaded = remove_current_date(df_downloaded, run_timestamp)
