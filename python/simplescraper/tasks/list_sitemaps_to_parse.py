@@ -7,8 +7,8 @@ from common.storage import load_temp_df, DOWNLOADED_SITEMAPS_CSV, PARSED_SITEMAP
 
 def list_sitemaps_to_parse(run_timestamp, df_downloaded: pd.DataFrame, df_parsed: pd.DataFrame) -> pd.DataFrame:
     df_downloaded = df_downloaded.drop_duplicates()
-    parsed_dates = df_parsed['ingestion_date'].to_list()
-    df = df_downloaded[~df_downloaded['ingestion_date'].isin(parsed_dates)]
+    parsed_dates = df_parsed['run_timestamp'].to_list()
+    df = df_downloaded[~df_downloaded['run_timestamp'].isin(parsed_dates)]
     save_temp_df(df, run_timestamp, SITEMAPS_TO_PARSE_CSV)
     return df
 

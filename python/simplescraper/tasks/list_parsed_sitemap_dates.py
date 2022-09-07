@@ -6,7 +6,7 @@ from common.storage import load_cleansed_df, save_temp_df, PARSED_SITEMAP_DATES_
 
 
 def list_parsed_sitemap_dates(run_timestamp) -> pd.DataFrame:
-    df = load_cleansed_df(SITEMAP, columns=['ingestion_date'])
+    df = load_cleansed_df(SITEMAP, columns=['run_timestamp'])
     df = df.drop_duplicates()
     save_temp_df(df, run_timestamp, PARSED_SITEMAP_DATES_CSV)
     return df
