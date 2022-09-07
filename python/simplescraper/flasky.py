@@ -107,6 +107,21 @@ def do_download_job_descriptions():
                '</form>'
 
 
+@app.route('/do/cleanse_job_descriptions', methods=['GET', 'POST'])
+def do_cleanse_job_descriptions():
+    if request.method == 'POST':
+        logger.info(request.form)
+        return {
+                   'result_status': 'success',
+                   'run_timestamp': 'TODO',
+               }, 200
+    elif request.method == 'GET':
+        return '<form method="POST">' \
+               '  <div><label>data_interval_end: <input type="text" name="data_interval_end"></label></div>' \
+               '  <input type="submit" value="Submit">' \
+               '</form>'
+
+
 @app.route('/do/test', methods=['GET', 'POST'])
 def do_test():
     if request.method == 'POST':
