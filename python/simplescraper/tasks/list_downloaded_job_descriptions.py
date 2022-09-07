@@ -17,9 +17,9 @@ def calculate_days_online(run_timestamp):
     return delta.days
 
 
-def list_downloaded_job_descriptions(run_timestamp) -> pd.DataFrame:
+def list_downloaded_job_descriptions(run_timestamp, target_date=None) -> pd.DataFrame:
     logger.info('list_downloaded_job_descriptions start')
-    files = list_raw_files(DATA_SOURCE_NAME, JOB_DESCRIPTION)
+    files = list_raw_files(DATA_SOURCE_NAME, JOB_DESCRIPTION, target_date)
     df = pd.DataFrame(files)
     df['id'] = df['file_name'].str.split('.', expand=True)[0]
     if ONLINE_EXPIRATION_IN_DAYS:

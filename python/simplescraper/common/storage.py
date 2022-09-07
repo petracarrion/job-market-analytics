@@ -25,6 +25,7 @@ from common.env_variables import DATA_SOURCE_NAME, RAW_DIR, CLEANSED_DIR, TEMP_D
 from common.logging import logger
 
 RUN_TIMESTAMP_FORMAT = '%Y/%m/%d/%H-%M-%S'
+TARGET_DATE_FORMAT = '%Y/%m/%d'
 
 RAW_LAYER = 'raw'
 CLEANSED_LAYER = 'cleansed'
@@ -49,8 +50,10 @@ PARSED_SITEMAP_DATES_CSV = '32_parsed_sitemap_dates.csv'
 SITEMAPS_TO_PARSE_CSV = '33_sitemaps_to_parse.csv'
 
 
-def list_raw_files(data_source, entity: Entity):
+def list_raw_files(data_source, entity: Entity, target_date=None):
     dir_path = os.path.join(RAW_DIR, data_source, entity.name)
+    if target_date:
+        dir_path = os.path.join(dir_path, target_date)
     file_list = [{
         'run_timestamp': '/'.join(f.split('/')[-5:-1]),
         'file_name': f.split('/')[-1],
@@ -75,11 +78,19 @@ def list_backup_days(data_source, entity: Entity):
 
 
 def get_run_timestamp(ts=None):
-    if ts is not None:
-        run_timestamp = parser.parse(ts).strftime(RUN_TIMESTAMP_FORMAT)
-    else:
+    if ts is None:
         run_timestamp = datetime.datetime.today().strftime(RUN_TIMESTAMP_FORMAT)
+    else:
+        run_timestamp = parser.parse(ts).strftime(RUN_TIMESTAMP_FORMAT)
     return run_timestamp
+
+
+def get_target_date(ds=None):
+    if ds is None:
+        target_date = (datetime.datetime.today() - datetime.timedelta(days=1)).strftime(TARGET_DATE_FORMAT)
+    else:
+        target_date = parser.parse(ds).strftime(TARGET_DATE_FORMAT)
+    return target_date
 
 
 def create_dir(file_path):

@@ -1,5 +1,3 @@
-import hashlib
-
 import bs4
 from loguru import logger
 
@@ -10,8 +8,6 @@ from tasks.chunk_sitemaps_to_parse import chunk_sitemaps_to_parse
 from tasks.list_downloaded_sitemaps import list_downloaded_sitemaps
 from tasks.list_parsed_sitemap_dates import list_parsed_sitemap_dates
 from tasks.list_sitemaps_to_parse import list_sitemaps_to_parse
-
-HASHKEY_SEPARATOR = ';'
 
 DEBUG = False
 
@@ -64,10 +60,6 @@ def parse_sitemaps(run_timestamp):
         df = df.explode('url')
         df = df.drop_duplicates(['ingestion_date', 'url'], keep='last')
         df['job_id'] = extract_job_id(df['url'])
-        df['sitemap_ingestion_hashkey'] = df.apply(
-            lambda row: hashlib.md5(
-                f'{row["job_id"]}{HASHKEY_SEPARATOR}{row["ingestion_date"]}'.encode('utf-8')).hexdigest(),
-            axis=1)
 
         logger.info(f'Saving cleansed: {df["ingestion_date"].iloc[0]}')
         save_cleansed_df(df, SITEMAP)

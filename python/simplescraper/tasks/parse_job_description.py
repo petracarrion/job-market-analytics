@@ -11,7 +11,7 @@ METADATA_JSON_SUFFIX = ';'
 
 FIELD_SELECTORS = {
     'company_name': '.at-header-company-name',
-    'description': '#job-description',
+    # 'description': 'div[itemprop="description"]',
     'description_introduction': '.at-section-text-introduction',
     'description_responsabilities': '.at-section-text-description-content',
     'description_requirements': '.at-section-text-profile-content',

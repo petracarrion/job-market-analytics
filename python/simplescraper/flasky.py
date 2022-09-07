@@ -3,7 +3,7 @@ import os
 from flask import Flask, request
 
 from common.logging import logger, configure_logger
-from common.storage import get_run_timestamp
+from common.storage import get_run_timestamp, get_target_date
 from tasks.download_job_descriptions import download_job_descriptions
 from tasks.download_sitemap import download_sitemap
 from tasks.list_downloaded_job_descriptions import list_downloaded_job_descriptions
@@ -111,9 +111,14 @@ def do_download_job_descriptions():
 def do_cleanse_job_descriptions():
     if request.method == 'POST':
         logger.info(request.form)
+        data_interval_end = request.form.get('data_interval_end')
+        run_timestamp = get_run_timestamp(data_interval_end)
+        ds = request.form.get('ds')
+        target_date = get_target_date(ds)
         return {
                    'result_status': 'success',
-                   'run_timestamp': 'TODO',
+                   'run_timestamp': run_timestamp,
+                   'target_date': target_date,
                }, 200
     elif request.method == 'GET':
         return '<form method="POST">' \
