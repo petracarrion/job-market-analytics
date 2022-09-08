@@ -172,8 +172,8 @@ def do_backup_day():
         return HTML_FORM
 
 
-@app.route('/do/validate_day_backup', methods=['GET', 'POST'])
-def do_validate_backup():
+@app.route('/do/verify_day_backup', methods=['GET', 'POST'])
+def do_verify_day_backup():
     if request.method == 'POST':
         ds = request.form.get('ds')
         target_date = get_target_date(ds)

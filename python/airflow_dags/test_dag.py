@@ -3,7 +3,7 @@ from datetime import datetime
 from airflow import DAG
 from airflow.decorators import task
 
-from common_airflow_gag import run_flasky_task
+from common_airflow_dag import run_flasky_task
 
 with DAG('test_dag2',
          description='Test DAG',

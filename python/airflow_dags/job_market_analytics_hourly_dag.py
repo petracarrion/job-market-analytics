@@ -4,7 +4,7 @@ from airflow import DAG
 from airflow.decorators import task
 from airflow.providers.http.hooks.http import HttpHook
 
-from common_airflow_gag import run_flasky_task
+from common_airflow_dag import run_flasky_task
 
 with DAG('job_market_analytics_hourly_dag',
          description='Job Market Analytics Hourly DAG',

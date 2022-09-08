@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from airflow import DAG
 from airflow.decorators import task
 
-from common_airflow_gag import run_flasky_task
+from common_airflow_dag import run_flasky_task
 
 with DAG('job_market_analytics_daily_dag',
          description='Job Market Analytics Daily DAG',
@@ -23,5 +23,16 @@ with DAG('job_market_analytics_daily_dag',
         run_flasky_task('do/cleanse_job_descriptions')
 
 
+    @task(task_id="backup_day")
+    def backup_day():
+        run_flasky_task('do/backup_day')
+
+
+    @task(task_id="verify_day_backup")
+    def verify_day_backup():
+        run_flasky_task('do/verify_day_backup')
+
+
     cleanse_sitemaps()
     cleanse_job_descriptions()
+    backup_day() >> verify_day_backup()
