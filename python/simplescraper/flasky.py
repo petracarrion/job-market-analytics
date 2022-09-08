@@ -43,7 +43,7 @@ def index():
            '<a href="/do/download_job_descriptions">Download Job Descriptions</a><br>' \
            '<a href="/do/cleanse_sitemaps">Cleanse Sitemap</a><br>' \
            '<a href="/do/cleanse_job_descriptions">Cleanse Job Descriptions</a><br>' \
-           '<a href="/do/validate_backup">Validate Backup</a><br>' \
+           '<a href="/do/validate_day_backup">Validate Backup</a><br>' \
            '<a href="/do/test">Test</a><br>'
 
 
@@ -151,7 +151,7 @@ def do_cleanse_job_descriptions():
         return HTML_FORM
 
 
-@app.route('/do/validate_backup', methods=['GET', 'POST'])
+@app.route('/do/validate_day_backup', methods=['GET', 'POST'])
 def do_validate_backup():
     if request.method == 'POST':
         logger.info(request.form)
