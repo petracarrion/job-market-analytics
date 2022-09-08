@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from airflow import DAG
 from airflow.decorators import task
@@ -10,6 +10,9 @@ with DAG('job_market_analytics_hourly_dag',
          description='Job Market Analytics Hourly DAG',
          schedule_interval='@hourly',
          start_date=datetime(2022, 1, 1),
+         dagrun_timeout=timedelta(minutes=60),
+         max_active_runs=1,
+         max_active_tasks=1,
          catchup=False) as dag:
     @task(task_id="check_vpn_status")
     def check_vpn_status():
