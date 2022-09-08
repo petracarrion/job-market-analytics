@@ -11,6 +11,12 @@ from tasks.download_sitemap import download_sitemap
 from tasks.list_downloaded_job_descriptions import list_downloaded_job_descriptions
 from tasks.list_job_descriptions_to_download import list_job_descriptions_to_download
 
+HTML_FORM = '<form method="POST">' \
+            '  <div><label>data_interval_end: <input type="text" name="data_interval_end"></label></div>' \
+            '  <div><label>ds: <input type="text" name="ds"></label></div>' \
+            '  <input type="submit" value="Submit">' \
+            '</form>'
+
 
 def is_connected_to_vpn():
     return os.system('/usr/sbin/scutil --nc list | grep Connected | grep vpn') == 0
@@ -26,6 +32,8 @@ def index():
            '<a href="/do/download_sitemap">Download Sitemap</a><br>' \
            '<a href="/do/list_job_descriptions_to_download">List Job Descriptions to Download</a><br>' \
            '<a href="/do/download_job_descriptions">Download Job Descriptions</a><br>' \
+           '<a href="/do/cleanse_sitemaps">Cleanse Sitemap</a><br>' \
+           '<a href="/do/cleanse_job_descriptions">Cleanse Job Descriptions</a><br>' \
            '<a href="/do/test">Test</a><br>'
 
 
@@ -49,10 +57,7 @@ def do_list_downloaded_urls():
         list_downloaded_job_descriptions(run_timestamp)
         return {'result_status': 'success'}, 200
     elif request.method == 'GET':
-        return '<form method="POST">' \
-               '  <div><label>data_interval_end: <input type="text" name="data_interval_end"></label></div>' \
-               '  <input type="submit" value="Submit">' \
-               '</form>'
+        return HTML_FORM
 
 
 @app.route('/do/download_sitemap', methods=['GET', 'POST'])
@@ -67,10 +72,7 @@ def do_download_sitemap():
         else:
             return {'result_status': 'failed'}, 400
     elif request.method == 'GET':
-        return '<form method="POST">' \
-               '  <div><label>data_interval_end: <input type="text" name="data_interval_end"></label></div>' \
-               '  <input type="submit" value="Submit">' \
-               '</form>'
+        return HTML_FORM
 
 
 @app.route('/do/list_job_descriptions_to_download', methods=['GET', 'POST'])
@@ -85,10 +87,7 @@ def do_list_job_descriptions_to_download():
         else:
             return {'result_status': 'failed'}, 400
     elif request.method == 'GET':
-        return '<form method="POST">' \
-               '  <div><label>data_interval_end: <input type="text" name="data_interval_end"></label></div>' \
-               '  <input type="submit" value="Submit">' \
-               '</form>'
+        return HTML_FORM
 
 
 @app.route('/do/download_job_descriptions', methods=['GET', 'POST'])
@@ -103,31 +102,7 @@ def do_download_job_descriptions():
         else:
             return {'result_status': 'failed'}, 400
     elif request.method == 'GET':
-        return '<form method="POST">' \
-               '  <div><label>data_interval_end: <input type="text" name="data_interval_end"></label></div>' \
-               '  <input type="submit" value="Submit">' \
-               '</form>'
-
-
-@app.route('/do/cleanse_job_descriptions', methods=['GET', 'POST'])
-def do_cleanse_job_descriptions():
-    if request.method == 'POST':
-        logger.info(request.form)
-        data_interval_end = request.form.get('data_interval_end')
-        run_timestamp = get_run_timestamp(data_interval_end)
-        ds = request.form.get('ds')
-        target_date = get_target_date(ds)
-        cleanse_job_descriptions(run_timestamp, target_date)
-        return {
-                   'result_status': 'success',
-                   'run_timestamp': run_timestamp,
-                   'target_date': target_date,
-               }, 200
-    elif request.method == 'GET':
-        return '<form method="POST">' \
-               '  <div><label>data_interval_end: <input type="text" name="data_interval_end"></label></div>' \
-               '  <input type="submit" value="Submit">' \
-               '</form>'
+        return HTML_FORM
 
 
 @app.route('/do/cleanse_sitemaps', methods=['GET', 'POST'])
@@ -145,10 +120,25 @@ def do_cleanse_sitemaps():
                    'target_date': target_date,
                }, 200
     elif request.method == 'GET':
-        return '<form method="POST">' \
-               '  <div><label>data_interval_end: <input type="text" name="data_interval_end"></label></div>' \
-               '  <input type="submit" value="Submit">' \
-               '</form>'
+        return HTML_FORM
+
+
+@app.route('/do/cleanse_job_descriptions', methods=['GET', 'POST'])
+def do_cleanse_job_descriptions():
+    if request.method == 'POST':
+        logger.info(request.form)
+        data_interval_end = request.form.get('data_interval_end')
+        run_timestamp = get_run_timestamp(data_interval_end)
+        ds = request.form.get('ds')
+        target_date = get_target_date(ds)
+        cleanse_job_descriptions(run_timestamp, target_date)
+        return {
+                   'result_status': 'success',
+                   'run_timestamp': run_timestamp,
+                   'target_date': target_date,
+               }, 200
+    elif request.method == 'GET':
+        return HTML_FORM
 
 
 @app.route('/do/test', methods=['GET', 'POST'])
@@ -160,7 +150,4 @@ def do_test():
                    'run_timestamp': 'TODO',
                }, 200
     elif request.method == 'GET':
-        return '<form method="POST">' \
-               '  <div><label>data_interval_end: <input type="text" name="data_interval_end"></label></div>' \
-               '  <input type="submit" value="Submit">' \
-               '</form>'
+        return HTML_FORM

@@ -20,4 +20,5 @@ with DAG('job_market_analytics_daily_dag',
         run_flasky_task('do/cleanse_job_descriptions')
 
 
-    cleanse_sitemaps() >> cleanse_job_descriptions()
+    cleanse_sitemaps()
+    cleanse_job_descriptions()
