@@ -3,7 +3,7 @@ import datetime
 import pandas as pd
 
 from common.entity import ALL_ENTITIES
-from common.env_variables import DATA_SOURCE_NAME
+from common.env_variables import DATA_SOURCE_NAME, SOURCE_DIR
 from common.storage import list_raw_days, list_backup_days
 
 
@@ -26,6 +26,15 @@ def list_missing_previous_dates(entity):
     return df
 
 
+def print_script_statements(script_name, dates_to_download):
+    for date_to_download in dates_to_download:
+        year = date_to_download[:4]
+        month = date_to_download[4:6]
+        day = date_to_download[6:8]
+        print(
+            f'/bin/zsh {SOURCE_DIR}/simplescraper/{script_name} {year} {month} {day}')
+
+
 def backup_missing_previous_days():
     dfs = []
     for entity in ALL_ENTITIES:
@@ -35,12 +44,9 @@ def backup_missing_previous_days():
     df = df.drop_duplicates()
     df = df.sort_values(by=['date'])
     dates_to_download = df['date'].to_list()
-    for date_to_download in dates_to_download:
-        year = date_to_download[:4]
-        month = date_to_download[4:6]
-        day = date_to_download[6:8]
-        print(
-            f'/bin/zsh /Users/carrion/PycharmProjects/job-market-analytics/python/simplescraper/backup_day.sh {year} {month} {day}')
+    print_script_statements('backup_day.sh', dates_to_download)
+    print()
+    print_script_statements('backup_day.sh', dates_to_download)
 
 
 if __name__ == "__main__":

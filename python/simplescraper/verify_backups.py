@@ -3,7 +3,7 @@ import datetime
 import pandas as pd
 
 from common.entity import ALL_ENTITIES
-from common.env_variables import DATA_SOURCE_NAME
+from common.env_variables import DATA_SOURCE_NAME, SOURCE_DIR
 from common.storage import list_raw_days
 
 
@@ -38,7 +38,7 @@ def verify_backups():
         month = date_to_download[4:6]
         day = date_to_download[6:8]
         print(
-            f'/bin/zsh /Users/carrion/PycharmProjects/job-market-analytics/python/simplescraper/verify_day_backup.sh {year} {month} {day} || exit 1')
+            f'/bin/zsh {SOURCE_DIR}/simplescraper/verify_day_backup.sh {year} {month} {day} || exit 1')
 
 
 if __name__ == "__main__":
