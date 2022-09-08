@@ -1,9 +1,11 @@
 import os
+import subprocess
 
 from flask import Flask, request
 
 from cleanse_job_descriptions import cleanse_job_descriptions
 from cleanse_sitemaps import cleanse_sitemaps
+from common.env_variables import SOURCE_DIR
 from common.logging import logger, configure_logger
 from common.storage import get_run_timestamp, get_target_date
 from tasks.download_job_descriptions import download_job_descriptions
@@ -11,11 +13,18 @@ from tasks.download_sitemap import download_sitemap
 from tasks.list_downloaded_job_descriptions import list_downloaded_job_descriptions
 from tasks.list_job_descriptions_to_download import list_job_descriptions_to_download
 
-HTML_FORM = '<form method="POST">' \
-            '  <div><label>data_interval_end: <input type="text" name="data_interval_end"></label></div>' \
-            '  <div><label>ds: <input type="text" name="ds"></label></div>' \
-            '  <input type="submit" value="Submit">' \
-            '</form>'
+SUCCESS_RETURN_CODE = 0
+
+DEFAULT_DATA_INTERVAL_END = '2022-09-08T00:00:00+00:00'
+DEFAULT_DS = '2022-09-07'
+
+HTML_FORM = f'''
+<form method="POST">
+  <label>data_interval_end:<input type="text" name="data_interval_end" value="{DEFAULT_DATA_INTERVAL_END}"></label><br>
+  <label>ds:               <input type="text" name="ds"                value="{DEFAULT_DS}"></label><br>
+  <input type="submit" value="Submit">
+</form>
+'''
 
 
 def is_connected_to_vpn():
@@ -34,6 +43,7 @@ def index():
            '<a href="/do/download_job_descriptions">Download Job Descriptions</a><br>' \
            '<a href="/do/cleanse_sitemaps">Cleanse Sitemap</a><br>' \
            '<a href="/do/cleanse_job_descriptions">Cleanse Job Descriptions</a><br>' \
+           '<a href="/do/validate_backup">Validate Backup</a><br>' \
            '<a href="/do/test">Test</a><br>'
 
 
@@ -137,6 +147,30 @@ def do_cleanse_job_descriptions():
                    'run_timestamp': run_timestamp,
                    'target_date': target_date,
                }, 200
+    elif request.method == 'GET':
+        return HTML_FORM
+
+
+@app.route('/do/validate_backup', methods=['GET', 'POST'])
+def do_validate_backup():
+    if request.method == 'POST':
+        logger.info(request.form)
+        data_interval_end = request.form.get('data_interval_end')
+        run_timestamp = get_run_timestamp(data_interval_end)
+        ds = request.form.get('ds')
+        target_date = get_target_date(ds)
+        year, month, day = ds.split('-')
+        result = subprocess.run([f'{SOURCE_DIR}/simplescraper/verify_day_backup.sh', year, month, day])
+        if result.returncode == SUCCESS_RETURN_CODE:
+            return {
+                       'result_status': 'success',
+                       'run_timestamp': run_timestamp,
+                       'target_date': target_date,
+                   }, 200
+        else:
+            return {
+                       'result_status': 'error',
+                   }, 400
     elif request.method == 'GET':
         return HTML_FORM
 

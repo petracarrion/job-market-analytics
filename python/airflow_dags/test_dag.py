@@ -9,7 +9,7 @@ with DAG('test_dag2',
          description='Test DAG',
          schedule_interval='@daily',
          start_date=datetime(2022, 7, 29),
-         catchup=True) as dag:
+         catchup=False) as dag:
     @task(task_id="test_task")
     def run_test():
         run_flasky_task('do/test')
