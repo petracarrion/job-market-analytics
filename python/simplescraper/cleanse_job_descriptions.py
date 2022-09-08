@@ -20,7 +20,7 @@ def load_and_parse(row) -> str:
         return ''
 
 
-def parse_job_descriptions(run_timestamp, target_date):
+def cleanse_job_descriptions(run_timestamp, target_date):
     configure_logger(run_timestamp, 'parse_job_descriptions')
     df = list_downloaded_job_descriptions(run_timestamp, target_date)
     df = df.sort_values(by=['run_timestamp', 'file_name'])
@@ -35,4 +35,4 @@ def parse_job_descriptions(run_timestamp, target_date):
 
 
 if __name__ == "__main__":
-    parse_job_descriptions(get_run_timestamp(), get_target_date())
+    cleanse_job_descriptions(get_run_timestamp(), get_target_date())

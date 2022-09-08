@@ -2,6 +2,7 @@ import os
 
 from flask import Flask, request
 
+from cleanse_job_descriptions import cleanse_job_descriptions
 from common.logging import logger, configure_logger
 from common.storage import get_run_timestamp, get_target_date
 from tasks.download_job_descriptions import download_job_descriptions
@@ -115,6 +116,7 @@ def do_cleanse_job_descriptions():
         run_timestamp = get_run_timestamp(data_interval_end)
         ds = request.form.get('ds')
         target_date = get_target_date(ds)
+        cleanse_job_descriptions(run_timestamp, target_date)
         return {
                    'result_status': 'success',
                    'run_timestamp': run_timestamp,
