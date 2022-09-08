@@ -155,9 +155,6 @@ def do_cleanse_job_descriptions():
 @app.route('/do/backup_day', methods=['GET', 'POST'])
 def do_backup_day():
     if request.method == 'POST':
-        logger.info(request.form)
-        data_interval_end = request.form.get('data_interval_end')
-        run_timestamp = get_run_timestamp(data_interval_end)
         ds = request.form.get('ds')
         target_date = get_target_date(ds)
         year, month, day = ds.split('-')
@@ -165,7 +162,6 @@ def do_backup_day():
         if result.returncode == SUCCESS_RETURN_CODE:
             return {
                        'result_status': 'success',
-                       'run_timestamp': run_timestamp,
                        'target_date': target_date,
                    }, 200
         else:
@@ -179,9 +175,6 @@ def do_backup_day():
 @app.route('/do/validate_day_backup', methods=['GET', 'POST'])
 def do_validate_backup():
     if request.method == 'POST':
-        logger.info(request.form)
-        data_interval_end = request.form.get('data_interval_end')
-        run_timestamp = get_run_timestamp(data_interval_end)
         ds = request.form.get('ds')
         target_date = get_target_date(ds)
         year, month, day = ds.split('-')
@@ -189,7 +182,6 @@ def do_validate_backup():
         if result.returncode == SUCCESS_RETURN_CODE:
             return {
                        'result_status': 'success',
-                       'run_timestamp': run_timestamp,
                        'target_date': target_date,
                    }, 200
         else:
