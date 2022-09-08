@@ -26,7 +26,8 @@ def list_downloaded_job_descriptions(run_timestamp, target_date=None) -> pd.Data
         df['days_online'] = df['run_timestamp'].map(calculate_days_online)
         df = df[df['days_online'] < ONLINE_EXPIRATION_IN_DAYS]
         df = df.drop(columns=['days_online'])
-    save_temp_df(df, run_timestamp, DOWNLOADED_JOB_DESCRIPTIONS_CSV)
+    if target_date is None:
+        save_temp_df(df, run_timestamp, DOWNLOADED_JOB_DESCRIPTIONS_CSV)
     logger.info('list_downloaded_job_descriptions end')
     return df
 
