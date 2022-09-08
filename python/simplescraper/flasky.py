@@ -43,7 +43,8 @@ def index():
            '<a href="/do/download_job_descriptions">Download Job Descriptions</a><br>' \
            '<a href="/do/cleanse_sitemaps">Cleanse Sitemap</a><br>' \
            '<a href="/do/cleanse_job_descriptions">Cleanse Job Descriptions</a><br>' \
-           '<a href="/do/validate_day_backup">Validate Backup</a><br>' \
+           '<a href="/do/backup_day">Backup Day</a><br>' \
+           '<a href="/do/validate_day_backup">Validate Day Backup</a><br>' \
            '<a href="/do/test">Test</a><br>'
 
 
@@ -147,6 +148,30 @@ def do_cleanse_job_descriptions():
                    'run_timestamp': run_timestamp,
                    'target_date': target_date,
                }, 200
+    elif request.method == 'GET':
+        return HTML_FORM
+
+
+@app.route('/do/backup_day', methods=['GET', 'POST'])
+def do_backup_day():
+    if request.method == 'POST':
+        logger.info(request.form)
+        data_interval_end = request.form.get('data_interval_end')
+        run_timestamp = get_run_timestamp(data_interval_end)
+        ds = request.form.get('ds')
+        target_date = get_target_date(ds)
+        year, month, day = ds.split('-')
+        result = subprocess.run([f'{SOURCE_DIR}/simplescraper/backup_day.sh', year, month, day])
+        if result.returncode == SUCCESS_RETURN_CODE:
+            return {
+                       'result_status': 'success',
+                       'run_timestamp': run_timestamp,
+                       'target_date': target_date,
+                   }, 200
+        else:
+            return {
+                       'result_status': 'error',
+                   }, 400
     elif request.method == 'GET':
         return HTML_FORM
 
