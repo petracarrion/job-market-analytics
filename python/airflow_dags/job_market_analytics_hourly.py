@@ -6,8 +6,8 @@ from airflow.providers.http.hooks.http import HttpHook
 
 from common_airflow_gag import run_flasky_task
 
-with DAG('scrape_data_source_dag',
-         description='Scrape Data Source DAG',
+with DAG('job_market_analytics_hourly_dag',
+         description='Job Market Analytics Hourly DAG',
          schedule_interval='@hourly',
          start_date=datetime(2022, 1, 1),
          catchup=False) as dag:
