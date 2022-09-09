@@ -29,6 +29,10 @@ do
       exit 1
     fi
 
+  else
+
+    echo "$1-$2-$3: NOT FOUND ${entity}"
+
   fi
 
 done
