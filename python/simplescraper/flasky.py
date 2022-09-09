@@ -18,6 +18,8 @@ SUCCESS_RETURN_CODE = 0
 DEFAULT_DATA_INTERVAL_END = '2022-09-08T00:00:00+00:00'
 DEFAULT_DS = '2022-09-07'
 
+SUCCESS = {'result_status': 'success', }, 200
+
 HTML_FORM = f'''
 <form method="POST">
   <label>data_interval_end:<input type="text" name="data_interval_end" value="{DEFAULT_DATA_INTERVAL_END}"></label><br>
@@ -34,9 +36,9 @@ def is_connected_to_vpn():
 class RequestParams:
     def __init__(self, _request: Request):
         form = _request.form
-        logger.info(form)
         self.run_timestamp = get_run_timestamp(form.get('data_interval_end'))
         self.target_date = get_target_date(form.get('ds'))
+        logger.info(self.__dict__)
 
 
 app = Flask(__name__)
@@ -62,7 +64,7 @@ def do_check_vpn_status():
     is_connected = is_connected_to_vpn()
     logger.info('is_connected_to_vpn: end')
     if is_connected:
-        return {'result_status': 'success'}, 200
+        return SUCCESS
     else:
         return {'result_status': 'failed'}, 400
 
@@ -72,7 +74,7 @@ def do_list_downloaded_urls():
     if request.method == 'POST':
         params = RequestParams(request)
         list_downloaded_job_descriptions(params.run_timestamp)
-        return {'result_status': 'success'}, 200
+        return SUCCESS
     elif request.method == 'GET':
         return HTML_FORM
 
@@ -96,7 +98,7 @@ def do_list_job_descriptions_to_download():
         if is_connected_to_vpn():
             params = RequestParams(request)
             list_job_descriptions_to_download(params.run_timestamp)
-            return {'result_status': 'success'}, 200
+            return SUCCESS
         else:
             return {'result_status': 'failed'}, 400
     elif request.method == 'GET':
@@ -109,7 +111,7 @@ def do_download_job_descriptions():
         if is_connected_to_vpn():
             params = RequestParams(request)
             download_job_descriptions(params.run_timestamp)
-            return {'result_status': 'success'}, 200
+            return SUCCESS
         else:
             return {'result_status': 'failed'}, 400
     elif request.method == 'GET':
@@ -121,9 +123,7 @@ def do_cleanse_sitemaps():
     if request.method == 'POST':
         params = RequestParams(request)
         cleanse_sitemaps(params.run_timestamp, params.target_date)
-        return {
-                   'result_status': 'success',
-               }, 200
+        return SUCCESS
     elif request.method == 'GET':
         return HTML_FORM
 
@@ -133,9 +133,7 @@ def do_cleanse_job_descriptions():
     if request.method == 'POST':
         params = RequestParams(request)
         cleanse_job_descriptions(params.run_timestamp, params.target_date)
-        return {
-                   'result_status': 'success',
-               }, 200
+        return SUCCESS
     elif request.method == 'GET':
         return HTML_FORM
 
@@ -147,9 +145,7 @@ def do_backup_day():
         year, month, day = params.target_date.split('/')
         result = subprocess.run([f'{SOURCE_DIR}/simplescraper/backup_day.sh', year, month, day])
         if result.returncode == SUCCESS_RETURN_CODE:
-            return {
-                       'result_status': 'success',
-                   }, 200
+            return SUCCESS
         else:
             return {
                        'result_status': 'error',
@@ -165,9 +161,7 @@ def do_verify_day_backup():
         year, month, day = params.target_date.split('/')
         result = subprocess.run([f'{SOURCE_DIR}/simplescraper/verify_day_backup.sh', year, month, day])
         if result.returncode == SUCCESS_RETURN_CODE:
-            return {
-                       'result_status': 'success',
-                   }, 200
+            return SUCCESS
         else:
             return {
                        'result_status': 'error',
