@@ -11,7 +11,7 @@ def get_current_date():
     return datetime.datetime.today().strftime('%Y%m%d')
 
 
-def list_missing_previous_dates(entity):
+def list_days_to_backup(entity):
     df = pd.DataFrame(list_raw_days(DATA_SOURCE_NAME, entity))
     df_backup_days = pd.DataFrame(list_backup_days(DATA_SOURCE_NAME, entity))
     df_current_date = pd.DataFrame([{
@@ -35,10 +35,10 @@ def print_script_statements(script_name, dates_to_download):
             f'/bin/zsh {SOURCE_DIR}/simplescraper/{script_name} {year} {month} {day}')
 
 
-def backup_missing_previous_days():
+def do_all_backups():
     dfs = []
     for entity in ALL_ENTITIES:
-        df = list_missing_previous_dates(entity)
+        df = list_days_to_backup(entity)
         dfs.append(df)
     df = pd.concat(dfs, ignore_index=True)
     df = df.drop_duplicates()
@@ -50,4 +50,4 @@ def backup_missing_previous_days():
 
 
 if __name__ == "__main__":
-    backup_missing_previous_days()
+    do_all_backups()
