@@ -133,4 +133,4 @@ temp/
 .idea/
 _trial_temp/
 .env-test
-/python/simplescraper/tasks/temp.sh
+temp.sh

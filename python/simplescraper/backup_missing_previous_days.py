@@ -46,7 +46,7 @@ def backup_missing_previous_days():
     dates_to_download = df['date'].to_list()
     print_script_statements('backup_day.sh', dates_to_download)
     print()
-    print_script_statements('backup_day.sh', dates_to_download)
+    print_script_statements('verify_day_backup.sh', dates_to_download)
 
 
 if __name__ == "__main__":
