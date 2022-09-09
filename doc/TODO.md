@@ -2,7 +2,6 @@
 
 ## Open
 
-- [ ] Fix the issue "metaData-bag.log"
 - [ ] Implement some kind of search/dashboard for external users
 - [ ] Try Prefect
 - [ ] Check out https://github.com/lightdash/lightdash and https://superset.apache.org/
@@ -27,6 +26,7 @@
 
 ## Done
 
+- [x] Fix the issue "metaData-bag.log"
 - [x] Find a better way to avoid Airflow to hang when there are many jobs to download
 - [x] Move the raw storage to the cloud
 - [x] Improve logging
