@@ -3,7 +3,7 @@ import xmltodict
 
 from common.entity import SITEMAP
 from common.env_variables import DATA_SOURCE_URL, LATEST_RUN_TIMESTAMP
-from common.logging import logger
+from common.logging import logger, configure_logger
 from common.storage import save_temp_df, SITEMAP_URLS_CSV, save_raw_file
 from common.webclient import get_url_content
 
@@ -68,6 +68,7 @@ def convert_urls_to_df(all_job_description_urls) -> pd.DataFrame:
 
 
 def download_sitemap(run_timestamp) -> pd.DataFrame:
+    configure_logger(run_timestamp, 'download_sitemap')
     logger.info('download_sitemap: start')
     all_job_description_urls = get_all_job_description_urls(run_timestamp)
     df = convert_urls_to_df(all_job_description_urls)

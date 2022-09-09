@@ -5,7 +5,7 @@ import pandas as pd
 
 from common.entity import JOB_DESCRIPTION
 from common.env_variables import LATEST_RUN_TIMESTAMP, ONLINE_EXPIRATION_IN_DAYS
-from common.logging import logger
+from common.logging import logger, configure_logger
 from common.storage import DOWNLOADED_JOB_DESCRIPTIONS_CSV, DATA_SOURCE_NAME, save_temp_df, list_raw_files
 
 
@@ -18,6 +18,7 @@ def calculate_days_online(run_timestamp):
 
 
 def list_downloaded_job_descriptions(run_timestamp, target_date=None) -> pd.DataFrame:
+    configure_logger(run_timestamp, 'list_downloaded_job_descriptions')
     logger.info('list_downloaded_job_descriptions start')
     files = list_raw_files(DATA_SOURCE_NAME, JOB_DESCRIPTION, target_date)
     df = pd.DataFrame(files)

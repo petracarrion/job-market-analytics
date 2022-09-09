@@ -1,12 +1,12 @@
 import os
 import subprocess
 
-from flask import Flask, request
+from flask import Flask, request, Request
 
 from cleanse_job_descriptions import cleanse_job_descriptions
 from cleanse_sitemaps import cleanse_sitemaps
 from common.env_variables import SOURCE_DIR
-from common.logging import logger, configure_logger
+from common.logging import logger
 from common.storage import get_run_timestamp, get_target_date
 from tasks.download_job_descriptions import download_job_descriptions
 from tasks.download_sitemap import download_sitemap
@@ -29,6 +29,14 @@ HTML_FORM = f'''
 
 def is_connected_to_vpn():
     return os.system('/usr/sbin/scutil --nc list | grep Connected | grep vpn') == 0
+
+
+class RequestParams:
+    def __init__(self, _request: Request):
+        form = _request.form
+        logger.info(form)
+        self.run_timestamp = get_run_timestamp(form.get('data_interval_end'))
+        self.target_date = get_target_date(form.get('ds'))
 
 
 app = Flask(__name__)
@@ -62,10 +70,8 @@ def do_check_vpn_status():
 @app.route('/do/list_downloaded_job_descriptions', methods=['GET', 'POST'])
 def do_list_downloaded_urls():
     if request.method == 'POST':
-        data_interval_end = request.form.get('data_interval_end')
-        run_timestamp = get_run_timestamp(data_interval_end)
-        configure_logger(run_timestamp, 'list_downloaded_job_descriptions')
-        list_downloaded_job_descriptions(run_timestamp)
+        params = RequestParams(request)
+        list_downloaded_job_descriptions(params.run_timestamp)
         return {'result_status': 'success'}, 200
     elif request.method == 'GET':
         return HTML_FORM
@@ -75,10 +81,8 @@ def do_list_downloaded_urls():
 def do_download_sitemap():
     if request.method == 'POST':
         if is_connected_to_vpn():
-            data_interval_end = request.form.get('data_interval_end')
-            run_timestamp = get_run_timestamp(data_interval_end)
-            configure_logger(run_timestamp, 'download_sitemap')
-            download_sitemap(run_timestamp)
+            params = RequestParams(request)
+            download_sitemap(params.run_timestamp)
             return {'result_status': 'success'}, 200
         else:
             return {'result_status': 'failed'}, 400
@@ -90,10 +94,8 @@ def do_download_sitemap():
 def do_list_job_descriptions_to_download():
     if request.method == 'POST':
         if is_connected_to_vpn():
-            data_interval_end = request.form.get('data_interval_end')
-            run_timestamp = get_run_timestamp(data_interval_end)
-            configure_logger(run_timestamp, 'list_job_descriptions_to_download')
-            list_job_descriptions_to_download(run_timestamp)
+            params = RequestParams(request)
+            list_job_descriptions_to_download(params.run_timestamp)
             return {'result_status': 'success'}, 200
         else:
             return {'result_status': 'failed'}, 400
@@ -105,10 +107,8 @@ def do_list_job_descriptions_to_download():
 def do_download_job_descriptions():
     if request.method == 'POST':
         if is_connected_to_vpn():
-            data_interval_end = request.form.get('data_interval_end')
-            run_timestamp = get_run_timestamp(data_interval_end)
-            configure_logger(run_timestamp, 'download_job_descriptions')
-            download_job_descriptions(run_timestamp)
+            params = RequestParams(request)
+            download_job_descriptions(params.run_timestamp)
             return {'result_status': 'success'}, 200
         else:
             return {'result_status': 'failed'}, 400
@@ -119,16 +119,10 @@ def do_download_job_descriptions():
 @app.route('/do/cleanse_sitemaps', methods=['GET', 'POST'])
 def do_cleanse_sitemaps():
     if request.method == 'POST':
-        logger.info(request.form)
-        data_interval_end = request.form.get('data_interval_end')
-        run_timestamp = get_run_timestamp(data_interval_end)
-        ds = request.form.get('ds')
-        target_date = get_target_date(ds)
-        cleanse_sitemaps(run_timestamp, target_date)
+        params = RequestParams(request)
+        cleanse_sitemaps(params.run_timestamp, params.target_date)
         return {
                    'result_status': 'success',
-                   'run_timestamp': run_timestamp,
-                   'target_date': target_date,
                }, 200
     elif request.method == 'GET':
         return HTML_FORM
@@ -137,16 +131,10 @@ def do_cleanse_sitemaps():
 @app.route('/do/cleanse_job_descriptions', methods=['GET', 'POST'])
 def do_cleanse_job_descriptions():
     if request.method == 'POST':
-        logger.info(request.form)
-        data_interval_end = request.form.get('data_interval_end')
-        run_timestamp = get_run_timestamp(data_interval_end)
-        ds = request.form.get('ds')
-        target_date = get_target_date(ds)
-        cleanse_job_descriptions(run_timestamp, target_date)
+        params = RequestParams(request)
+        cleanse_job_descriptions(params.run_timestamp, params.target_date)
         return {
                    'result_status': 'success',
-                   'run_timestamp': run_timestamp,
-                   'target_date': target_date,
                }, 200
     elif request.method == 'GET':
         return HTML_FORM
@@ -155,14 +143,12 @@ def do_cleanse_job_descriptions():
 @app.route('/do/backup_day', methods=['GET', 'POST'])
 def do_backup_day():
     if request.method == 'POST':
-        ds = request.form.get('ds')
-        target_date = get_target_date(ds)
-        year, month, day = ds.split('-')
+        params = RequestParams(request)
+        year, month, day = params.target_date.split('/')
         result = subprocess.run([f'{SOURCE_DIR}/simplescraper/backup_day.sh', year, month, day])
         if result.returncode == SUCCESS_RETURN_CODE:
             return {
                        'result_status': 'success',
-                       'target_date': target_date,
                    }, 200
         else:
             return {
@@ -175,14 +161,12 @@ def do_backup_day():
 @app.route('/do/verify_day_backup', methods=['GET', 'POST'])
 def do_verify_day_backup():
     if request.method == 'POST':
-        ds = request.form.get('ds')
-        target_date = get_target_date(ds)
-        year, month, day = ds.split('-')
+        params = RequestParams(request)
+        year, month, day = params.target_date.split('/')
         result = subprocess.run([f'{SOURCE_DIR}/simplescraper/verify_day_backup.sh', year, month, day])
         if result.returncode == SUCCESS_RETURN_CODE:
             return {
                        'result_status': 'success',
-                       'target_date': target_date,
                    }, 200
         else:
             return {
@@ -195,10 +179,11 @@ def do_verify_day_backup():
 @app.route('/do/test', methods=['GET', 'POST'])
 def do_test():
     if request.method == 'POST':
-        logger.info(request.form)
+        params = RequestParams(request)
         return {
                    'result_status': 'success',
-                   'run_timestamp': 'TODO',
+                   'run_timestamp': params.run_timestamp,
+                   'target_date': params.target_date,
                }, 200
     elif request.method == 'GET':
         return HTML_FORM

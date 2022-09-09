@@ -7,7 +7,7 @@ from common.chunking import get_chunk_size
 from common.entity import JOB_DESCRIPTION
 from common.env_variables import DATA_SOURCE_URL, SEMAPHORE_COUNT, MAX_CHUNK_SIZE, LATEST_RUN_TIMESTAMP, RUN_HEADLESS, \
     MIN_TO_DOWNLOAD
-from common.logging import logger
+from common.logging import logger, configure_logger
 from common.storage import save_raw_file, load_temp_df, JOB_DESCRIPTIONS_TO_DOWNLOAD_CSV
 
 TAB_HITS = 30
@@ -121,6 +121,7 @@ async def run_async_tasks(chunks, run_timestamp):
 
 
 def download_job_descriptions(run_timestamp, df_to_download=None):
+    configure_logger(run_timestamp, 'download_job_descriptions')
     df = df_to_download or load_temp_df(run_timestamp, JOB_DESCRIPTIONS_TO_DOWNLOAD_CSV)
 
     # TODO find a better way to avoid Airflow to hang when there are many jobs to download

@@ -1,12 +1,13 @@
 import pandas as pd
 
 from common.env_variables import LATEST_RUN_TIMESTAMP
-from common.logging import logger
+from common.logging import logger, configure_logger
 from common.storage import load_temp_df, DOWNLOADED_JOB_DESCRIPTIONS_CSV, SITEMAP_URLS_CSV, save_temp_df, \
     JOB_DESCRIPTIONS_TO_DOWNLOAD_CSV
 
 
 def list_job_descriptions_to_download(run_timestamp, df_sitemap_urls=None, df_downloaded=None):
+    configure_logger(run_timestamp, 'list_job_descriptions_to_download')
     logger.info('list_job_descriptions_to_download: start')
 
     df_sitemap_urls = df_sitemap_urls or load_temp_df(run_timestamp, SITEMAP_URLS_CSV)
