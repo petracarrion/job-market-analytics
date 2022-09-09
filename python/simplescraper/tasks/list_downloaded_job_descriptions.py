@@ -22,13 +22,14 @@ def list_downloaded_job_descriptions(run_timestamp, target_date=None) -> pd.Data
     logger.info('list_downloaded_job_descriptions start')
     files = list_raw_files(DATA_SOURCE_NAME, JOB_DESCRIPTION, target_date)
     df = pd.DataFrame(files)
-    df['id'] = df['file_name'].str.split('.', expand=True)[0]
-    if ONLINE_EXPIRATION_IN_DAYS:
-        df['days_online'] = df['run_timestamp'].map(calculate_days_online)
-        df = df[df['days_online'] < ONLINE_EXPIRATION_IN_DAYS]
-        df = df.drop(columns=['days_online'])
-    if target_date is None:
-        save_temp_df(df, run_timestamp, DOWNLOADED_JOB_DESCRIPTIONS_CSV)
+    if not df.empty:
+        df['id'] = df['file_name'].str.split('.', expand=True)[0]
+        if ONLINE_EXPIRATION_IN_DAYS:
+            df['days_online'] = df['run_timestamp'].map(calculate_days_online)
+            df = df[df['days_online'] < ONLINE_EXPIRATION_IN_DAYS]
+            df = df.drop(columns=['days_online'])
+        if target_date is None:
+            save_temp_df(df, run_timestamp, DOWNLOADED_JOB_DESCRIPTIONS_CSV)
     logger.info('list_downloaded_job_descriptions end')
     return df
 

@@ -1,3 +1,5 @@
+import sys
+
 import pandas as pd
 
 from common.entity import JOB_DESCRIPTION
@@ -23,6 +25,9 @@ def load_and_parse(row) -> str:
 def cleanse_job_descriptions(run_timestamp, target_date):
     configure_logger(run_timestamp, 'parse_job_descriptions')
     df = list_downloaded_job_descriptions(run_timestamp, target_date)
+    if df.empty:
+        logger.warning(f'Nothing to cleanse for the target date: {target_date}')
+        return
     df = df.sort_values(by=['run_timestamp', 'file_name'])
     df = df.reset_index(drop=True)
     logger.info(f'Start  to parse job descriptions for the target date: {target_date}')
@@ -35,4 +40,6 @@ def cleanse_job_descriptions(run_timestamp, target_date):
 
 
 if __name__ == "__main__":
-    cleanse_job_descriptions(get_run_timestamp(), get_target_date())
+    _run_timestamp = sys.argv[1] if len(sys.argv) > 1 else get_run_timestamp()
+    _target_date = sys.argv[2] if len(sys.argv) > 2 else get_target_date()
+    cleanse_job_descriptions(_run_timestamp, _target_date)
