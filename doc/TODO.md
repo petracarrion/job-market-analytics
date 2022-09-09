@@ -6,7 +6,6 @@
 - [ ] Try Prefect
 - [ ] Check out https://github.com/lightdash/lightdash and https://superset.apache.org/
 - [ ] Log the date and time more visible
-- [ ] Do not let Flasky start a process behind an endpoint, if a process is still running
 - [ ] Allow one retry after the browser crashes
 - [ ] Add a file in the raw layer with the scrape run information for each execution
     - This file could be in JSON format and have the following fields:
@@ -26,6 +25,7 @@
 
 ## Done
 
+- [x] Do not let Flasky start a process behind an endpoint, if a process is still running
 - [x] Fix the issue "metaData-bag.log"
 - [x] Find a better way to avoid Airflow to hang when there are many jobs to download
 - [x] Move the raw storage to the cloud
