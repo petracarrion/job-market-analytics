@@ -53,7 +53,7 @@ def index():
            '<a href="/do/download_job_descriptions">Download Job Descriptions</a><br>' \
            '<a href="/do/cleanse_sitemaps">Cleanse Sitemap</a><br>' \
            '<a href="/do/cleanse_job_descriptions">Cleanse Job Descriptions</a><br>' \
-           '<a href="/do/backup_day">Backup Day</a><br>' \
+           '<a href="/do/do_day_backup">Do Day Backup</a><br>' \
            '<a href="/do/validate_day_backup">Validate Day Backup</a><br>' \
            '<a href="/do/test">Test</a><br>'
 
@@ -138,12 +138,12 @@ def do_cleanse_job_descriptions():
         return HTML_FORM
 
 
-@app.route('/do/backup_day', methods=['GET', 'POST'])
-def do_backup_day():
+@app.route('/do/do_day_backup', methods=['GET', 'POST'])
+def do_do_day_backup():
     if request.method == 'POST':
         params = RequestParams(request)
         year, month, day = params.target_date.split('/')
-        result = subprocess.run([f'{SOURCE_DIR}/simplescraper/backup_day.sh', year, month, day])
+        result = subprocess.run([f'{SOURCE_DIR}/simplescraper/do_day_backup.sh', year, month, day])
         if result.returncode == SUCCESS_RETURN_CODE:
             return SUCCESS
         else:
