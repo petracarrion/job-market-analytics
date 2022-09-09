@@ -3,10 +3,7 @@
 ## Open
 
 - [ ] Implement some kind of search/dashboard for external users
-- [ ] Try Prefect
 - [ ] Check out https://github.com/lightdash/lightdash and https://superset.apache.org/
-- [ ] Log the date and time more visible
-- [ ] Allow one retry after the browser crashes
 - [ ] Add a file in the raw layer with the scrape run information for each execution
     - This file could be in JSON format and have the following fields:
         - run_id
@@ -18,14 +15,14 @@
 - [ ] Implement use case: Technology trends
 - [ ] Implement use case: Number of jobs relative to city population
 - [ ] Replace the PostgreSQL ingestion with CSV instead of Parquet
-- [ ] Create separated virtual environments for dbt and airflow
+- [ ] Create a separated virtual environment for dbt
 
 ## In Progress
 
 
 ## Done
 
-- [x] Do not let Flasky start a process behind an endpoint, if a process is still running
+- [x] Create a separated virtual environment for airflow
 - [x] Fix the issue "metaData-bag.log"
 - [x] Find a better way to avoid Airflow to hang when there are many jobs to download
 - [x] Move the raw storage to the cloud
@@ -50,3 +47,10 @@
     - Result: Use Python to create the staging fdw staging tables referencing the parquet files
 - [x] Add the _job_id_ to the _sitemap_ and _job_description_ on the cleansed layer
 - [x] Create a _ingestion_id_ with the hash of the _job_id_ and _timestap_ on the cleansed layer
+
+## Discarded
+
+- [x] Do not let Flasky start a process behind an endpoint, if a process is still running
+- [x] Try Prefect
+- [x] Log the date and time more visible
+- [x] Allow one retry after the browser crashes
