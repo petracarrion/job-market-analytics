@@ -1,13 +1,26 @@
+import datetime
+
 import pandas as pd
 import xmltodict
 
 from common.entity import SITEMAP
 from common.env_variables import DATA_SOURCE_URL, LATEST_RUN_TIMESTAMP
 from common.logging import logger, configure_logger
-from common.storage import save_temp_df, SITEMAP_URLS_CSV, save_raw_file
+from common.storage import save_temp_df, SITEMAP_URLS_CSV, save_raw_file, RUN_TIMESTAMP_FORMAT
 from common.webclient import get_url_content
 
 SITEMAP_INDEX_XML = f'{DATA_SOURCE_URL}5/sitemaps/de/sitemapindex.xml'
+
+ONE_HOUR = 3600
+
+
+def check_run_timestamp(run_timestamp):
+    parsed_run_timestamp = datetime.datetime.strptime(run_timestamp, RUN_TIMESTAMP_FORMAT).replace(
+        tzinfo=datetime.timezone.utc)
+    current_timestamp = datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc)
+    time_delta = current_timestamp - parsed_run_timestamp
+    if time_delta.seconds > ONE_HOUR:
+        raise Exception('The run_timestamp is older than one hour')
 
 
 def historize_url_content(url, content, run_timestamp):
@@ -69,6 +82,7 @@ def convert_urls_to_df(all_job_description_urls) -> pd.DataFrame:
 
 def download_sitemap(run_timestamp) -> pd.DataFrame:
     configure_logger(run_timestamp, 'download_sitemap')
+    check_run_timestamp(run_timestamp)
     logger.info('download_sitemap: start')
     all_job_description_urls = get_all_job_description_urls(run_timestamp)
     df = convert_urls_to_df(all_job_description_urls)

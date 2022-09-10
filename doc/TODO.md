@@ -19,10 +19,10 @@
 
 ## In Progress
 
-- [ ] Fail the download sitemap task in the hourly dag if the run_timestamp is older than one hour
 
 ## Done
 
+- [x] Fail the download sitemap task in the hourly dag if the run_timestamp is older than one hour
 - [x] Create a separated virtual environment for airflow
 - [x] Fix the issue "metaData-bag.log"
 - [x] Find a better way to avoid Airflow to hang when there are many jobs to download
