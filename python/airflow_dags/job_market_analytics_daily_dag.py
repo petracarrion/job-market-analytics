@@ -23,9 +23,9 @@ with DAG('job_market_analytics_daily_dag',
         run_flasky_task('do/cleanse_job_descriptions')
 
 
-    @task(task_id="backup_day")
+    @task(task_id="do_day_backup")
     def backup_day():
-        run_flasky_task('do/backup_day')
+        run_flasky_task('do/do_day_backup')
 
 
     @task(task_id="verify_day_backup")
