@@ -2,8 +2,8 @@
 
 ## Open
 
-- [ ] Check out https://github.com/jwills/dbt-duckdb
 - [ ] Check out https://dbtvault.readthedocs.io/
+- [ ] Check out https://github.com/jwills/dbt-duckdb
 - [ ] Implement some kind of search/dashboard for external users
 - [ ] Check out https://github.com/lightdash/lightdash and https://superset.apache.org/
 - [ ] Add a file in the raw layer with the scrape run information for each execution
@@ -51,9 +51,17 @@
 - [x] Add the _job_id_ to the _sitemap_ and _job_description_ on the cleansed layer
 - [x] Create a _ingestion_id_ with the hash of the _job_id_ and _timestap_ on the cleansed layer
 
+---
+
 ## Discarded
 
 - [x] Do not let Flasky start a process behind an endpoint, if a process is still running
 - [x] Try Prefect
 - [x] Log the date and time more visible
 - [x] Allow one retry after the browser crashes
+
+## Technical Debt
+
+- [ ] Rename run_timestamp to load_timestamp
+- [ ] Rename target_date to load_date
+- [ ] Rename job_description to job_offer
