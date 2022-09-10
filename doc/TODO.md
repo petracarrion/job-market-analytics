@@ -2,6 +2,8 @@
 
 ## Open
 
+- [ ] Check out https://github.com/jwills/dbt-duckdb
+- [ ] Check out https://dbtvault.readthedocs.io/
 - [ ] Implement some kind of search/dashboard for external users
 - [ ] Check out https://github.com/lightdash/lightdash and https://superset.apache.org/
 - [ ] Add a file in the raw layer with the scrape run information for each execution
