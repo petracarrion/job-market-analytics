@@ -65,3 +65,4 @@
 - [ ] Rename run_timestamp to load_timestamp
 - [ ] Rename target_date to load_date
 - [ ] Rename job_description to job_offer
+- [ ] Rename cleansed to curated
