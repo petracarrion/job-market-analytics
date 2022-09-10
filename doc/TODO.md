@@ -19,6 +19,7 @@
 
 ## In Progress
 
+- [ ] Fail the download sitemap task in the hourly dag if the run_timestamp is older than one hour
 
 ## Done
 
