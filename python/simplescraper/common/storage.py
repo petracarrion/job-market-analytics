@@ -94,8 +94,14 @@ def get_target_date(ds=None):
     return target_date
 
 
-def split_target_date(target_date: str):
-    return target_date.split('/', 2)
+def get_filters_from_target_date(target_date: str):
+    year, month, day = target_date.split('/', 2)
+    filters = [
+        ('year', '=', int(year)),
+        ('month', '=', int(month)),
+        ('day', '=', int(day)),
+    ]
+    return filters
 
 
 def create_dir(file_path):
@@ -187,5 +193,7 @@ def load_parquet_df(layer, entity: Entity, columns, filters) -> pd.DataFrame:
         return pd.DataFrame(columns=columns)
 
 
-def load_cleansed_df(entity: Entity, columns=None, filters=None) -> pd.DataFrame:
+def load_cleansed_df(entity: Entity, columns=None, filters=None, target_date=None) -> pd.DataFrame:
+    if filters is None and target_date is not None:
+        filters = get_filters_from_target_date(target_date)
     return load_parquet_df(CLEANSED_LAYER, entity, columns, filters)
