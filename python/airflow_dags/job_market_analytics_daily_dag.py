@@ -23,6 +23,16 @@ with DAG('job_market_analytics_daily_dag',
         run_flasky_task('do/cleanse_job_descriptions')
 
 
+    @task(task_id="curate_sitemaps")
+    def curate_sitemaps():
+        run_flasky_task('do/curate_sitemaps')
+
+
+    @task(task_id="curate_job_descriptions")
+    def curate_job_descriptions():
+        run_flasky_task('do/curate_job_descriptions')
+
+
     @task(task_id="do_day_backup")
     def backup_day():
         run_flasky_task('do/do_day_backup')
@@ -33,6 +43,6 @@ with DAG('job_market_analytics_daily_dag',
         run_flasky_task('do/verify_day_backup')
 
 
-    cleanse_sitemaps()
-    cleanse_job_descriptions()
+    cleanse_sitemaps() >> curate_sitemaps()
+    cleanse_job_descriptions() >> curate_job_descriptions()
     backup_day() >> verify_day_backup()
