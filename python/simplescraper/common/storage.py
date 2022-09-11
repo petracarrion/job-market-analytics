@@ -94,6 +94,10 @@ def get_target_date(ds=None):
     return target_date
 
 
+def split_target_date(target_date: str):
+    return target_date.split('/', 2)
+
+
 def create_dir(file_path):
     dir_path = os.path.dirname(file_path)
     pathlib.Path(dir_path).mkdir(parents=True, exist_ok=True)
@@ -184,4 +188,4 @@ def load_parquet_df(layer, entity: Entity, columns, filters) -> pd.DataFrame:
 
 
 def load_cleansed_df(entity: Entity, columns=None, filters=None) -> pd.DataFrame:
-    load_parquet_df(CLEANSED_LAYER, entity, columns, filters)
+    return load_parquet_df(CLEANSED_LAYER, entity, columns, filters)
