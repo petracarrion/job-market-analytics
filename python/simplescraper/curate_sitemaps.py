@@ -3,17 +3,18 @@ import sys
 import pandas as pd
 
 from common.entity import SITEMAP, JOB_ONLINE
-from common.logging import configure_logger
+from common.logging import configure_logger, logger
 from common.storage import get_run_timestamp, get_target_date, load_cleansed_df, save_curated_df
 
 
 def curate_sitemaps(run_timestamp, target_date):
-    logger = configure_logger(run_timestamp, 'curate_sitemaps')
+    configure_logger(run_timestamp, 'curate_sitemaps')
+    logger.info(f'Start curate_sitemaps: {target_date}')
     df = load_cleansed_df(SITEMAP, target_date=target_date)
     df['online_date'] = pd.to_datetime(df['run_timestamp']).dt.date
     df = df[['year', 'month', 'day', 'job_id', 'online_date', 'url']]
     df = df.sort_values(by=['job_id'])
-    logger.info(f'Saving curated: {target_date}')
+    logger.info(f'End   curate_sitemaps: {target_date}')
     save_curated_df(df, JOB_ONLINE)
 
 
