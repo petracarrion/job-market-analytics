@@ -21,7 +21,7 @@ from pyarrow import ArrowInvalid
 
 from common.entity import Entity
 from common.env_variables import DATA_SOURCE_NAME, RAW_DIR, CLEANSED_DIR, TEMP_DIR, AZURE_STORAGE_CONNECTION_STRING, \
-    AZURE_STORAGE_CONTAINER_NAME, DATA_DIR, UPLOAD_TO_AZURE, BACKUP_DIR
+    AZURE_STORAGE_CONTAINER_NAME, DATA_DIR, UPLOAD_TO_AZURE, BACKUP_DIR, CURATED_DIR
 from common.logging import logger
 
 RUN_TIMESTAMP_FORMAT = '%Y/%m/%d/%H-%M-%S'
@@ -37,6 +37,7 @@ LAYERS = [RAW_LAYER, CLEANSED_LAYER, CURATED_LAYER, TEMP_LAYER]
 LAYER_DIR = {
     RAW_LAYER: RAW_DIR,
     CLEANSED_LAYER: CLEANSED_DIR,
+    CURATED_LAYER: CURATED_DIR,
     TEMP_LAYER: TEMP_DIR,
 }
 
@@ -142,29 +143,45 @@ def load_temp_df(run_timestamp: str, file_name: str) -> pd.DataFrame:
     return pd.read_csv(os.path.join(TEMP_DIR, run_timestamp, file_name))
 
 
-def list_cleansed_files(entity: Entity, relative_paths=True):
-    dir_path = os.path.join(CLEANSED_DIR, DATA_SOURCE_NAME, entity.name)
+def list_parquet_files(layer, entity: Entity, relative_paths):
+    dir_path = os.path.join(LAYER_DIR[layer], DATA_SOURCE_NAME, entity.name)
     file_list = [f for f in glob.iglob(dir_path + '/**/*.parquet', recursive=True) if os.path.isfile(f)]
     if relative_paths:
         file_list = [file_path.replace(dir_path + '/', '') for file_path in file_list]
     return file_list
 
 
-def save_cleansed_df(df: pd.DataFrame, entity: Entity):
+def list_cleansed_files(entity: Entity, relative_paths=True):
+    return list_parquet_files(CLEANSED_LAYER, entity, relative_paths)
+
+
+def save_parquet_df(df: pd.DataFrame, layer, entity: Entity):
     # noinspection PyArgumentList
     table: pa.Table = pa.Table.from_pandas(df, preserve_index=False)
-    root_path = os.path.join(LAYER_DIR[CLEANSED_LAYER], DATA_SOURCE_NAME, entity.name)
+    root_path = os.path.join(LAYER_DIR[layer], DATA_SOURCE_NAME, entity.name)
     pq.write_to_dataset(table,
                         root_path,
                         partition_cols=['year', 'month', 'day'],
                         use_legacy_dataset=False)
 
 
-def load_cleansed_df(entity: Entity, columns=None, filters=None) -> pd.DataFrame:
+def save_cleansed_df(df: pd.DataFrame, entity: Entity):
+    save_parquet_df(df, CLEANSED_LAYER, entity)
+
+
+def save_curated_df(df: pd.DataFrame, entity: Entity):
+    save_parquet_df(df, CURATED_LAYER, entity)
+
+
+def load_parquet_df(layer, entity: Entity, columns, filters) -> pd.DataFrame:
     # noinspection PyArgumentList
-    root_path = os.path.join(LAYER_DIR[CLEANSED_LAYER], DATA_SOURCE_NAME, entity.name)
+    root_path = os.path.join(LAYER_DIR[layer], DATA_SOURCE_NAME, entity.name)
     try:
         table = pq.read_table(root_path, columns, filters=filters, use_legacy_dataset=False)
         return table.to_pandas()
     except (FileNotFoundError, ArrowInvalid):
         return pd.DataFrame(columns=columns)
+
+
+def load_cleansed_df(entity: Entity, columns=None, filters=None) -> pd.DataFrame:
+    load_parquet_df(CLEANSED_LAYER, entity, columns, filters)
