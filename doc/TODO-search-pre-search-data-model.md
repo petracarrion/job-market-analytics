@@ -8,6 +8,19 @@
   - url
 - job
   - job_id
+- job_description
+  - job_id
+  - title
+  - online_status
+  - is_anonymous
+  - should_display_early_applicant
+  - contract_type
+  - work_type
+  - online_date
+  - description_introduction
+  - description_responsabilities
+  - description_requirements'
+  - description_perks
 - company
   - company_name
 - job_company

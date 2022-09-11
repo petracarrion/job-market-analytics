@@ -12,6 +12,16 @@ def process_job(df):
     save_curated_df(df, JOB)
 
 
+def process_job_description(df):
+    df = df.copy()
+    df = df[
+        ['year', 'month', 'day', 'job_id', 'title', 'online_status', 'is_anonymous',
+         'should_display_early_applicant', 'contract_type', 'work_type', 'online_date', 'description_introduction',
+         'description_responsabilities', 'description_requirements', 'description_perks']]
+    df = df.rename(columns={'online_date': 'online_since'})
+    save_curated_df(df, JOB_DESCRIPTION)
+
+
 def process_company(df):
     df = df[['year', 'month', 'day', 'job_id', 'company_name']]
     save_curated_df(df, JOB_COMPANY)
@@ -52,6 +62,7 @@ def curate_job_descriptions(run_timestamp, target_date):
     df = df.sort_values(by=['job_id'])
 
     process_job(df)
+    process_job_description(df)
     process_company(df)
     process_location(df)
 
