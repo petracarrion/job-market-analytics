@@ -1,0 +1,5 @@
+dbt-duckdb
+duckdb
+pandas
+pyarrow
+python-dotenv
