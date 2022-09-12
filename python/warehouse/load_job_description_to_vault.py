@@ -11,9 +11,9 @@ print()
 con = duckdb.connect()
 
 dataset = ds.dataset(parquet_input, format='parquet', partitioning='hive')
-con.register('''Hierarchy''', dataset)
+con.register('''job_online''', dataset)
 print(con.execute('''
-SELECT * FROM Hierarchy
+SELECT * FROM job_online
   WHERE
     year = 2022 AND
     month = 9 AND
