@@ -172,6 +172,7 @@ def save_parquet_df(df: pd.DataFrame, layer, entity: Entity):
     pq.write_to_dataset(table,
                         root_path,
                         partition_cols=['year', 'month', 'day'],
+                        basename_template='part-{i}.parquet',
                         use_legacy_dataset=False)
 
 
@@ -187,7 +188,7 @@ def load_parquet_df(layer, entity: Entity, columns, filters) -> pd.DataFrame:
     # noinspection PyArgumentList
     root_path = os.path.join(LAYER_DIR[layer], DATA_SOURCE_NAME, entity.name)
     try:
-        table = pq.read_table(root_path, columns, filters=filters, use_legacy_dataset=False)
+        table = pq.read_table(root_path, columns=columns, filters=filters, use_legacy_dataset=False)
         return table.to_pandas()
     except (FileNotFoundError, ArrowInvalid):
         return pd.DataFrame(columns=columns)

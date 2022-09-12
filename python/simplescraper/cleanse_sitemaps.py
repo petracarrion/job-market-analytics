@@ -1,3 +1,5 @@
+import sys
+
 import bs4
 from loguru import logger
 
@@ -47,4 +49,6 @@ def cleanse_sitemaps(run_timestamp, target_date):
 
 
 if __name__ == "__main__":
-    cleanse_sitemaps(get_run_timestamp(), get_target_date())
+    _run_timestamp = sys.argv[1] if len(sys.argv) > 1 else get_run_timestamp()
+    _target_date = sys.argv[2] if len(sys.argv) > 2 else get_target_date()
+    cleanse_sitemaps(_run_timestamp, _target_date)
