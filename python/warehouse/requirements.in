@@ -1,5 +1,6 @@
 dbt-duckdb
 duckdb
+loguru
 pandas
 pyarrow
 python-dotenv

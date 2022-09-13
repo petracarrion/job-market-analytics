@@ -15,7 +15,6 @@ import pathlib
 import pandas as pd
 import pyarrow as pa
 import pyarrow.parquet as pq
-from azure.storage.blob import BlockBlobService
 from dateutil import parser
 from pyarrow import ArrowInvalid
 
@@ -117,6 +116,7 @@ def save_local_file(content, file_path):
 
 
 def save_remote_file(content, blob_name):
+    from azure.storage.blob import BlockBlobService
     logger.debug(f'save_remote_file start: {blob_name}')
     blob_service_client = BlockBlobService(connection_string=AZURE_STORAGE_CONNECTION_STRING)
     if isinstance(content, str):
