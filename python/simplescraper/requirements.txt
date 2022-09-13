@@ -67,6 +67,8 @@ defusedxml==0.7.1
     # via nbconvert
 docutils==0.19
     # via restructuredtext-lint
+duckdb==0.5.0
+    # via -r requirements.in
 entrypoints==0.4
     # via jupyter-client
 eradicate==2.1.0
@@ -227,6 +229,7 @@ notebook==6.4.12
     # via jupyter
 numpy==1.23.3
     # via
+    #   duckdb
     #   pandas
     #   patsy
     #   plotly-express

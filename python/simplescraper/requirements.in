@@ -1,5 +1,6 @@
 azure-storage-blob==2.1.0
 beautifulsoup4
+duckdb
 Flask
 jupyter
 kaleido
