@@ -21,6 +21,9 @@
 
 ## In Progress
 
+- [ ] On the cleansed layer, add the first sitemap occurance per URL instead of only the latest load_timestamp
+- [ ] Rename run_timestamp to load_timestamp and add it to the curated layer
+- [ ] Rename target_date to load_date and add it to the curated layer
 
 ## Done
 
@@ -62,7 +65,5 @@
 
 ## Technical Debt
 
-- [ ] Rename run_timestamp to load_timestamp
-- [ ] Rename target_date to load_date
 - [ ] Rename job_description to job_offer
 - [ ] Rename cleansed to curated
