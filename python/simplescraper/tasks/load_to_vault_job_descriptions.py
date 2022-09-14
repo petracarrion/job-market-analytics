@@ -10,15 +10,14 @@ from common.storage import get_run_timestamp, get_target_date
 
 CREATE_TABLE_HUB_JOB_DESCRIPTION = '''
     CREATE TABLE IF NOT EXISTS hub_job_description (
-         job_hk VARCHAR
+         job_id NUMERIC
         ,load_timestamp TIMESTAMP
-        ,job_id NUMERIC
         )
     '''
 
 CREATE_TABLE_SAT_JOB_DESCRIPTION = '''
     CREATE TABLE IF NOT EXISTS sat_job_description (
-         job_hk VARCHAR
+         job_id VARCHAR
         ,job_hashdiff VARCHAR
         ,load_timestamp TIMESTAMP
         ,title VARCHAR
@@ -27,7 +26,7 @@ CREATE_TABLE_SAT_JOB_DESCRIPTION = '''
         ,should_display_early_applicant BOOLEAN
         ,contract_type VARCHAR
         ,work_type VARCHAR
-        ,online_since VARCHAR
+        ,online_date VARCHAR
         ,description_introduction VARCHAR
         ,description_responsabilities VARCHAR
         ,description_requirements VARCHAR
@@ -60,17 +59,16 @@ def load_to_vault_job_descriptions(run_timestamp, target_date):
     
     INSERT INTO hub_job_description 
         SELECT
-             a.job_hk
+             a.job_id
             ,'{year}-{month}-{day}'
-            ,a.job_id
         FROM staging_job_description a
         LEFT OUTER JOIN hub_job_description b
-            ON (a.job_hk = b.job_hk)
-        WHERE b.job_hk IS NULL;
+            ON (a.job_id = b.job_id)
+        WHERE b.job_id IS NULL;
          
     INSERT INTO sat_job_description 
         SELECT
-             a.job_hk
+             a.job_id
             ,a.job_hashdiff
             ,'{year}-{month}-{day}'
             ,a.title
@@ -79,7 +77,7 @@ def load_to_vault_job_descriptions(run_timestamp, target_date):
             ,a.should_display_early_applicant
             ,a.contract_type
             ,a.work_type
-            ,a.online_since
+            ,a.online_date
             ,a.description_introduction
             ,a.description_responsabilities
             ,a.description_requirements
@@ -87,11 +85,11 @@ def load_to_vault_job_descriptions(run_timestamp, target_date):
         FROM staging_job_description a
         LEFT OUTER JOIN sat_job_description b
             ON (
-                a.job_hk = b.job_hk AND
+                a.job_id = b.job_id AND
                 a.job_hashdiff = b.job_hashdiff
             )
         WHERE
-            b.job_hk IS NULL;
+            b.job_id IS NULL;
     ''').df()
     print(df)
     df = conn.execute(f'''
