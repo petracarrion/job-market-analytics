@@ -4,7 +4,7 @@
 
 - job_online
   - job_id
-  - online_date
+  - online_at
   - url
 - job
   - job_id

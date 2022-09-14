@@ -8,7 +8,7 @@ from common.logging import configure_logger, logger
 from common.storage import get_run_timestamp, get_target_date, load_cleansed_df, save_curated_df
 from curate_job_descriptions import BASE_COLUMNS
 
-JOB_ONLINE_SAT_COLUMNS = ['online_date', 'url']
+JOB_ONLINE_SAT_COLUMNS = ['online_at', 'url']
 
 
 def curate_sitemaps(run_timestamp, target_date):
@@ -16,7 +16,7 @@ def curate_sitemaps(run_timestamp, target_date):
     logger.info(f'Start curate_sitemaps: {target_date}')
     df = load_cleansed_df(SITEMAP, target_date=target_date)
 
-    df['online_date'] = pd.to_datetime(df['run_timestamp']).dt.date
+    df['online_at'] = pd.to_datetime(df['run_timestamp']).dt.date
     df['job_hk'] = df['job_id'].astype(str).apply(hash_str)
     df = df[BASE_COLUMNS + JOB_ONLINE_SAT_COLUMNS]
     df['job_online_hashdiff'] = hash_columns(df, JOB_ONLINE_SAT_COLUMNS)
