@@ -7,7 +7,7 @@ from cleanse_job_descriptions import cleanse_job_descriptions
 from cleanse_sitemaps import cleanse_sitemaps
 from common.env_variables import SOURCE_DIR
 from common.logging import logger
-from common.storage import get_run_timestamp, get_target_date
+from common.storage import get_load_timestamp, get_target_date
 from curate_job_descriptions import curate_job_descriptions
 from curate_sitemaps import curate_sitemaps
 from tasks.download_job_descriptions import download_job_descriptions
@@ -38,7 +38,7 @@ def is_connected_to_vpn():
 class RequestParams:
     def __init__(self, _request: Request):
         form = _request.form
-        self.run_timestamp = get_run_timestamp(form.get('data_interval_end'))
+        self.load_timestamp = get_load_timestamp(form.get('data_interval_end'))
         self.target_date = get_target_date(form.get('ds'))
         logger.info(self.__dict__)
 
@@ -75,7 +75,7 @@ def do_check_vpn_status():
 def do_list_downloaded_urls():
     if request.method == 'POST':
         params = RequestParams(request)
-        list_downloaded_job_descriptions(params.run_timestamp)
+        list_downloaded_job_descriptions(params.load_timestamp)
         return SUCCESS
     elif request.method == 'GET':
         return HTML_FORM
@@ -86,7 +86,7 @@ def do_download_sitemap():
     if request.method == 'POST':
         if is_connected_to_vpn():
             params = RequestParams(request)
-            download_sitemap(params.run_timestamp)
+            download_sitemap(params.load_timestamp)
             return {'result_status': 'success'}, 200
         else:
             return {'result_status': 'failed'}, 400
@@ -99,7 +99,7 @@ def do_list_job_descriptions_to_download():
     if request.method == 'POST':
         if is_connected_to_vpn():
             params = RequestParams(request)
-            list_job_descriptions_to_download(params.run_timestamp)
+            list_job_descriptions_to_download(params.load_timestamp)
             return SUCCESS
         else:
             return {'result_status': 'failed'}, 400
@@ -112,7 +112,7 @@ def do_download_job_descriptions():
     if request.method == 'POST':
         if is_connected_to_vpn():
             params = RequestParams(request)
-            download_job_descriptions(params.run_timestamp)
+            download_job_descriptions(params.load_timestamp)
             return SUCCESS
         else:
             return {'result_status': 'failed'}, 400
@@ -124,7 +124,7 @@ def do_download_job_descriptions():
 def do_cleanse_sitemaps():
     if request.method == 'POST':
         params = RequestParams(request)
-        cleanse_sitemaps(params.run_timestamp, params.target_date)
+        cleanse_sitemaps(params.load_timestamp, params.target_date)
         return SUCCESS
     elif request.method == 'GET':
         return HTML_FORM
@@ -134,7 +134,7 @@ def do_cleanse_sitemaps():
 def do_cleanse_job_descriptions():
     if request.method == 'POST':
         params = RequestParams(request)
-        cleanse_job_descriptions(params.run_timestamp, params.target_date)
+        cleanse_job_descriptions(params.load_timestamp, params.target_date)
         return SUCCESS
     elif request.method == 'GET':
         return HTML_FORM
@@ -144,7 +144,7 @@ def do_cleanse_job_descriptions():
 def do_curate_sitemaps():
     if request.method == 'POST':
         params = RequestParams(request)
-        curate_sitemaps(params.run_timestamp, params.target_date)
+        curate_sitemaps(params.load_timestamp, params.target_date)
         return SUCCESS
     elif request.method == 'GET':
         return HTML_FORM
@@ -154,7 +154,7 @@ def do_curate_sitemaps():
 def do_curate_job_descriptions():
     if request.method == 'POST':
         params = RequestParams(request)
-        curate_job_descriptions(params.run_timestamp, params.target_date)
+        curate_job_descriptions(params.load_timestamp, params.target_date)
         return SUCCESS
     elif request.method == 'GET':
         return HTML_FORM
@@ -198,7 +198,7 @@ def do_test():
         params = RequestParams(request)
         return {
                    'result_status': 'success',
-                   'run_timestamp': params.run_timestamp,
+                   'load_timestamp': params.load_timestamp,
                    'target_date': params.target_date,
                }, 200
     elif request.method == 'GET':

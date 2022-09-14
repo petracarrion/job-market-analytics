@@ -21,13 +21,14 @@
 
 ## In Progress
 
+- [ ] Rename target_date to load_date
+- [ ] Add load_timestamp and load_date to the curated layer
 - [ ] On the cleansed layer, add the first sitemap occurance per URL instead of only the latest load_timestamp
-- [ ] Rename run_timestamp to load_timestamp and add it to the curated layer
-- [ ] Rename target_date to load_date and add it to the curated layer
 
 ## Done
 
-- [x] Fail the download sitemap task in the hourly dag if the run_timestamp is older than one hour
+- [x] Rename run_timestamp to load_timestamp
+- [x] Fail the download sitemap task in the hourly dag if the load_timestamp is older than one hour
 - [x] Create a separated virtual environment for airflow
 - [x] Fix the issue "metaData-bag.log"
 - [x] Find a better way to avoid Airflow to hang when there are many jobs to download

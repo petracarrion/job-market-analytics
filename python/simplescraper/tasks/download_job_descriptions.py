@@ -5,7 +5,7 @@ from playwright.async_api import async_playwright, Error, TimeoutError
 
 from common.chunking import get_chunk_size
 from common.entity import JOB_DESCRIPTION
-from common.env_variables import DATA_SOURCE_URL, SEMAPHORE_COUNT, MAX_CHUNK_SIZE, LATEST_RUN_TIMESTAMP, RUN_HEADLESS, \
+from common.env_variables import DATA_SOURCE_URL, SEMAPHORE_COUNT, MAX_CHUNK_SIZE, LATEST_LOAD_TIMESTAMP, RUN_HEADLESS, \
     MIN_TO_DOWNLOAD
 from common.logging import logger, configure_logger
 from common.storage import save_raw_file, load_temp_df, JOB_DESCRIPTIONS_TO_DOWNLOAD_CSV
@@ -29,7 +29,7 @@ async def open_first_page(browser):
     return page
 
 
-async def download_urls(df, run_timestamp):
+async def download_urls(df, load_timestamp):
     if df.empty:
         return
     async with async_playwright() as p:
@@ -72,7 +72,7 @@ async def download_urls(df, run_timestamp):
                             await page.keyboard.press('Tab')
                         await page.wait_for_selector('.listing-content', timeout=20000, state='attached')
                     page_content = await page.content()
-                    save_raw_file(page_content, JOB_DESCRIPTION, run_timestamp, file_name)
+                    save_raw_file(page_content, JOB_DESCRIPTION, load_timestamp, file_name)
                     logger.success(f'Chunk {chunk_id}: Downloaded  ({pos_in_chunk}/{chunk_size}): {url}')
                 except TimeoutError:
                     logger.warning(f'Chunk {chunk_id}: TimeoutError: Timeout error while requesting the page {url}')
@@ -105,24 +105,24 @@ def split_dataframe(df, chunk_size):
     return chunks
 
 
-async def safe_download_urls(urls, run_timestamp, sem):
+async def safe_download_urls(urls, load_timestamp, sem):
     async with sem:  # semaphore limits num of simultaneous downloads
-        return await download_urls(urls, run_timestamp)
+        return await download_urls(urls, load_timestamp)
 
 
-async def run_async_tasks(chunks, run_timestamp):
+async def run_async_tasks(chunks, load_timestamp):
     sem = asyncio.Semaphore(SEMAPHORE_COUNT)
     tasks = [
-        asyncio.ensure_future(safe_download_urls(chunk, run_timestamp, sem))  # creating task starts coroutine
+        asyncio.ensure_future(safe_download_urls(chunk, load_timestamp, sem))  # creating task starts coroutine
         for chunk
         in chunks
     ]
     await asyncio.gather(*tasks)
 
 
-def download_job_descriptions(run_timestamp, df_to_download=None):
-    configure_logger(run_timestamp, 'download_job_descriptions')
-    df = df_to_download or load_temp_df(run_timestamp, JOB_DESCRIPTIONS_TO_DOWNLOAD_CSV)
+def download_job_descriptions(load_timestamp, df_to_download=None):
+    configure_logger(load_timestamp, 'download_job_descriptions')
+    df = df_to_download or load_temp_df(load_timestamp, JOB_DESCRIPTIONS_TO_DOWNLOAD_CSV)
 
     # TODO find a better way to avoid Airflow to hang when there are many jobs to download
     # df = df.head(SEMAPHORE_COUNT * MAX_CHUNK_SIZE)
@@ -130,21 +130,21 @@ def download_job_descriptions(run_timestamp, df_to_download=None):
     total_count = df.shape[0]
 
     if total_count < MIN_TO_DOWNLOAD:
-        logger.success(f'Not enough to download: {total_count} for the timestamp {run_timestamp}')
+        logger.success(f'Not enough to download: {total_count} for the load timestamp {load_timestamp}')
         return
 
     chunk_size = get_chunk_size(total_count, SEMAPHORE_COUNT, MAX_CHUNK_SIZE)
     chunks = split_dataframe(df, chunk_size)
 
     start_time = time.time()
-    logger.info(f'Starting downloading job descriptions for job: {run_timestamp}')
+    logger.info(f'Starting downloading job descriptions for job: {load_timestamp}')
     logger.info(f'Concurrent tasks: {SEMAPHORE_COUNT}')
     logger.info(f'Urls to download: {total_count}')
 
     loop = asyncio.SelectorEventLoop()
     asyncio.set_event_loop(loop)
     try:
-        loop.run_until_complete(run_async_tasks(chunks, run_timestamp))
+        loop.run_until_complete(run_async_tasks(chunks, load_timestamp))
     finally:
         loop.run_until_complete(loop.shutdown_asyncgens())
         loop.close()
@@ -152,11 +152,11 @@ def download_job_descriptions(run_timestamp, df_to_download=None):
     elapsed_time = time.time() - start_time
     logger.info(f'Elapsed time: {elapsed_time:.2f} seconds')
     logger.info(f'Downloads per second: {total_count / elapsed_time:.2f}')
-    logger.success(f'Finished: {total_count} urls for the timestamp {run_timestamp}')
+    logger.success(f'Finished: {total_count} urls for the timestamp {load_timestamp}')
 
 
 if __name__ == '__main__':
     download_job_descriptions(
-        LATEST_RUN_TIMESTAMP,
-        load_temp_df(LATEST_RUN_TIMESTAMP, JOB_DESCRIPTIONS_TO_DOWNLOAD_CSV),
+        LATEST_LOAD_TIMESTAMP,
+        load_temp_df(LATEST_LOAD_TIMESTAMP, JOB_DESCRIPTIONS_TO_DOWNLOAD_CSV),
     )

@@ -23,7 +23,7 @@ from common.env_variables import DATA_SOURCE_NAME, RAW_DIR, CLEANSED_DIR, TEMP_D
     AZURE_STORAGE_CONTAINER_NAME, DATA_DIR, UPLOAD_TO_AZURE, BACKUP_DIR, CURATED_DIR
 from common.logging import logger
 
-RUN_TIMESTAMP_FORMAT = '%Y/%m/%d/%H-%M-%S'
+LOAD_TIMESTAMP_FORMAT = '%Y/%m/%d/%H-%M-%S'
 TARGET_DATE_FORMAT = '%Y/%m/%d'
 
 RAW_LAYER = 'raw'
@@ -55,7 +55,7 @@ def list_raw_files(data_source, entity: Entity, target_date=None):
     if target_date:
         dir_path = os.path.join(dir_path, target_date)
     file_list = [{
-        'run_timestamp': '/'.join(f.split('/')[-5:-1]),
+        'load_timestamp': '/'.join(f.split('/')[-5:-1]),
         'file_name': f.split('/')[-1],
     } for f in glob.iglob(dir_path + '/**/*', recursive=True) if os.path.isfile(f) and 'latest' not in f]
     return file_list
@@ -77,12 +77,12 @@ def list_backup_days(data_source, entity: Entity):
     return file_list
 
 
-def get_run_timestamp(ts=None):
+def get_load_timestamp(ts=None):
     if ts is None:
-        run_timestamp = datetime.datetime.today().strftime(RUN_TIMESTAMP_FORMAT)
+        load_timestamp = datetime.datetime.today().strftime(LOAD_TIMESTAMP_FORMAT)
     else:
-        run_timestamp = parser.parse(ts).strftime(RUN_TIMESTAMP_FORMAT)
-    return run_timestamp
+        load_timestamp = parser.parse(ts).strftime(LOAD_TIMESTAMP_FORMAT)
+    return load_timestamp
 
 
 def get_target_date(ds=None):
@@ -126,31 +126,31 @@ def save_remote_file(content, blob_name):
     logger.success(f'save_remote_file end:   {blob_name}')
 
 
-def save_raw_file(content, entity: Entity, run_timestamp: str, file_name):
-    blob_name = os.path.join(RAW_LAYER, DATA_SOURCE_NAME, entity.name, run_timestamp, file_name)
+def save_raw_file(content, entity: Entity, load_timestamp: str, file_name):
+    blob_name = os.path.join(RAW_LAYER, DATA_SOURCE_NAME, entity.name, load_timestamp, file_name)
     file_path = os.path.join(DATA_DIR, blob_name)
     save_local_file(content, file_path)
     if UPLOAD_TO_AZURE:
         save_remote_file(content, blob_name)
 
 
-def load_raw_file(entity: Entity, run_timestamp, file_name):
-    file_path = os.path.join(LAYER_DIR[RAW_LAYER], DATA_SOURCE_NAME, entity.name, run_timestamp, file_name)
+def load_raw_file(entity: Entity, load_timestamp, file_name):
+    file_path = os.path.join(LAYER_DIR[RAW_LAYER], DATA_SOURCE_NAME, entity.name, load_timestamp, file_name)
     with open(file_path, 'r') as f:
         content = f.read()
     return content
 
 
-def save_temp_df(df: pd.DataFrame, run_timestamp: str, file_name: str):
-    temp_dir = os.path.join(TEMP_DIR, run_timestamp)
+def save_temp_df(df: pd.DataFrame, load_timestamp: str, file_name: str):
+    temp_dir = os.path.join(TEMP_DIR, load_timestamp)
     if not os.path.exists(temp_dir):
         os.makedirs(temp_dir)
     # noinspection PyTypeChecker
     df.to_csv(os.path.join(temp_dir, file_name), index=False)
 
 
-def load_temp_df(run_timestamp: str, file_name: str) -> pd.DataFrame:
-    return pd.read_csv(os.path.join(TEMP_DIR, run_timestamp, file_name))
+def load_temp_df(load_timestamp: str, file_name: str) -> pd.DataFrame:
+    return pd.read_csv(os.path.join(TEMP_DIR, load_timestamp, file_name))
 
 
 def list_parquet_files(layer, entity: Entity, relative_paths):

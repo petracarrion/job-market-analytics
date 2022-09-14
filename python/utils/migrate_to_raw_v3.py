@@ -4,7 +4,7 @@ import shutil
 
 import pandas as pd
 
-from common.env_variables import LATEST_RUN_TIMESTAMP, RAW_DIR
+from common.env_variables import LATEST_LOAD_TIMESTAMP, RAW_DIR
 from common.storage import DATA_SOURCE_NAME, save_temp_df, load_temp_df
 
 
@@ -16,10 +16,10 @@ def list_raw_files(data_source, entity):
     return file_list
 
 
-def list_downloaded_files(run_timestamp) -> pd.DataFrame:
+def list_downloaded_files(load_timestamp) -> pd.DataFrame:
     files = list_raw_files(DATA_SOURCE_NAME, 'job_description')
     df = pd.DataFrame(files)
-    save_temp_df(df, run_timestamp, '00_downloaded_raw_job_descriptions.csv')
+    save_temp_df(df, load_timestamp, '00_downloaded_raw_job_descriptions.csv')
     return df
 
 
@@ -42,12 +42,11 @@ def copy_file(row):
     shutil.copy2(src, dst)
 
 
-def copy_files_to_raw_v2(run_timestamp):
-    df = load_temp_df(run_timestamp, '00_downloaded_raw_job_descriptions.csv')
+def copy_files_to_raw_v2(load_timestamp):
+    df = load_temp_df(load_timestamp, '00_downloaded_raw_job_descriptions.csv')
     df['new_file_path'] = df.apply(get_new_file_path, axis=1)
     df.apply(copy_file, axis=1)
 
 
 if __name__ == "__main__":
-    # list_downloaded_files(LATEST_RUN_TIMESTAMP)
-    copy_files_to_raw_v2(LATEST_RUN_TIMESTAMP)
+    copy_files_to_raw_v2(LATEST_LOAD_TIMESTAMP)
