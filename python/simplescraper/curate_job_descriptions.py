@@ -11,7 +11,7 @@ JOB_DESCRIPTION_SAT_COLUMNS = ['title', 'online_status', 'is_anonymous', 'should
                                'contract_type', 'work_type', 'online_date', 'description_introduction',
                                'description_responsabilities', 'description_requirements', 'description_perks']
 
-BASE_COLUMNS = ['year', 'month', 'day', 'job_id']
+BASE_COLUMNS = ['year', 'month', 'day', 'job_id', 'load_timestamp']
 
 
 def process_job_description(df):

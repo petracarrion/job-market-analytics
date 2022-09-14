@@ -1,11 +1,12 @@
 import sys
 
 import bs4
+import pandas as pd
 from loguru import logger
 
 from common.entity import SITEMAP
 from common.logging import configure_logger
-from common.storage import get_load_timestamp, load_raw_file, save_cleansed_df, get_load_date
+from common.storage import get_load_timestamp, load_raw_file, save_cleansed_df, get_load_date, LOAD_TIMESTAMP_FORMAT
 from tasks.list_downloaded_sitemaps import list_downloaded_sitemaps
 
 
@@ -43,7 +44,7 @@ def cleanse_sitemaps(load_timestamp, load_date):
     df = df.explode('url')
     df = df.drop_duplicates(['load_timestamp', 'url'], keep='last')
     df['job_id'] = extract_job_id(df['url'])
-
+    df['load_timestamp'] = pd.to_datetime(df['load_timestamp'], format=LOAD_TIMESTAMP_FORMAT, utc=True)
     logger.info(f'Saving cleansed: {df["load_timestamp"].iloc[0]}')
     save_cleansed_df(df, SITEMAP)
 

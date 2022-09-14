@@ -4,7 +4,7 @@ import pandas as pd
 
 from common.entity import JOB_DESCRIPTION
 from common.logging import logger, configure_logger
-from common.storage import get_load_timestamp, load_raw_file, save_cleansed_df, get_load_date
+from common.storage import get_load_timestamp, load_raw_file, save_cleansed_df, get_load_date, LOAD_TIMESTAMP_FORMAT
 from tasks.list_downloaded_job_descriptions import list_downloaded_job_descriptions
 from tasks.parse_job_description import parse_job_description
 
@@ -35,6 +35,7 @@ def cleanse_job_descriptions(load_timestamp, load_date):
     df = df.join(pd.json_normalize(df['parsed_content']))
     df = df.drop(columns=['parsed_content'])
     df[['year', 'month', 'day', 'hour']] = df['load_timestamp'].str.split('/', 3, expand=True)
+    df['load_timestamp'] = pd.to_datetime(df['load_timestamp'], format=LOAD_TIMESTAMP_FORMAT, utc=True)
     logger.info(f'Finish to parse job descriptions for the load date: {load_date}')
     save_cleansed_df(df, JOB_DESCRIPTION)
 

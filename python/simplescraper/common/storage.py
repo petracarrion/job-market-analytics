@@ -173,6 +173,7 @@ def save_parquet_df(df: pd.DataFrame, layer, entity: Entity):
                         root_path,
                         partition_cols=['year', 'month', 'day'],
                         basename_template='part-{i}.parquet',
+                        existing_data_behavior='delete_matching',
                         use_legacy_dataset=False)
 
 
