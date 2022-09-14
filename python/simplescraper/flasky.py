@@ -7,7 +7,7 @@ from cleanse_job_descriptions import cleanse_job_descriptions
 from cleanse_sitemaps import cleanse_sitemaps
 from common.env_variables import SOURCE_DIR
 from common.logging import logger
-from common.storage import get_load_timestamp, get_target_date
+from common.storage import get_load_timestamp, get_load_date
 from curate_job_descriptions import curate_job_descriptions
 from curate_sitemaps import curate_sitemaps
 from tasks.download_job_descriptions import download_job_descriptions
@@ -39,7 +39,7 @@ class RequestParams:
     def __init__(self, _request: Request):
         form = _request.form
         self.load_timestamp = get_load_timestamp(form.get('data_interval_end'))
-        self.target_date = get_target_date(form.get('ds'))
+        self.load_date = get_load_date(form.get('ds'))
         logger.info(self.__dict__)
 
 
@@ -124,7 +124,7 @@ def do_download_job_descriptions():
 def do_cleanse_sitemaps():
     if request.method == 'POST':
         params = RequestParams(request)
-        cleanse_sitemaps(params.load_timestamp, params.target_date)
+        cleanse_sitemaps(params.load_timestamp, params.load_date)
         return SUCCESS
     elif request.method == 'GET':
         return HTML_FORM
@@ -134,7 +134,7 @@ def do_cleanse_sitemaps():
 def do_cleanse_job_descriptions():
     if request.method == 'POST':
         params = RequestParams(request)
-        cleanse_job_descriptions(params.load_timestamp, params.target_date)
+        cleanse_job_descriptions(params.load_timestamp, params.load_date)
         return SUCCESS
     elif request.method == 'GET':
         return HTML_FORM
@@ -144,7 +144,7 @@ def do_cleanse_job_descriptions():
 def do_curate_sitemaps():
     if request.method == 'POST':
         params = RequestParams(request)
-        curate_sitemaps(params.load_timestamp, params.target_date)
+        curate_sitemaps(params.load_timestamp, params.load_date)
         return SUCCESS
     elif request.method == 'GET':
         return HTML_FORM
@@ -154,7 +154,7 @@ def do_curate_sitemaps():
 def do_curate_job_descriptions():
     if request.method == 'POST':
         params = RequestParams(request)
-        curate_job_descriptions(params.load_timestamp, params.target_date)
+        curate_job_descriptions(params.load_timestamp, params.load_date)
         return SUCCESS
     elif request.method == 'GET':
         return HTML_FORM
@@ -164,7 +164,7 @@ def do_curate_job_descriptions():
 def do_do_day_backup():
     if request.method == 'POST':
         params = RequestParams(request)
-        year, month, day = params.target_date.split('/')
+        year, month, day = params.load_date.split('/')
         result = subprocess.run([f'{SOURCE_DIR}/simplescraper/do_day_backup.sh', year, month, day])
         if result.returncode == SUCCESS_RETURN_CODE:
             return SUCCESS
@@ -180,7 +180,7 @@ def do_do_day_backup():
 def do_verify_day_backup():
     if request.method == 'POST':
         params = RequestParams(request)
-        year, month, day = params.target_date.split('/')
+        year, month, day = params.load_date.split('/')
         result = subprocess.run([f'{SOURCE_DIR}/simplescraper/verify_day_backup.sh', year, month, day])
         if result.returncode == SUCCESS_RETURN_CODE:
             return SUCCESS
@@ -199,7 +199,7 @@ def do_test():
         return {
                    'result_status': 'success',
                    'load_timestamp': params.load_timestamp,
-                   'target_date': params.target_date,
+                   'load_date': params.load_date,
                }, 200
     elif request.method == 'GET':
         return HTML_FORM

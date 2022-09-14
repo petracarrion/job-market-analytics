@@ -17,10 +17,10 @@ def calculate_days_online(load_timestamp):
     return delta.days
 
 
-def list_downloaded_job_descriptions(load_timestamp, target_date=None) -> pd.DataFrame:
+def list_downloaded_job_descriptions(load_timestamp, load_date=None) -> pd.DataFrame:
     configure_logger(load_timestamp, 'list_downloaded_job_descriptions')
     logger.info('list_downloaded_job_descriptions start')
-    files = list_raw_files(DATA_SOURCE_NAME, JOB_DESCRIPTION, target_date)
+    files = list_raw_files(DATA_SOURCE_NAME, JOB_DESCRIPTION, load_date)
     df = pd.DataFrame(files)
     if not df.empty:
         df['id'] = df['file_name'].str.split('.', expand=True)[0]
@@ -28,7 +28,7 @@ def list_downloaded_job_descriptions(load_timestamp, target_date=None) -> pd.Dat
             df['days_online'] = df['load_timestamp'].map(calculate_days_online)
             df = df[df['days_online'] < ONLINE_EXPIRATION_IN_DAYS]
             df = df.drop(columns=['days_online'])
-        if target_date is None:
+        if load_date is None:
             save_temp_df(df, load_timestamp, DOWNLOADED_JOB_DESCRIPTIONS_CSV)
     logger.info('list_downloaded_job_descriptions end')
     return df

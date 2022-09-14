@@ -24,7 +24,7 @@ from common.env_variables import DATA_SOURCE_NAME, RAW_DIR, CLEANSED_DIR, TEMP_D
 from common.logging import logger
 
 LOAD_TIMESTAMP_FORMAT = '%Y/%m/%d/%H-%M-%S'
-TARGET_DATE_FORMAT = '%Y/%m/%d'
+LOAD_DATE_FORMAT = '%Y/%m/%d'
 
 RAW_LAYER = 'raw'
 CLEANSED_LAYER = 'cleansed'
@@ -50,10 +50,10 @@ PARSED_SITEMAP_DATES_CSV = '32_parsed_sitemap_dates.csv'
 SITEMAPS_TO_PARSE_CSV = '33_sitemaps_to_parse.csv'
 
 
-def list_raw_files(data_source, entity: Entity, target_date=None):
+def list_raw_files(data_source, entity: Entity, load_date=None):
     dir_path = os.path.join(RAW_DIR, data_source, entity.name)
-    if target_date:
-        dir_path = os.path.join(dir_path, target_date)
+    if load_date:
+        dir_path = os.path.join(dir_path, load_date)
     file_list = [{
         'load_timestamp': '/'.join(f.split('/')[-5:-1]),
         'file_name': f.split('/')[-1],
@@ -85,16 +85,16 @@ def get_load_timestamp(ts=None):
     return load_timestamp
 
 
-def get_target_date(ds=None):
+def get_load_date(ds=None):
     if ds is None:
-        target_date = (datetime.datetime.today() - datetime.timedelta(days=1)).strftime(TARGET_DATE_FORMAT)
+        load_date = (datetime.datetime.today() - datetime.timedelta(days=1)).strftime(LOAD_DATE_FORMAT)
     else:
-        target_date = parser.parse(ds).strftime(TARGET_DATE_FORMAT)
-    return target_date
+        load_date = parser.parse(ds).strftime(LOAD_DATE_FORMAT)
+    return load_date
 
 
-def get_filters_from_target_date(target_date: str):
-    year, month, day = target_date.split('/', 2)
+def get_filters_from_load_date(load_date: str):
+    year, month, day = load_date.split('/', 2)
     filters = [
         ('year', '=', int(year)),
         ('month', '=', int(month)),
@@ -194,7 +194,7 @@ def load_parquet_df(layer, entity: Entity, columns, filters) -> pd.DataFrame:
         return pd.DataFrame(columns=columns)
 
 
-def load_cleansed_df(entity: Entity, columns=None, filters=None, target_date=None) -> pd.DataFrame:
-    if filters is None and target_date is not None:
-        filters = get_filters_from_target_date(target_date)
+def load_cleansed_df(entity: Entity, columns=None, filters=None, load_date=None) -> pd.DataFrame:
+    if filters is None and load_date is not None:
+        filters = get_filters_from_load_date(load_date)
     return load_parquet_df(CLEANSED_LAYER, entity, columns, filters)

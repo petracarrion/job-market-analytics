@@ -5,7 +5,7 @@ from loguru import logger
 
 from common.entity import SITEMAP
 from common.logging import configure_logger
-from common.storage import get_load_timestamp, load_raw_file, save_cleansed_df, get_target_date
+from common.storage import get_load_timestamp, load_raw_file, save_cleansed_df, get_load_date
 from tasks.list_downloaded_sitemaps import list_downloaded_sitemaps
 
 
@@ -29,9 +29,9 @@ def get_date_from_load_timestamp(load_timestamp):
     return f'{year}-{month}-{day}'
 
 
-def cleanse_sitemaps(load_timestamp, target_date):
+def cleanse_sitemaps(load_timestamp, load_date):
     configure_logger(load_timestamp, 'parse_sitemaps')
-    df = list_downloaded_sitemaps(load_timestamp, target_date)
+    df = list_downloaded_sitemaps(load_timestamp, load_date)
     df[['year', 'month', 'day', 'time']] = df['load_timestamp'].str.split('/', 3, expand=True)
     if df.empty:
         logger.info('Nothing to parse')
@@ -50,5 +50,5 @@ def cleanse_sitemaps(load_timestamp, target_date):
 
 if __name__ == "__main__":
     _load_timestamp = sys.argv[1] if len(sys.argv) > 1 else get_load_timestamp()
-    _target_date = sys.argv[2] if len(sys.argv) > 2 else get_target_date()
-    cleanse_sitemaps(_load_timestamp, _target_date)
+    _load_date = sys.argv[2] if len(sys.argv) > 2 else get_load_date()
+    cleanse_sitemaps(_load_timestamp, _load_date)

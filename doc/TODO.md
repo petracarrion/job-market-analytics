@@ -21,12 +21,12 @@
 
 ## In Progress
 
-- [ ] Rename target_date to load_date
 - [ ] Add load_timestamp and load_date to the curated layer
 - [ ] On the cleansed layer, add the first sitemap occurance per URL instead of only the latest load_timestamp
 
 ## Done
 
+- [x] Rename target_date to load_date
 - [x] Rename run_timestamp to load_timestamp
 - [x] Fail the download sitemap task in the hourly dag if the load_timestamp is older than one hour
 - [x] Create a separated virtual environment for airflow
