@@ -42,12 +42,8 @@ def remove_old_files():
     df = df.drop_duplicates()
     df['days_online'] = df['date'].map(calculate_days_online)
     # 2022-09-15 252
-    # 2022-09-16 250
-    # 2022-09-17 248
-    # 2022-09-18 246
-    # 2022-09-19 244
-    # 2022-09-20 242
-    # 2022-09-21 240
+    # 2022-09-16 251
+    # 2022-09-17 250
     df = df[df['days_online'] > 252]
     df = df.sort_values(by=['date'])
     dates_to_download = df['date'].to_list()
