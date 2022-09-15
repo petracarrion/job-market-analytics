@@ -1,0 +1,55 @@
+import datetime
+
+import pandas as pd
+
+from common.entity import ALL_ENTITIES
+from common.env_variables import DATA_SOURCE_NAME, RAW_DIR
+from common.storage import list_raw_days
+from tasks.list_downloaded_job_descriptions import calculate_days_online
+
+
+def get_current_date():
+    return datetime.datetime.today().strftime('%Y%m%d')
+
+
+def list_missing_previous_dates(entity):
+    df = pd.DataFrame(list_raw_days(DATA_SOURCE_NAME, entity))
+    df_current_date = pd.DataFrame([{
+        'date': get_current_date()
+    }])
+    df = df.drop_duplicates()
+    df = pd.concat([
+        df,
+        df_current_date, df_current_date
+    ]).drop_duplicates(keep=False)
+    return df
+
+
+def remove_old_files():
+    dfs = []
+    for entity in ALL_ENTITIES:
+        df = list_missing_previous_dates(entity)
+        dfs.append(df)
+    df = pd.concat(dfs, ignore_index=True)
+    df = df.drop_duplicates()
+    df['days_online'] = df['date'].map(calculate_days_online)
+    # 2022-09-15 252
+    # 2022-09-16 250
+    # 2022-09-17 248
+    # 2022-09-18 246
+    # 2022-09-19 244
+    # 2022-09-20 242
+    # 2022-09-21 240
+    df = df[df['days_online'] > 252]
+    df = df.sort_values(by=['date'])
+    dates_to_download = df['date'].to_list()
+    for date_to_download in dates_to_download:
+        year = date_to_download[:4]
+        month = date_to_download[4:6]
+        day = date_to_download[6:8]
+        for entity in ALL_ENTITIES:
+            print(f'rm -rf {RAW_DIR}/{DATA_SOURCE_NAME}/{entity}/{year}/{month}/{day}')
+
+
+if __name__ == "__main__":
+    remove_old_files()
