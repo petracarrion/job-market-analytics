@@ -1,15 +1,23 @@
 import datetime
+import functools
 
 import pandas as pd
 
 from common.entity import ALL_ENTITIES
 from common.env_variables import DATA_SOURCE_NAME, RAW_DIR
 from common.storage import list_raw_days
-from tasks.list_downloaded_job_descriptions import calculate_days_online
 
 
 def get_current_date():
     return datetime.datetime.today().strftime('%Y%m%d')
+
+
+@functools.lru_cache(maxsize=None)
+def calculate_days_online(load_timestamp):
+    ingestion_datetime = datetime.datetime.strptime(load_timestamp, '%Y%m%d')
+    now = datetime.datetime.now()
+    delta = now - ingestion_datetime
+    return delta.days
 
 
 def list_missing_previous_dates(entity):
