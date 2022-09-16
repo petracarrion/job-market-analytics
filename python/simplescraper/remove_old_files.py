@@ -3,7 +3,7 @@ import functools
 
 import pandas as pd
 
-from common.entity import ALL_ENTITIES
+from common.entity import RAW_ENTITIES
 from common.env_variables import DATA_SOURCE_NAME, RAW_DIR
 from common.storage import list_raw_days
 
@@ -35,7 +35,7 @@ def list_missing_previous_dates(entity):
 
 def remove_old_files():
     dfs = []
-    for entity in ALL_ENTITIES:
+    for entity in RAW_ENTITIES:
         df = list_missing_previous_dates(entity)
         dfs.append(df)
     df = pd.concat(dfs, ignore_index=True)
@@ -51,7 +51,7 @@ def remove_old_files():
         year = date_to_download[:4]
         month = date_to_download[4:6]
         day = date_to_download[6:8]
-        for entity in ALL_ENTITIES:
+        for entity in RAW_ENTITIES:
             print(f'rm -rf {RAW_DIR}/{DATA_SOURCE_NAME}/{entity}/{year}/{month}/{day}')
 
 

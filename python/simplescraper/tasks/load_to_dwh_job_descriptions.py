@@ -4,28 +4,10 @@ import sys
 import duckdb
 import pyarrow.dataset as ds
 
+from common.entity import CURATED_ENTITIES
 from common.env_variables import CURATED_DIR, DATA_SOURCE_NAME, DUCKDB_WAREHOUSE_FILE
 from common.logging import configure_logger, logger
 from common.storage import get_load_timestamp, get_load_date
-
-CREATE_TABLE_SRC_JOB_DESCRIPTION = '''
-    CREATE TABLE IF NOT EXISTS src_job_description (
-         job_id VARCHAR
-        ,load_timestamp TIMESTAMP
-        ,job_hashdiff VARCHAR
-        ,title VARCHAR
-        ,online_status VARCHAR
-        ,is_anonymous BOOLEAN
-        ,should_display_early_applicant BOOLEAN
-        ,contract_type VARCHAR
-        ,work_type VARCHAR
-        ,online_date VARCHAR
-        ,description_introduction VARCHAR
-        ,description_responsabilities VARCHAR
-        ,description_requirements VARCHAR
-        ,description_perks VARCHAR
-        )
-    '''
 
 
 def load_to_vault_job_descriptions(load_timestamp, load_date):
@@ -34,46 +16,56 @@ def load_to_vault_job_descriptions(load_timestamp, load_date):
 
     conn = duckdb.connect(DUCKDB_WAREHOUSE_FILE)
 
-    conn.execute(CREATE_TABLE_SRC_JOB_DESCRIPTION)
-
-    parquet_input = os.path.join(CURATED_DIR, DATA_SOURCE_NAME, 'job_description')
-    dataset = ds.dataset(parquet_input, format='parquet', partitioning='hive')
-    conn.register('''curated_job_description''', dataset)
-    year, month, day = load_date.split('/', 2)
-
-    conn.execute(f'''    
-    CREATE TEMP TABLE tmp_job_description AS
-        SELECT *
-            FROM curated_job_description
-            WHERE
-                year = {year} AND
-                month = {month} AND
-                day = {day};
-    
-    INSERT INTO src_job_description 
-        SELECT
-             a.job_id
-            ,a.load_timestamp
-            ,a.job_hashdiff
-            ,a.title
-            ,a.online_status
-            ,a.is_anonymous
-            ,a.should_display_early_applicant
-            ,a.contract_type
-            ,a.work_type
-            ,a.online_date
-            ,a.description_introduction
-            ,a.description_responsabilities
-            ,a.description_requirements
-            ,a.description_perks
-        FROM tmp_job_description a
-        LEFT OUTER JOIN src_job_description b
-            ON (
-                a.job_id = b.job_id
+    for entity in CURATED_ENTITIES:
+        conn.execute(f'''
+        CREATE TABLE IF NOT EXISTS src_{entity.name} (
+             {entity.get_src_clause_create_columns()}
             )
-        WHERE
-            b.job_id IS NULL;
-    ''')
+        ''')
+
+        parquet_input = os.path.join(CURATED_DIR, DATA_SOURCE_NAME, entity.name)
+        dataset = ds.dataset(parquet_input, format='parquet', partitioning='hive')
+        conn.register(f'curated_{entity.name}', dataset)
+        year, month, day = load_date.split('/', 2)
+
+        df = conn.execute(f'''
+            SELECT *
+                FROM curated_{entity.name}
+                WHERE
+                    year = {year} AND
+                    month = {month} AND
+                    day = {day};
+        ''').df()
+
+        conn.execute(f'''    
+        CREATE TEMP TABLE tmp_{entity.name} AS
+            SELECT *
+                FROM curated_{entity.name}
+                WHERE
+                    year = {year} AND
+                    month = {month} AND
+                    day = {day};
+        ''')
+
+        df = conn.execute(f'''
+            SELECT *
+                FROM tmp_{entity.name};
+        ''').df()
+
+        df = conn.execute(f'''
+            SELECT *
+                FROM src_{entity.name};
+        ''').df()
+
+        conn.execute(f'''
+        INSERT INTO src_{entity.name}
+            SELECT {entity.get_src_select_columns()}
+            FROM tmp_{entity.name} a
+            LEFT OUTER JOIN src_{entity.name} b
+                ON ( {entity.get_src_clause_join_on()} )
+            WHERE
+                {entity.get_src_clause_where()};
+        ''')
 
     logger.info(f'End   load_to_dwh_job_descriptions: {load_date}')
 

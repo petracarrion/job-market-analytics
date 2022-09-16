@@ -2,7 +2,7 @@ import datetime
 
 import pandas as pd
 
-from common.entity import ALL_ENTITIES
+from common.entity import RAW_ENTITIES
 from common.env_variables import DATA_SOURCE_NAME, SOURCE_DIR
 from common.storage import list_raw_days, list_backup_days
 
@@ -37,7 +37,7 @@ def print_script_statements(script_name, dates_to_download):
 
 def do_all_backups():
     dfs = []
-    for entity in ALL_ENTITIES:
+    for entity in RAW_ENTITIES:
         df = list_days_to_backup(entity)
         dfs.append(df)
     df = pd.concat(dfs, ignore_index=True)
