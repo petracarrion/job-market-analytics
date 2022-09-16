@@ -56,5 +56,10 @@ with DAG('job_market_analytics_daily_dag',
     curate_job_descriptions_t = curate_job_descriptions()
     load_to_dwh_t = load_to_dwh()
 
-    backup_day_t >> verify_day_backup_t >> cleanse_sitemaps_t >> curate_sitemaps_t >> load_to_dwh_t
-    backup_day_t >> verify_day_backup_t >> cleanse_job_descriptions_t >> curate_job_descriptions_t >> load_to_dwh_t
+    backup_day_t >> verify_day_backup_t
+
+    verify_day_backup_t >> cleanse_sitemaps_t >> curate_sitemaps_t
+    verify_day_backup_t >> cleanse_job_descriptions_t >> curate_job_descriptions_t
+
+    curate_sitemaps_t >> load_to_dwh_t
+    curate_job_descriptions_t >> load_to_dwh_t
