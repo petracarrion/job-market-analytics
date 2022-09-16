@@ -35,10 +35,6 @@ STG_COLUMNS_JOB_DESCRIPTION = [
 SITEMAP = Entity('sitemap', STG_COLUMNS_SITEMAP)
 JOB_DESCRIPTION = Entity('job_description', STG_COLUMNS_JOB_DESCRIPTION)
 JOB_ONLINE = Entity('job_online')
-JOB = Entity('job')
-COMPANY = Entity('company')
-JOB_COMPANY = Entity('job_company')
-LOCATION = Entity('location')
 JOB_LOCATION = Entity('job_location')
 
 ALL_ENTITIES = [SITEMAP, JOB_DESCRIPTION]
