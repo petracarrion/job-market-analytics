@@ -2,7 +2,7 @@ import sys
 
 import numpy as np
 
-from common.entity import JOB_DESCRIPTION, JOB_COMPANY, JOB_LOCATION
+from common.entity import JOB_DESCRIPTION, JOB_LOCATION
 from common.hashing import hash_columns
 from common.logging import configure_logger, logger
 from common.storage import get_load_timestamp, get_load_date, load_cleansed_df, save_curated_df
@@ -19,12 +19,6 @@ def process_job_description(df):
     df = df[BASE_COLUMNS + JOB_DESCRIPTION_SAT_COLUMNS]
     df['job_hashdiff'] = hash_columns(df, JOB_DESCRIPTION_SAT_COLUMNS)
     save_curated_df(df, JOB_DESCRIPTION)
-
-
-def process_company(df):
-    df = df[BASE_COLUMNS + ['company_name']].copy()
-    df = df.rename(columns={'company_name': 'company'})
-    save_curated_df(df, JOB_COMPANY)
 
 
 def process_location(df):
@@ -53,7 +47,6 @@ def curate_job_descriptions(load_timestamp, load_date):
     df = df.sort_values(by=['job_id'])
 
     process_job_description(df)
-    process_company(df)
     process_location(df)
 
     logger.info(f'End   curate_job_descriptions: {load_date}')
