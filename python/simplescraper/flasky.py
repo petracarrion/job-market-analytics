@@ -14,6 +14,7 @@ from tasks.download_job_descriptions import download_job_descriptions
 from tasks.download_sitemap import download_sitemap
 from tasks.list_downloaded_job_descriptions import list_downloaded_job_descriptions
 from tasks.list_job_descriptions_to_download import list_job_descriptions_to_download
+from tasks.load_to_dwh import load_to_dwh
 
 SUCCESS_RETURN_CODE = 0
 
@@ -155,6 +156,16 @@ def do_curate_job_descriptions():
     if request.method == 'POST':
         params = RequestParams(request)
         curate_job_descriptions(params.load_timestamp, params.load_date)
+        return SUCCESS
+    elif request.method == 'GET':
+        return HTML_FORM
+
+
+@app.route('/do/load_to_dwh', methods=['GET', 'POST'])
+def do_load_to_dwh():
+    if request.method == 'POST':
+        params = RequestParams(request)
+        load_to_dwh(params.load_timestamp, params.load_date)
         return SUCCESS
     elif request.method == 'GET':
         return HTML_FORM

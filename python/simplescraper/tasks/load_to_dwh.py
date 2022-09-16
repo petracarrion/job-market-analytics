@@ -10,7 +10,7 @@ from common.logging import configure_logger, logger
 from common.storage import get_load_timestamp, get_load_date
 
 
-def load_to_vault_job_descriptions(load_timestamp, load_date):
+def load_to_dwh(load_timestamp, load_date):
     configure_logger(load_timestamp, 'load_to_vault_job_descriptions')
     logger.info(f'Start load_to_dwh_job_descriptions: {load_date}')
 
@@ -28,15 +28,6 @@ def load_to_vault_job_descriptions(load_timestamp, load_date):
         conn.register(f'curated_{entity.name}', dataset)
         year, month, day = load_date.split('/', 2)
 
-        df = conn.execute(f'''
-            SELECT *
-                FROM curated_{entity.name}
-                WHERE
-                    year = {year} AND
-                    month = {month} AND
-                    day = {day};
-        ''').df()
-
         conn.execute(f'''    
         CREATE TEMP TABLE tmp_{entity.name} AS
             SELECT *
@@ -46,16 +37,6 @@ def load_to_vault_job_descriptions(load_timestamp, load_date):
                     month = {month} AND
                     day = {day};
         ''')
-
-        df = conn.execute(f'''
-            SELECT *
-                FROM tmp_{entity.name};
-        ''').df()
-
-        df = conn.execute(f'''
-            SELECT *
-                FROM src_{entity.name};
-        ''').df()
 
         conn.execute(f'''
         INSERT INTO src_{entity.name}
@@ -75,4 +56,4 @@ def load_to_vault_job_descriptions(load_timestamp, load_date):
 if __name__ == "__main__":
     _load_timestamp = sys.argv[1] if len(sys.argv) > 1 else get_load_timestamp()
     _load_date = sys.argv[2] if len(sys.argv) > 2 else get_load_date()
-    load_to_vault_job_descriptions(_load_timestamp, _load_date)
+    load_to_dwh(_load_timestamp, _load_date)

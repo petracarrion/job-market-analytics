@@ -51,10 +51,10 @@ SRC_COLUMNS_JOB_DESCRIPTION = [
     Column('contract_type', 'VARCHAR'),
     Column('work_type', 'VARCHAR'),
     Column('online_date', 'VARCHAR'),
-    Column('description_introduction', 'VARCHAR'),
-    Column('description_responsabilities', 'VARCHAR'),
-    Column('description_requirements', 'VARCHAR'),
-    Column('description_perks', 'VARCHAR'),
+    # Column('description_introduction', 'VARCHAR'),
+    # Column('description_responsabilities', 'VARCHAR'),
+    # Column('description_requirements', 'VARCHAR'),
+    # Column('description_perks', 'VARCHAR'),
     Column('job_hashdiff', 'VARCHAR', True),
 ]
 
