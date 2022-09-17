@@ -12,8 +12,8 @@ def create_curated_views_in_dwh():
     for entity in CURATED_ENTITIES:
         curated_path = os.path.join(CURATED_DIR, DATA_SOURCE_NAME, entity.name, '*/*/*/*.parquet')
 
-        conn.execute(f'''    
-        CREATE OR REPLACE view curated_{entity.name} AS
+        conn.execute(f'''
+        CREATE OR REPLACE view src_{entity.name} AS
             SELECT * FROM parquet_scan('{curated_path}', HIVE_PARTITIONING=1);
         ''')
 
