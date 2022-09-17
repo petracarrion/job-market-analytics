@@ -15,7 +15,7 @@ def load_and_parse(row):
     file_name = row['file_name']
     sitemap_content = load_raw_file(SITEMAP, load_timestamp, file_name)
     logger.debug(f'Parsing: {load_timestamp}/{file_name}')
-    soup = bs4.BeautifulSoup(sitemap_content, 'lxml')
+    soup = bs4.BeautifulSoup(sitemap_content, 'xml')
     urls = [loc.text for loc in soup.findAll('loc')]
     return urls
 
@@ -37,13 +37,11 @@ def cleanse_sitemaps(load_timestamp, load_date):
     if df.empty:
         logger.info('Nothing to parse')
         return
-    last_time = sorted(df.time.unique().tolist()).pop()
-    df = df[df['time'] == last_time]
     df = df.sort_values(by=['load_timestamp', 'file_name'])
     df['url'] = df.apply(load_and_parse, axis=1)
     df = df.explode('url')
-    df = df.drop_duplicates(['load_timestamp', 'url'], keep='last')
     df['job_id'] = extract_job_id(df['url'])
+    df = df.drop_duplicates(['job_id'], keep='first')
     df['load_timestamp'] = pd.to_datetime(df['load_timestamp'], format=LOAD_TIMESTAMP_FORMAT, utc=True)
     logger.info(f'Saving cleansed: {df["load_timestamp"].iloc[0]}')
     save_cleansed_df(df, SITEMAP)
