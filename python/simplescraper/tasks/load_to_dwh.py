@@ -5,7 +5,7 @@ import duckdb
 import pyarrow.dataset as ds
 
 from common.entity import CURATED_ENTITIES
-from common.env_variables import CURATED_DIR, DATA_SOURCE_NAME, DUCKDB_WAREHOUSE_FILE
+from common.env_variables import CURATED_DIR, DATA_SOURCE_NAME, DUCKDB_DWH_FILE
 from common.logging import configure_logger, logger
 from common.storage import get_load_timestamp, get_load_date
 
@@ -14,7 +14,7 @@ def load_to_dwh(load_timestamp, load_date):
     configure_logger(load_timestamp)
     logger.info(f'Start load_to_dwh_job_descriptions: {load_date}')
 
-    conn = duckdb.connect(DUCKDB_WAREHOUSE_FILE)
+    conn = duckdb.connect(DUCKDB_DWH_FILE)
 
     for entity in CURATED_ENTITIES:
         conn.execute(f'''
