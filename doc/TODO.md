@@ -21,10 +21,10 @@
 
 ## In Progress
 
-- [ ] Use Gunicorn to run flasky with 8 workers
 
 ## Done
 
+- [x] Use Gunicorn to run flasky with 4 workers
 - [x] On the cleansed layer, add the first sitemap occurance per URL instead of only the latest load_timestamp
 - [x] Add load_timestamp and load_date to the curated layer
 - [x] Rename target_date to load_date

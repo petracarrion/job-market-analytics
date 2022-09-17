@@ -8,4 +8,4 @@ source .env
 source "${VENV_ACTIVATE}"
 
 ulimit -n 2048
-flask run --host=0.0.0.0 --port=3001
+gunicorn -w 4 --timeout 600 -b 0.0.0.0:3001 'flasky:app'

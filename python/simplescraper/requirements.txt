@@ -130,6 +130,8 @@ gitpython==3.1.27
     # via bandit
 greenlet==1.1.2
     # via playwright
+gunicorn==20.1.0
+    # via -r requirements.in
 idna==3.3
     # via requests
 iniconfig==1.1.1
@@ -432,4 +434,5 @@ pip==22.2.2
 setuptools==65.3.0
     # via
     #   flake8-eradicate
+    #   gunicorn
     #   pip-tools
