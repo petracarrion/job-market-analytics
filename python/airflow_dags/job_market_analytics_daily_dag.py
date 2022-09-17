@@ -11,7 +11,6 @@ with DAG('job_market_analytics_daily_dag',
          start_date=datetime(2022, 1, 1),
          dagrun_timeout=timedelta(minutes=60),
          max_active_runs=1,
-         max_active_tasks=2,
          catchup=False) as dag:
     @task(task_id="cleanse_sitemaps")
     def cleanse_sitemaps():
@@ -33,11 +32,6 @@ with DAG('job_market_analytics_daily_dag',
         run_flasky_task('do/curate_job_descriptions')
 
 
-    @task(task_id="load_to_dwh")
-    def load_to_dwh():
-        run_flasky_task('do/load_to_dwh')
-
-
     @task(task_id="do_day_backup")
     def backup_day():
         run_flasky_task('do/do_day_backup')
@@ -48,16 +42,7 @@ with DAG('job_market_analytics_daily_dag',
         run_flasky_task('do/verify_day_backup')
 
 
-    cleanse_sitemaps_t = cleanse_sitemaps()
-    cleanse_job_descriptions_t = cleanse_job_descriptions()
-    curate_sitemaps_t = curate_sitemaps()
-    curate_job_descriptions_t = curate_job_descriptions()
-    load_to_dwh_t = load_to_dwh()
-
-    cleanse_sitemaps_t >> curate_sitemaps_t
-    cleanse_job_descriptions_t >> curate_job_descriptions_t
-
-    curate_sitemaps_t >> load_to_dwh_t
-    curate_job_descriptions_t >> load_to_dwh_t
+    cleanse_sitemaps() >> curate_sitemaps()
+    cleanse_job_descriptions() >> curate_job_descriptions()
 
     backup_day() >> verify_day_backup()
