@@ -12,7 +12,7 @@ JOB_ONLINE_SAT_COLUMNS = ['online_at', 'url']
 
 
 def curate_sitemaps(load_timestamp, load_date):
-    configure_logger(load_timestamp, 'curate_sitemaps')
+    configure_logger(load_timestamp)
     logger.info(f'Start curate_sitemaps: {load_date}')
     df = load_cleansed_df(SITEMAP, load_date=load_date)
 

@@ -31,7 +31,7 @@ def get_date_from_load_timestamp(load_timestamp):
 
 
 def cleanse_sitemaps(load_timestamp, load_date):
-    configure_logger(load_timestamp, 'parse_sitemaps')
+    configure_logger(load_timestamp)
     df = list_downloaded_sitemaps(load_timestamp, load_date)
     df[['year', 'month', 'day', 'time']] = df['load_timestamp'].str.split('/', 3, expand=True)
     if df.empty:

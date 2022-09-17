@@ -81,7 +81,7 @@ def convert_urls_to_df(all_job_description_urls) -> pd.DataFrame:
 
 
 def download_sitemap(load_timestamp) -> pd.DataFrame:
-    configure_logger(load_timestamp, 'download_sitemap')
+    configure_logger(load_timestamp)
     check_load_timestamp(load_timestamp)
     logger.info('download_sitemap: start')
     all_job_description_urls = get_all_job_description_urls(load_timestamp)

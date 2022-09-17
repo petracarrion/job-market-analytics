@@ -18,7 +18,7 @@ def calculate_days_online(load_timestamp):
 
 
 def list_downloaded_job_descriptions(load_timestamp, load_date=None) -> pd.DataFrame:
-    configure_logger(load_timestamp, 'list_downloaded_job_descriptions')
+    configure_logger(load_timestamp)
     logger.info('list_downloaded_job_descriptions start')
     files = list_raw_files(DATA_SOURCE_NAME, JOB_DESCRIPTION, load_date)
     df = pd.DataFrame(files)

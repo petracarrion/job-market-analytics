@@ -7,7 +7,7 @@ from common.storage import load_temp_df, DOWNLOADED_JOB_DESCRIPTIONS_CSV, SITEMA
 
 
 def list_job_descriptions_to_download(load_timestamp, df_sitemap_urls=None, df_downloaded=None):
-    configure_logger(load_timestamp, 'list_job_descriptions_to_download')
+    configure_logger(load_timestamp)
     logger.info('list_job_descriptions_to_download: start')
 
     df_sitemap_urls = df_sitemap_urls or load_temp_df(load_timestamp, SITEMAP_URLS_CSV)

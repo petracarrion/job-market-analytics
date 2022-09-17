@@ -23,7 +23,7 @@ def load_and_parse(row) -> str:
 
 
 def cleanse_job_descriptions(load_timestamp, load_date):
-    configure_logger(load_timestamp, 'parse_job_descriptions')
+    configure_logger(load_timestamp)
     df = list_downloaded_job_descriptions(load_timestamp, load_date)
     if df.empty:
         logger.warning(f'Nothing to cleanse for the load date: {load_date}')

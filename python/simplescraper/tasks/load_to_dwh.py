@@ -11,7 +11,7 @@ from common.storage import get_load_timestamp, get_load_date
 
 
 def load_to_dwh(load_timestamp, load_date):
-    configure_logger(load_timestamp, 'load_to_vault_job_descriptions')
+    configure_logger(load_timestamp)
     logger.info(f'Start load_to_dwh_job_descriptions: {load_date}')
 
     conn = duckdb.connect(DUCKDB_WAREHOUSE_FILE)
