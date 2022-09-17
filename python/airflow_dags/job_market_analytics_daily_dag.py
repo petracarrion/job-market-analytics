@@ -48,18 +48,16 @@ with DAG('job_market_analytics_daily_dag',
         run_flasky_task('do/verify_day_backup')
 
 
-    backup_day_t = backup_day()
-    verify_day_backup_t = verify_day_backup()
     cleanse_sitemaps_t = cleanse_sitemaps()
     cleanse_job_descriptions_t = cleanse_job_descriptions()
     curate_sitemaps_t = curate_sitemaps()
     curate_job_descriptions_t = curate_job_descriptions()
     load_to_dwh_t = load_to_dwh()
 
-    backup_day_t >> verify_day_backup_t
-
-    verify_day_backup_t >> cleanse_sitemaps_t >> curate_sitemaps_t
-    verify_day_backup_t >> cleanse_job_descriptions_t >> curate_job_descriptions_t
+    cleanse_sitemaps_t >> curate_sitemaps_t
+    cleanse_job_descriptions_t >> curate_job_descriptions_t
 
     curate_sitemaps_t >> load_to_dwh_t
     curate_job_descriptions_t >> load_to_dwh_t
+
+    backup_day() >> verify_day_backup()
