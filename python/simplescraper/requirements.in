@@ -10,6 +10,7 @@ loguru
 pandas
 pip-tools
 playwright
+plotly-calplot
 plotly-express
 pyarrow
 pytest
