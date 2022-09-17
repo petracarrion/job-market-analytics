@@ -6,7 +6,7 @@ from common.entity import CURATED_ENTITIES
 from common.env_variables import CURATED_DIR, DATA_SOURCE_NAME, DUCKDB_DWH_FILE
 
 
-def create_curated_views_in_dwh():
+def create_src_views_in_dwh():
     conn = duckdb.connect(DUCKDB_DWH_FILE)
 
     for entity in CURATED_ENTITIES:
@@ -21,4 +21,4 @@ def create_curated_views_in_dwh():
 
 
 if __name__ == "__main__":
-    create_curated_views_in_dwh()
+    create_src_views_in_dwh()
