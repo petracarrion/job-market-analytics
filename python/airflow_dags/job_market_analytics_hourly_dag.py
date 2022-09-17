@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from itertools import chain
 
 from airflow import DAG
 from airflow.decorators import task
@@ -12,7 +13,7 @@ with DAG('job_market_analytics_hourly_dag',
          start_date=datetime(2022, 1, 1),
          dagrun_timeout=timedelta(minutes=60),
          max_active_runs=1,
-         max_active_tasks=1,
+         max_active_tasks=2,
          catchup=False) as dag:
     @task(task_id="check_vpn_status")
     def check_vpn_status():
@@ -39,5 +40,6 @@ with DAG('job_market_analytics_hourly_dag',
         run_flasky_task('do/download_job_descriptions')
 
 
-    check_vpn_status() >> list_downloaded_job_descriptions() >> \
-    download_sitemap() >> list_job_descriptions_to_download() >> download_job_descriptions()
+    chain(check_vpn_status() >> [list_downloaded_job_descriptions(),
+                                 download_sitemap()] >> \
+          list_job_descriptions_to_download() >> download_job_descriptions())
