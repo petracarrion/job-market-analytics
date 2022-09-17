@@ -21,6 +21,7 @@
 
 ## In Progress
 
+- [ ] Use Gunicorn to run flasky with 8 workers
 
 ## Done
 
