@@ -3,8 +3,8 @@ WITH unique_job_company AS (
     FROM {{ source('curated', 'job_description') }}
 )
 
-SELECT company_name AS company, count(job_id)
+SELECT company_name AS company, COUNT(job_id) AS job_count
 FROM unique_job_company
 GROUP BY 1
 ORDER BY 2 DESC
-LIMIT 5
+LIMIT 50
