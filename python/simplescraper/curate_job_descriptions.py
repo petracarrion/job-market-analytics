@@ -43,6 +43,9 @@ def process_location(df):
     df = df.explode('location').reset_index(drop=True)
 
     df['location'] = df['location'].str.strip()
+
+    df['location'] = df['location'].replace('Frankfurt', 'Frankfurt am Main')
+
     df['location'] = df['location'].replace('', np.nan)
     df['location'] = df['location'].replace('keine Angabe', np.nan)
     df = df.dropna()
