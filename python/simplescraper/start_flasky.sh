@@ -8,4 +8,4 @@ source .env
 source "${VENV_ACTIVATE}"
 
 ulimit -n 2048
-gunicorn -w 4 --timeout 600 -b 0.0.0.0:3001 'flasky:app'
+gunicorn -w 8 --timeout 600 -b 0.0.0.0:3001 'flasky:app'

@@ -8,7 +8,7 @@ from common.logging import configure_logger, logger
 from common.storage import get_load_timestamp, get_load_date, load_cleansed_df, save_curated_df
 
 JOB_DESCRIPTION_SAT_COLUMNS = ['title', 'online_status', 'is_anonymous', 'should_display_early_applicant',
-                               'contract_type', 'work_type', 'online_date', 'description_introduction',
+                               'contract_type', 'work_type', 'online_date', 'company_name', 'description_introduction',
                                'description_responsabilities', 'description_requirements', 'description_perks']
 
 BASE_COLUMNS = ['year', 'month', 'day', 'job_id', 'load_timestamp']
