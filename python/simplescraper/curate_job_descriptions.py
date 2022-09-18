@@ -24,10 +24,21 @@ def process_job_description(df):
 def process_location(df):
     df = df[BASE_COLUMNS + ['location']].copy()
 
-    df['location'] = df['location'].str.replace(' und ', ',')
-    df['location'] = df['location'].str.replace(' oder ', ',')
+    df['location'] = df['location'].str.replace('Frankfurt (Main)', 'Frankfurt am Main', regex=False)
+    df['location'] = df['location'].str.replace('Frankfurt a. M.', 'Frankfurt am Main', regex=False)
+    df['location'] = df['location'].str.replace('Frankfurt a.M.', 'Frankfurt am Main', regex=False)
+    df['location'] = df['location'].str.replace('Frankfurt am Main (60488)', 'Frankfurt am Main', regex=False)
+    df['location'] = df['location'].str.replace('Frankfurt Am Main', 'Frankfurt am Main', regex=False)
+    df['location'] = df['location'].str.replace('Frankfurt/M.', 'Frankfurt am Main', regex=False)
+    df['location'] = df['location'].str.replace('Frankfurt aM', 'Frankfurt am Main', regex=False)
+    df['location'] = df['location'].str.replace('Frankfurt (am Main)', 'Frankfurt am Main', regex=False)
+    df['location'] = df['location'].str.replace('Frankfurt Main', 'Frankfurt am Main', regex=False)
+    df['location'] = df['location'].str.replace('Frankfurt aam Main', 'Frankfurt am Main', regex=False)
+
+    df['location'] = df['location'].str.replace('|'.join([' und ', ' oder ', '/', ';', ' - ', ':']), ',')
+    df['location'] = df['location'].str.replace(' | ', ',', regex=False)
+    df['location'] = df['location'].str.replace(' .', ',', regex=False)
     df['location'] = df['location'].str.replace(' u.a. ', ',', regex=False)
-    df['location'] = df['location'].str.replace('/', ',')
     df['location'] = df['location'].str.split(',')
     df = df.explode('location').reset_index(drop=True)
 
