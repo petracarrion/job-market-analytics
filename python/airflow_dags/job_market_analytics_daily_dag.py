@@ -42,7 +42,12 @@ with DAG('job_market_analytics_daily_dag',
         run_flasky_task('do/verify_day_backup')
 
 
+    @task(task_id="prune_old_raw")
+    def prune_old_raw():
+        run_flasky_task('do/prune_old_raw')
+
+
     cleanse_sitemaps() >> curate_sitemaps()
     cleanse_job_descriptions() >> curate_job_descriptions()
 
-    backup_day() >> verify_day_backup()
+    backup_day() >> verify_day_backup() >> prune_old_raw()

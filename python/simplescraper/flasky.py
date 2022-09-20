@@ -14,6 +14,7 @@ from tasks.download_job_descriptions import download_job_descriptions
 from tasks.download_sitemap import download_sitemap
 from tasks.list_downloaded_job_descriptions import list_downloaded_job_descriptions
 from tasks.list_job_descriptions_to_download import list_job_descriptions_to_download
+from tasks.prune_old_raw import prune_old_raw
 
 SUCCESS_RETURN_CODE = 0
 
@@ -188,6 +189,16 @@ def do_verify_day_backup():
             return {
                        'result_status': 'error',
                    }, 400
+    elif request.method == 'GET':
+        return HTML_FORM
+
+
+@app.route('/do/prune_old_raw', methods=['GET', 'POST'])
+def do_prune_old_raw():
+    if request.method == 'POST':
+        params = RequestParams(request)
+        prune_old_raw(params.load_timestamp, params.load_date)
+        return SUCCESS
     elif request.method == 'GET':
         return HTML_FORM
 
