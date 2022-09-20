@@ -2,8 +2,8 @@
 
 ## Open
 
+- [ ] Add the flag to the do and verify backup commands: --exclude='.DS_Store'
 - [ ] Check out https://dbtvault.readthedocs.io/
-- [ ] Check out https://github.com/jwills/dbt-duckdb
 - [ ] Implement some kind of search/dashboard for external users
 - [ ] Check out https://github.com/lightdash/lightdash and https://superset.apache.org/
 - [ ] Add a file in the raw layer with the scrape run information for each execution
@@ -24,6 +24,7 @@
 
 ## Done
 
+- [x] Check out https://github.com/jwills/dbt-duckdb
 - [x] Use Gunicorn to run flasky with 4 workers
 - [x] On the cleansed layer, add the first sitemap occurance per URL instead of only the latest load_timestamp
 - [x] Add load_timestamp and load_date to the curated layer
