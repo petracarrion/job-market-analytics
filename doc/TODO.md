@@ -5,7 +5,8 @@
 - [ ] Add the flag to the do and verify backup commands: --exclude='.DS_Store'
 - [ ] Check out https://dbtvault.readthedocs.io/
 - [ ] Implement some kind of search/dashboard for external users
-- [ ] Check out https://github.com/lightdash/lightdash and https://superset.apache.org/
+- [ ] Check out https://github.com/lightdash/lightdash
+- [ ] Check out https://superset.apache.org/
 - [ ] Add a file in the raw layer with the scrape run information for each execution
     - This file could be in JSON format and have the following fields:
         - run_id
