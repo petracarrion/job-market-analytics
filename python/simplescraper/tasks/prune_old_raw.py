@@ -21,10 +21,10 @@ def prune_old_raw(load_timestamp, load_date):
     for entity in RAW_ENTITIES:
         folder_to_remove = f'{RAW_DIR}/{DATA_SOURCE_NAME}/{entity}/{year}/{month}/{day}'
         if os.path.exists(folder_to_remove) and os.path.isdir(folder_to_remove):
-            print(f'Removing {folder_to_remove}')
+            logger.success(f'Removing {folder_to_remove}')
             shutil.rmtree(folder_to_remove)
         else:
-            print(f'No folder to remove on {folder_to_remove}')
+            logger.warning(f'No folder to remove on {folder_to_remove}')
 
     logger.info(f'End   prune_old_raw: {load_date}')
 
