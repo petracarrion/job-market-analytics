@@ -3,13 +3,13 @@ import subprocess
 
 from flask import Flask, request, Request
 
-from cleanse_job_descriptions import cleanse_job_descriptions
-from cleanse_sitemaps import cleanse_sitemaps
 from common.env_variables import SOURCE_DIR
 from common.logging import logger
 from common.storage import get_load_timestamp, get_load_date
-from curate_job_descriptions import curate_job_descriptions
-from curate_sitemaps import curate_sitemaps
+from tasks.cleanse_job_descriptions import cleanse_job_descriptions
+from tasks.cleanse_sitemaps import cleanse_sitemaps
+from tasks.curate_job_descriptions import curate_job_descriptions
+from tasks.curate_sitemaps import curate_sitemaps
 from tasks.download_job_descriptions import download_job_descriptions
 from tasks.download_sitemap import download_sitemap
 from tasks.list_downloaded_job_descriptions import list_downloaded_job_descriptions

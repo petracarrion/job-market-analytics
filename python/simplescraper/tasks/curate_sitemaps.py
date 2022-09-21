@@ -6,7 +6,7 @@ from common.entity import SITEMAP, JOB_ONLINE
 from common.hashing import hash_columns
 from common.logging import configure_logger, logger
 from common.storage import get_load_timestamp, get_load_date, load_cleansed_df, save_curated_df
-from curate_job_descriptions import BASE_COLUMNS
+from tasks.curate_job_descriptions import BASE_COLUMNS
 
 JOB_ONLINE_SAT_COLUMNS = ['online_at', 'url']
 
