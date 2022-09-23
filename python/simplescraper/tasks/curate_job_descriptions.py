@@ -35,7 +35,7 @@ def process_location(df):
     df['location'] = df['location'].str.replace('Frankfurt Main', 'Frankfurt am Main', regex=False)
     df['location'] = df['location'].str.replace('Frankfurt aam Main', 'Frankfurt am Main', regex=False)
 
-    df['location'] = df['location'].str.replace('|'.join([' und ', ' oder ', '/', ';', ' - ', ':']), ',')
+    df['location'] = df['location'].str.replace('|'.join([' und ', ' oder ', '/', ';', ' - ', ':']), ',', regex=True)
     df['location'] = df['location'].str.replace(' | ', ',', regex=False)
     df['location'] = df['location'].str.replace(' .', ',', regex=False)
     df['location'] = df['location'].str.replace(' u.a. ', ',', regex=False)
