@@ -13,10 +13,11 @@ JOB_ONLINE_SAT_COLUMNS = ['online_at', 'url']
 
 def curate_sitemaps(load_timestamp, load_date):
     configure_logger(load_timestamp)
-    logger.info(f'Start curate_sitemaps: {load_date}')
+    logger.info(f'Start curate_sitemaps: {load_timestamp} {load_date}')
 
     df = load_cleansed_df(SITEMAP, load_date=load_date)
 
+    df = df.dropna(subset=['job_id'])
     df['job_id'] = df['job_id'].astype('int')
     df['online_at'] = pd.to_datetime(df['load_timestamp']).dt.date
     df = df[BASE_COLUMNS + JOB_ONLINE_SAT_COLUMNS]
@@ -24,7 +25,7 @@ def curate_sitemaps(load_timestamp, load_date):
     df = df.sort_values(by=['job_id'])
 
     save_curated_df(df, JOB_ONLINE)
-    logger.info(f'End   curate_sitemaps: {load_date}')
+    logger.info(f'End   curate_sitemaps: {load_timestamp} {load_date}')
 
 
 if __name__ == "__main__":

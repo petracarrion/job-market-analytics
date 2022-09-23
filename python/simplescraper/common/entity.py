@@ -34,7 +34,7 @@ class Column:
 
 
 SRC_COLUMNS_JOB_ONLINE = [
-    Column('job_id', 'VARCHAR', True),
+    Column('job_id', 'INTEGER', True),
     Column('load_timestamp', 'TIMESTAMP'),
     Column('online_at', 'DATE'),
     Column('url', 'VARCHAR'),
@@ -42,7 +42,7 @@ SRC_COLUMNS_JOB_ONLINE = [
 ]
 
 SRC_COLUMNS_JOB_DESCRIPTION = [
-    Column('job_id', 'VARCHAR', True),
+    Column('job_id', 'INTEGER', True),
     Column('load_timestamp', 'TIMESTAMP'),
     Column('title', 'VARCHAR'),
     Column('online_status', 'VARCHAR'),
@@ -59,7 +59,7 @@ SRC_COLUMNS_JOB_DESCRIPTION = [
 ]
 
 SRC_COLUMNS_JOB_LOCATION = [
-    Column('job_id', 'VARCHAR', True),
+    Column('job_id', 'INTEGER', True),
     Column('load_timestamp', 'TIMESTAMP'),
     Column('location', 'VARCHAR', True),
 ]

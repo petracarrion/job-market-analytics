@@ -55,7 +55,7 @@ def process_location(df):
 
 def curate_job_descriptions(load_timestamp, load_date):
     configure_logger(load_timestamp)
-    logger.info(f'Start curate_job_descriptions: {load_date}')
+    logger.info(f'Start curate_job_descriptions: {load_timestamp} {load_date}')
 
     df = load_cleansed_df(JOB_DESCRIPTION, load_date=load_date)
 
@@ -66,7 +66,7 @@ def curate_job_descriptions(load_timestamp, load_date):
     process_job_description(df)
     process_location(df)
 
-    logger.info(f'End   curate_job_descriptions: {load_date}')
+    logger.info(f'End   curate_job_descriptions: {load_timestamp} {load_date}')
 
 
 if __name__ == "__main__":
