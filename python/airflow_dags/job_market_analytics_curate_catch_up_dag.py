@@ -10,8 +10,8 @@ with DAG('job_market_analytics_curate_catch_up_dag',
          schedule_interval='@daily',
          start_date=datetime(2021, 10, 1),
          dagrun_timeout=timedelta(minutes=60),
-         max_active_runs=1,
-         max_active_tasks=1,
+         max_active_runs=8,
+         max_active_tasks=8,
          catchup=True) as dag:
     @task(task_id="curate_sitemaps")
     def curate_sitemaps():
