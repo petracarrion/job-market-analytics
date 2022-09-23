@@ -4,6 +4,7 @@
 
 - [ ] Add the flag to the do and verify backup commands: --exclude='.DS_Store'
 - [ ] Check out https://dbtvault.readthedocs.io/
+- [ ] Try https://xapian.org/ for the search
 - [ ] Implement some kind of search/dashboard for external users
 - [ ] Check out https://github.com/lightdash/lightdash
 - [ ] Check out https://superset.apache.org/
