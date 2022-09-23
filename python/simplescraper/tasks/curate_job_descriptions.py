@@ -56,8 +56,11 @@ def process_location(df):
 def curate_job_descriptions(load_timestamp, load_date):
     configure_logger(load_timestamp)
     logger.info(f'Start curate_job_descriptions: {load_date}')
+
     df = load_cleansed_df(JOB_DESCRIPTION, load_date=load_date)
+
     df = df.dropna(subset=['job_id'])
+    df['job_id'] = df['job_id'].astype('int')
     df = df.sort_values(by=['job_id'])
 
     process_job_description(df)

@@ -14,8 +14,10 @@ JOB_ONLINE_SAT_COLUMNS = ['online_at', 'url']
 def curate_sitemaps(load_timestamp, load_date):
     configure_logger(load_timestamp)
     logger.info(f'Start curate_sitemaps: {load_date}')
+
     df = load_cleansed_df(SITEMAP, load_date=load_date)
 
+    df['job_id'] = df['job_id'].astype('int')
     df['online_at'] = pd.to_datetime(df['load_timestamp']).dt.date
     df = df[BASE_COLUMNS + JOB_ONLINE_SAT_COLUMNS]
     df['job_online_hashdiff'] = hash_columns(df, JOB_ONLINE_SAT_COLUMNS)
