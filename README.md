@@ -34,6 +34,10 @@ via Docker so that I can avoid cloud service costs. We will divide the datawareh
 
 ![Data Vault Model](doc/data-vault-model.drawio.svg)
 
+### Mart Model
+
+![Mart Model](doc/mart-model.drawio.svg)
+
 ## Computing
 
 In order to compute the data, we use two different approaches.
@@ -87,6 +91,8 @@ current data size and number of columns.
 
 ### How big is your data?
 
-It is around 275 GB in raw format after the initial load and being scraping the web source since October 2021, and it
-grows around 2 GB every day. After cleansing and compressing the data to Parquet is around 30 times smaller, since we
-can get rid of a great deal of HTML, CSS and JS because it does not provide any extra information for my use cases.
+It is around 530 GB in raw format after being scraping the data sources since October 2021, and it grows around 2 GB
+every day. After cleansing and compressing the data to Parquet is around 30 times smaller, since we can get rid of a
+great deal of HTML, CSS and JS because it does not provide any extra information for my use cases.
+
+![Raw Storage Size in Azure Blob Container](doc/raw-in-azure-blob-storage.png)
