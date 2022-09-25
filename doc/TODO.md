@@ -2,6 +2,7 @@
 
 ## Open
 
+- [ ] Check out https://www.linkedin.com/in/christian-kaul/recent-activity/posts/
 - [ ] Add the flag to the do and verify backup commands: --exclude='.DS_Store'
 - [ ] Check out https://dbtvault.readthedocs.io/
 - [ ] Try https://xapian.org/ for the search
