@@ -3,7 +3,6 @@ import sys
 import pandas as pd
 
 from common.entity import SITEMAP, ONLINE_JOB
-from common.hashing import hash_columns
 from common.logging import configure_logger, logger
 from common.storage import get_load_timestamp, get_load_date, load_cleansed_df, save_curated_df
 from tasks.curate_job_descriptions import BASE_COLUMNS
