@@ -2,7 +2,6 @@
 
 ## Open
 
-- [ ] Check out https://www.linkedin.com/in/christian-kaul/recent-activity/posts/
 - [ ] Add the flag to the do and verify backup commands: --exclude='.DS_Store'
 - [ ] Try https://xapian.org/ for the search
 - [ ] Implement some kind of search/dashboard for external users
@@ -26,6 +25,7 @@
 
 ## Done
 
+- [x] Check out https://www.linkedin.com/in/christian-kaul/recent-activity/posts/
 - [x] Check out https://dbtvault.readthedocs.io/
 - [x] Check out https://github.com/jwills/dbt-duckdb
 - [x] Use Gunicorn to run flasky with 4 workers
