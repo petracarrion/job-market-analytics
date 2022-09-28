@@ -1,6 +1,6 @@
 WITH unique_job_company AS (
     SELECT DISTINCT company_name, job_id
-    FROM {{ source('curated', 'job_description') }}
+    FROM {{ source('curated', 'job') }}
 )
 
 SELECT company_name AS company, COUNT(job_id) AS job_count

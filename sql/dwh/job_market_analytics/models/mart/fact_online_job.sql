@@ -7,7 +7,7 @@
 
 SELECT online_at     AS date_id,
        COUNT(job_id) AS total
-FROM {{ source('curated', 'job_online') }}
+FROM {{ source('curated', 'online_job') }}
 
 {% if is_incremental() %}
 WHERE online_at > (

@@ -2,13 +2,13 @@ import sys
 
 import pandas as pd
 
-from common.entity import SITEMAP, JOB_ONLINE
+from common.entity import SITEMAP, ONLINE_JOB
 from common.hashing import hash_columns
 from common.logging import configure_logger, logger
 from common.storage import get_load_timestamp, get_load_date, load_cleansed_df, save_curated_df
 from tasks.curate_job_descriptions import BASE_COLUMNS
 
-JOB_ONLINE_SAT_COLUMNS = ['online_at', 'url']
+ONLINE_JOB_SAT_COLUMNS = ['online_at', 'url']
 
 
 def curate_sitemaps(load_timestamp, load_date):
@@ -20,11 +20,10 @@ def curate_sitemaps(load_timestamp, load_date):
     df = df.dropna(subset=['job_id'])
     df['job_id'] = df['job_id'].astype('int')
     df['online_at'] = pd.to_datetime(df['load_timestamp']).dt.date
-    df = df[BASE_COLUMNS + JOB_ONLINE_SAT_COLUMNS]
-    df['job_online_hashdiff'] = hash_columns(df, JOB_ONLINE_SAT_COLUMNS)
+    df = df[BASE_COLUMNS + ONLINE_JOB_SAT_COLUMNS]
     df = df.sort_values(by=['job_id'])
 
-    save_curated_df(df, JOB_ONLINE)
+    save_curated_df(df, ONLINE_JOB)
     logger.info(f'End   curate_sitemaps: {load_timestamp} {load_date}')
 
 

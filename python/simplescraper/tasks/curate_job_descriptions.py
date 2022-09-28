@@ -2,8 +2,7 @@ import sys
 
 import numpy as np
 
-from common.entity import JOB_DESCRIPTION, JOB_LOCATION
-from common.hashing import hash_columns
+from common.entity import JOB, JOB_LOCATION, JOB_DESCRIPTION
 from common.logging import configure_logger, logger
 from common.storage import get_load_timestamp, get_load_date, load_cleansed_df, save_curated_df
 
@@ -17,8 +16,7 @@ BASE_COLUMNS = ['year', 'month', 'day', 'job_id', 'load_timestamp']
 def process_job_description(df):
     df = df.copy()
     df = df[BASE_COLUMNS + JOB_DESCRIPTION_SAT_COLUMNS]
-    df['job_hashdiff'] = hash_columns(df, JOB_DESCRIPTION_SAT_COLUMNS)
-    save_curated_df(df, JOB_DESCRIPTION)
+    save_curated_df(df, JOB)
 
 
 def process_location(df):

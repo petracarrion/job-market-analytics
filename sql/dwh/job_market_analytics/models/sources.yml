@@ -8,6 +8,6 @@ sources:
       error_after: { count: 36, period: hour }
     loaded_at_field: load_timestamp
     tables:
-      - name: job_online
-      - name: job_description
+      - name: online_job
+      - name: job
       - name: job_location
