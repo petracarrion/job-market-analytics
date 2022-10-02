@@ -28,8 +28,8 @@ SELECT MD5(CONCAT_WS('||',
   FROM {{ source('curated', 'job') }}
 
 {% if is_incremental() %}
- RIGHT OUTER JOIN dim_job
+ LEFT OUTER JOIN dim_job
   ON (job.job_id   = dim_job.job_id AND
       job.load_timestamp = dim_job.job_ldts)
-WHERE job.job_id IS NULL
+WHERE dim_job.job_id IS NULL
 {% endif %}
