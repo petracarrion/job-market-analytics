@@ -38,6 +38,10 @@ via Docker so that I can avoid cloud service costs. We will divide the datawareh
 
 ![Mart Model](doc/mart-model.drawio.svg)
 
+### Data Lineage (dbt Dag)
+
+![Data Lineage (dbt Dag)](doc/dbt-dag.png)
+
 ## Computing
 
 In order to compute the data, we use two different approaches.
