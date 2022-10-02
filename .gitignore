@@ -134,3 +134,4 @@ temp/
 _trial_temp/
 .env-test
 temp.sh
+.DS_Store
