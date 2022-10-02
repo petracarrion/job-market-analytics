@@ -62,6 +62,13 @@ First, we make sure that we are connected to the VPN, then we download and archi
 the moment from the sitemap, and we list out which job descriptions we have not downloaded yet, and then we download
 them via browser automation with [Playwright](https://playwright.dev/).
 
+### Data Transformation Orchestration
+
+The data transformation is orchestrated as an Airflow DAG, which runs on daily basis and combines Python transformation
+jobs and the dbt run to build up the incremental models.
+
+![Airflow DAG Daily](doc/airflow_dag_daily.png)
+
 ## Frequently Asked Questions
 
 ### What questions can be answered with this project?
