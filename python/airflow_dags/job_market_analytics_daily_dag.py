@@ -32,6 +32,11 @@ with DAG('job_market_analytics_daily_dag',
         run_flasky_task('do/curate_job_descriptions')
 
 
+    @task(task_id="do_dbt_run")
+    def dbt_run():
+        run_flasky_task('do/do_dbt_run')
+
+
     @task(task_id="do_day_backup")
     def backup_day():
         run_flasky_task('do/do_day_backup')
@@ -47,7 +52,13 @@ with DAG('job_market_analytics_daily_dag',
         run_flasky_task('do/prune_old_raw')
 
 
-    cleanse_sitemaps() >> curate_sitemaps()
-    cleanse_job_descriptions() >> curate_job_descriptions()
+    t_curate_sitemaps = curate_sitemaps()
+    t_curate_job_descriptions = curate_job_descriptions()
+
+
+    cleanse_sitemaps() >> t_curate_sitemaps
+    cleanse_job_descriptions() >> t_curate_job_descriptions
+
+    [t_curate_sitemaps, t_curate_job_descriptions] >> dbt_run()
 
     backup_day() >> verify_day_backup() >> prune_old_raw()

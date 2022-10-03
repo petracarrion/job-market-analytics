@@ -56,6 +56,7 @@ def index():
            '<a href="/do/download_job_descriptions">Download Job Descriptions</a><br>' \
            '<a href="/do/cleanse_sitemaps">Cleanse Sitemap</a><br>' \
            '<a href="/do/cleanse_job_descriptions">Cleanse Job Descriptions</a><br>' \
+           '<a href="/do/do_dbt_run">Do dbt run</a><br>' \
            '<a href="/do/do_day_backup">Do Day Backup</a><br>' \
            '<a href="/do/validate_day_backup">Validate Day Backup</a><br>' \
            '<a href="/do/test">Test</a><br>'
@@ -167,6 +168,21 @@ def do_do_day_backup():
         params = RequestParams(request)
         year, month, day = params.load_date.split('/')
         result = subprocess.run([f'{SOURCE_DIR}/simplescraper/do_day_backup.sh', year, month, day])
+        if result.returncode == SUCCESS_RETURN_CODE:
+            return SUCCESS
+        else:
+            return {
+                       'result_status': 'error',
+                   }, 400
+    elif request.method == 'GET':
+        return HTML_FORM
+
+
+@app.route('/do/do_dbt_run', methods=['GET', 'POST'])
+def do_dbt_run():
+    if request.method == 'POST':
+        _ = RequestParams(request)
+        result = subprocess.run([f'{SOURCE_DIR}/simplescraper/do_dbt_run.sh'])
         if result.returncode == SUCCESS_RETURN_CODE:
             return SUCCESS
         else:
