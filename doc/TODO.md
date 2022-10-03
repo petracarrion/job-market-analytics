@@ -5,7 +5,6 @@
 - [ ] Add the flag to the do and verify backup commands: --exclude='.DS_Store'
 - [ ] Try https://xapian.org/ for the search
 - [ ] Implement some kind of search/dashboard for external users
-- [ ] Check out https://superset.apache.org/
 - [ ] Check out https://github.com/rilldata/rill-developer
 - [ ] Decide for a BI tool (Superset or rill)
 - [ ] Add a file in the raw layer with the scrape run information for each execution
@@ -24,6 +23,7 @@
 
 ## Done
 
+- [x] Check out https://superset.apache.org/
 - [x] Create a separated virtual environment for dbt
 - [x] Check out https://www.linkedin.com/in/christian-kaul/recent-activity/posts/
 - [x] Check out https://dbtvault.readthedocs.io/
