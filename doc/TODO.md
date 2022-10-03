@@ -5,8 +5,9 @@
 - [ ] Add the flag to the do and verify backup commands: --exclude='.DS_Store'
 - [ ] Try https://xapian.org/ for the search
 - [ ] Implement some kind of search/dashboard for external users
-- [ ] Check out https://github.com/lightdash/lightdash
 - [ ] Check out https://superset.apache.org/
+- [ ] Check out https://github.com/rilldata/rill-developer
+- [ ] Decide for a BI tool (Superset or rill)
 - [ ] Add a file in the raw layer with the scrape run information for each execution
     - This file could be in JSON format and have the following fields:
         - run_id
@@ -17,14 +18,13 @@
         - failed urls (a list of string)
 - [ ] Implement use case: Technology trends
 - [ ] Implement use case: Number of jobs relative to city population
-- [ ] Replace the PostgreSQL ingestion with CSV instead of Parquet
-- [ ] Create a separated virtual environment for dbt
 
 ## In Progress
 
 
 ## Done
 
+- [x] Create a separated virtual environment for dbt
 - [x] Check out https://www.linkedin.com/in/christian-kaul/recent-activity/posts/
 - [x] Check out https://dbtvault.readthedocs.io/
 - [x] Check out https://github.com/jwills/dbt-duckdb
@@ -64,6 +64,7 @@
 
 ## Discarded
 
+- [x] Replace the PostgreSQL ingestion with CSV instead of Parquet
 - [x] Do not let Flasky start a process behind an endpoint, if a process is still running
 - [x] Try Prefect
 - [x] Log the date and time more visible
