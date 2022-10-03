@@ -8,14 +8,14 @@ from common.env_variables import RAW_DIR, DATA_SOURCE_NAME
 from common.logging import configure_logger, logger
 from common.storage import get_load_timestamp, get_load_date, LOAD_DATE_FORMAT
 
-EIGHT_MONTHS_IN_DAYS = 8 * 30
+SEVEN_MONTHS_IN_DAYS = 7 * 30
 
 
 def prune_old_raw(load_timestamp, load_date):
     configure_logger(load_timestamp)
     logger.info(f'Start prune_old_raw: {load_date}')
     date_to_remove = datetime.datetime.strptime(load_date, LOAD_DATE_FORMAT).date()
-    date_to_remove = date_to_remove - datetime.timedelta(days=EIGHT_MONTHS_IN_DAYS)
+    date_to_remove = date_to_remove - datetime.timedelta(days=SEVEN_MONTHS_IN_DAYS)
     date_to_remove = date_to_remove.strftime(LOAD_DATE_FORMAT)
     year, month, day = date_to_remove.split('/', 2)
     for entity in RAW_ENTITIES:
