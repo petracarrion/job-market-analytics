@@ -12,7 +12,7 @@ WITH new_fact_online_job AS (
     FROM {{ source('curated', 'online_job') }}
 
 {% if is_incremental() %}
- LEFT OUTER JOIN fact_online_job
+ LEFT OUTER JOIN {{ this }} fact_online_job
     ON (online_job.online_at = fact_online_job.online_at AND
         online_job.job_id    = fact_online_job.job_id)
     WHERE fact_online_job.job_id IS NULL
