@@ -10,7 +10,7 @@ load_dotenv()
 
 DUCKDB_DWH_FILE = os.getenv('DUCKDB_DWH_FILE')
 
-app = Dash('Dashy', title='Job Market Analytics', external_stylesheets=[dbc.themes.BOOTSTRAP])
+app = Dash('Dashy', title='Job Market Analytics', external_stylesheets=[dbc.themes.SANDSTONE])
 
 
 @app.callback(Output('main-graph', 'children'),
