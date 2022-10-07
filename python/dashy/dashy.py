@@ -56,7 +56,7 @@ if __name__ == '__main__':
       FROM aggregated_online_job
      GROUP BY 1
      ORDER BY 2 DESC
-    LIMIT 100
+    LIMIT 5000
     ''').df()
 
     df_top_companies = conn.execute('''
@@ -65,7 +65,7 @@ if __name__ == '__main__':
       FROM aggregated_online_job
      GROUP BY 1
      ORDER BY 2 DESC
-    LIMIT 100
+    LIMIT 5000
     ''').df()
 
     conn.close()
