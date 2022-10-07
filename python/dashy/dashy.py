@@ -77,35 +77,40 @@ if __name__ == '__main__':
             {'label': 'Last 3 Months', 'value': '3'},
         ],
         value='12',
-        id='time-selector'
+        id='time-selector',
+        inline=True,
     )
 
     location_options = df_top_cities['location_name'].to_list()
     location_options = [{'label': location, 'value': location} for location in location_options]
-    location_selector = dbc.Checklist(
+    location_selector = dcc.Dropdown(
         options=location_options,
-        id='location-selector'
+        id='location-selector',
+        multi=True
     )
 
     company_options = df_top_companies['company_name'].to_list()
     company_options = [{'label': company, 'value': company} for company in company_options]
-    company_selector = dbc.Checklist(
+    company_selector = dcc.Dropdown(
         options=company_options,
-        id='company-selector'
+        id='company-selector',
+        multi=True
     )
 
     controls = dbc.Card(
         [
             html.Div([
-                html.H2("Time Range"),
+                html.H3("Time Range"),
                 time_selector,
             ]),
+            html.Br(),
             html.Div([
-                html.H2('City'),
+                html.H3('City'),
                 location_selector
             ]),
+            html.Br(),
             html.Div([
-                html.H2('Company'),
+                html.H3('Company'),
                 company_selector
             ]),
         ],
@@ -121,6 +126,7 @@ if __name__ == '__main__':
                     dbc.Col(controls, md=4),
                     dbc.Col(html.Div(id='main-graph'), md=8),
                 ],
+                align='center'
             ),
         ],
         fluid=True,
