@@ -3,10 +3,6 @@
 ## Open
 
 - [ ] Add the flag to the do and verify backup commands: --exclude='.DS_Store'
-- [ ] Try https://xapian.org/ for the search
-- [ ] Implement some kind of search/dashboard for external users
-- [ ] Check out https://github.com/rilldata/rill-developer
-- [ ] Decide for a BI tool (Superset or rill)
 - [ ] Add a file in the raw layer with the scrape run information for each execution
     - This file could be in JSON format and have the following fields:
         - run_id
@@ -23,6 +19,9 @@
 
 ## Done
 
+- [x] Implement some kind of search/dashboard for external users
+- [x] Check out https://github.com/rilldata/rill-developer
+- [x] Decide for a BI tool
 - [x] Check out https://superset.apache.org/
 - [x] Create a separated virtual environment for dbt
 - [x] Check out https://www.linkedin.com/in/christian-kaul/recent-activity/posts/
@@ -64,6 +63,7 @@
 
 ## Discarded
 
+- [x] Try https://xapian.org/ for the search
 - [x] Replace the PostgreSQL ingestion with CSV instead of Parquet
 - [x] Do not let Flasky start a process behind an endpoint, if a process is still running
 - [x] Try Prefect
