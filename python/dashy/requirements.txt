@@ -25,7 +25,10 @@ click==8.1.3
 dash==2.6.2
     # via
     #   -r requirements.in
+    #   dash-bootstrap-components
     #   jupyter-dash
+dash-bootstrap-components==1.2.1
+    # via -r requirements.in
 dash-core-components==2.0.0
     # via dash
 dash-html-components==2.0.0
