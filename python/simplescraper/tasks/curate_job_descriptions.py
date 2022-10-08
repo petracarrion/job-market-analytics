@@ -2,7 +2,7 @@ import sys
 
 import numpy as np
 
-from common.entity import JOB, JOB_LOCATION, JOB_DESCRIPTION
+from common.entity import JOB, JOB_LOCATION, JOB_DESCRIPTION, JOB_TECHNOLOGY
 from common.logging import configure_logger, logger
 from common.storage import get_load_timestamp, get_load_date, load_cleansed_df, save_curated_df
 
@@ -11,6 +11,18 @@ JOB_DESCRIPTION_SAT_COLUMNS = ['title', 'online_status', 'is_anonymous', 'should
                                'description_responsabilities', 'description_requirements', 'description_perks']
 
 BASE_COLUMNS = ['year', 'month', 'day', 'job_id', 'load_timestamp']
+
+TECHNOLOGIES = [
+    'JavaScript',
+    'Java',
+    'Python',
+    'SQL',
+    'Golang',
+    'Rust',
+    'Pandas',
+    'dbt',
+    'Duckdb',
+]
 
 
 def process_job_description(df):
@@ -51,6 +63,24 @@ def process_location(df):
     save_curated_df(df, JOB_LOCATION)
 
 
+def process_technology(df):
+    df = df.copy()
+    df['description'] = df['title'] + ' ' + \
+                        df['description_introduction'] + ' ' + \
+                        df['description_responsabilities'] + ' ' + \
+                        df['description_requirements'] + ' ' + \
+                        df['description_perks']
+    for technology in TECHNOLOGIES:
+        df[technology] = df['description'].str.contains(fr'(?i)\b{technology}\b', regex=True)
+    df['Other'] = ~df[TECHNOLOGIES].any(axis='columns')
+    df = df.melt(id_vars=BASE_COLUMNS, value_vars=TECHNOLOGIES + ['Other'], var_name='technology')
+    df = df[df['value'].notna()]
+    df = df[df['value']]
+    df = df[BASE_COLUMNS + ['technology']]
+
+    save_curated_df(df, JOB_TECHNOLOGY)
+
+
 def curate_job_descriptions(load_timestamp, load_date):
     configure_logger(load_timestamp)
     logger.info(f'Start curate_job_descriptions: {load_timestamp} {load_date}')
@@ -63,6 +93,7 @@ def curate_job_descriptions(load_timestamp, load_date):
 
     process_job_description(df)
     process_location(df)
+    process_technology(df)
 
     logger.info(f'End   curate_job_descriptions: {load_timestamp} {load_date}')
 
