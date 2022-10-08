@@ -12,11 +12,11 @@
         - number of urls downloaded
         - number of failed urls
         - failed urls (a list of string)
-- [ ] Implement use case: Technology trends
 - [ ] Implement use case: Number of jobs relative to city population
 
 ## In Progress
 
+- [ ] Implement use case: Technology trends
 
 ## Done
 
