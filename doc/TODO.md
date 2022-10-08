@@ -2,7 +2,6 @@
 
 ## Open
 
-- [ ] Add a size indicator in the filter options in Dashy
 - [ ] Run Airflow locally to reduce the Docker overhead
 - [ ] Add the flag to the do and verify backup commands: --exclude='.DS_Store'
 - [ ] Add a file in the raw layer with the scrape run information for each execution
@@ -21,6 +20,7 @@
 
 ## Done
 
+- [x] Add a size indicator in the filter options in Dashy
 - [x] Implement some kind of search/dashboard for external users
 - [x] Check out https://github.com/rilldata/rill-developer
 - [x] Decide for a BI tool

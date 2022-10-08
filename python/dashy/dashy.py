@@ -10,13 +10,19 @@ load_dotenv()
 
 DUCKDB_DWH_FILE = os.getenv('DUCKDB_DWH_FILE')
 
+FILTER_NAMES = ['location_name', 'company_name']
+
 app = Dash('Dashy', title='Job Market Analytics', external_stylesheets=[dbc.themes.SANDSTONE])
 
 
-@app.callback(Output('main-graph', 'children'),
-              Input('time-selector', 'value'),
-              Input('location-selector', 'value'),
-              Input('company-selector', 'value'))
+@app.callback(
+    Output('main-graph', 'children'),
+    Output('location-selector', 'options'),
+    Output('company-selector', 'options'),
+    Input('time-selector', 'value'),
+    Input('location-selector', 'value'),
+    Input('company-selector', 'value'),
+)
 def get_main_graph(time_input, location_input, company_input):
     _conn = duckdb.connect(DUCKDB_DWH_FILE, read_only=True)
 
@@ -35,6 +41,33 @@ def get_main_graph(time_input, location_input, company_input):
      ORDER BY 1
     ''').df()
 
+    filter_df = {}
+    options = {}
+    for filter_name in FILTER_NAMES:
+        filter_df[filter_name] = _conn.execute(f'''
+            SELECT {filter_name},
+                   MAX(total_jobs) AS total_jobs
+            FROM (
+                SELECT {filter_name},
+                       online_at,
+                       MAX(total_jobs) AS total_jobs
+                  FROM aggregated_online_job
+                 WHERE {time_clause} AND
+                       {location_clause if filter_name == 'company_name'  else '1 == 1'} AND
+                       {company_clause  if filter_name == 'location_name' else '1 == 1'}
+                 GROUP BY 1, 2
+            )
+            GROUP BY 1
+            ORDER BY 2 DESC
+            LIMIT 5000
+            ''').df()
+
+        filter_df_records = filter_df[filter_name].to_dict('records')
+        options[filter_name] = [
+            {'label': f'{option[filter_name]} ({option["total_jobs"]})', 'value': option[filter_name]}
+            for option in filter_df_records
+        ]
+
     _conn.close()
 
     fig = px.scatter(df, x='online_at', y='total_jobs', trendline='rolling', trendline_options=dict(window=7),
@@ -42,9 +75,11 @@ def get_main_graph(time_input, location_input, company_input):
 
     main_graph = dcc.Graph(figure=fig)
 
-    return html.Div([
-        main_graph
-    ])
+    return [
+        html.Div([main_graph]),
+        options['location_name'],
+        options['company_name'],
+    ]
 
 
 if __name__ == '__main__':
@@ -81,22 +116,6 @@ if __name__ == '__main__':
         inline=True,
     )
 
-    location_options = df_top_cities['location_name'].to_list()
-    location_options = [{'label': location, 'value': location} for location in location_options]
-    location_selector = dcc.Dropdown(
-        options=location_options,
-        id='location-selector',
-        multi=True
-    )
-
-    company_options = df_top_companies['company_name'].to_list()
-    company_options = [{'label': company, 'value': company} for company in company_options]
-    company_selector = dcc.Dropdown(
-        options=company_options,
-        id='company-selector',
-        multi=True
-    )
-
     controls = dbc.Card(
         [
             html.Div([
@@ -106,12 +125,20 @@ if __name__ == '__main__':
             html.Br(),
             html.Div([
                 html.H3('City'),
-                location_selector
+                dcc.Dropdown(
+                    options=[],
+                    id='location-selector',
+                    multi=True
+                )
             ]),
             html.Br(),
             html.Div([
                 html.H3('Company'),
-                company_selector
+                dcc.Dropdown(
+                    options=[],
+                    id='company-selector',
+                    multi=True
+                )
             ]),
         ],
         body=True,
