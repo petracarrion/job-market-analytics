@@ -46,11 +46,11 @@ def get_main_graph(time_input, location_input, company_input):
     for filter_name in FILTER_NAMES:
         filter_df[filter_name] = _conn.execute(f'''
             SELECT {filter_name},
-                   MAX(total_jobs) AS total_jobs
+                   CAST(MAX(total_jobs) AS INTEGER) AS total_jobs
             FROM (
                 SELECT {filter_name},
                        online_at,
-                       MAX(total_jobs) AS total_jobs
+                       SUM(total_jobs) AS total_jobs
                   FROM aggregated_online_job
                  WHERE {time_clause} AND
                        {location_clause if filter_name == 'company_name'  else '1 == 1'} AND
@@ -83,27 +83,6 @@ def get_main_graph(time_input, location_input, company_input):
 
 
 if __name__ == '__main__':
-    conn = duckdb.connect(DUCKDB_DWH_FILE, read_only=True)
-
-    df_top_cities = conn.execute('''
-    SELECT location_name,
-           SUM(total_jobs) AS total_jobs
-      FROM aggregated_online_job
-     GROUP BY 1
-     ORDER BY 2 DESC
-    LIMIT 5000
-    ''').df()
-
-    df_top_companies = conn.execute('''
-    SELECT company_name,
-           SUM(total_jobs) AS total_jobs
-      FROM aggregated_online_job
-     GROUP BY 1
-     ORDER BY 2 DESC
-    LIMIT 5000
-    ''').df()
-
-    conn.close()
 
     time_selector = dbc.RadioItems(
         options=[
@@ -159,4 +138,4 @@ if __name__ == '__main__':
         fluid=True,
     )
 
-    app.run_server(debug=True)
+    app.run_server(debug=False)
