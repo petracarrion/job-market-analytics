@@ -1,4 +1,5 @@
 import os
+import sys
 
 import dash_bootstrap_components as dbc
 import duckdb
@@ -14,6 +15,59 @@ FILTER_NAMES = ['location_name', 'company_name']
 
 app = Dash('Dashy', title='Job Market Analytics', external_stylesheets=[dbc.themes.SANDSTONE])
 
+time_selector = dbc.RadioItems(
+    options=[
+        {'label': 'Last Year', 'value': '12'},
+        {'label': 'Last 6 Months', 'value': '6'},
+        {'label': 'Last 3 Months', 'value': '3'},
+    ],
+    value='12',
+    id='time-selector',
+    inline=True,
+)
+
+controls = dbc.Card(
+    [
+        html.Div([
+            html.H3("Time Range"),
+            time_selector,
+        ]),
+        html.Br(),
+        html.Div([
+            html.H3('City'),
+            dcc.Dropdown(
+                options=[],
+                id='location-selector',
+                multi=True
+            )
+        ]),
+        html.Br(),
+        html.Div([
+            html.H3('Company'),
+            dcc.Dropdown(
+                options=[],
+                id='company-selector',
+                multi=True
+            )
+        ]),
+    ],
+    body=True,
+)
+
+app.layout = dbc.Container(
+    [
+        html.H1("Job Market Analytics"),
+        html.Hr(),
+        dbc.Row(
+            [
+                dbc.Col(controls, md=4),
+                dbc.Col(html.Div(id='main-graph'), md=8),
+            ],
+            align='center'
+        ),
+    ],
+    fluid=True,
+)
 
 @app.callback(
     Output('main-graph', 'children'),
@@ -83,59 +137,7 @@ def get_main_graph(time_input, location_input, company_input):
 
 
 if __name__ == '__main__':
+    is_debug = sys.argv[1].lower() != 'prod' if len(sys.argv) > 1 else False
+    port = sys.argv[2] if len(sys.argv) > 2 else 8050
 
-    time_selector = dbc.RadioItems(
-        options=[
-            {'label': 'Last Year', 'value': '12'},
-            {'label': 'Last 6 Months', 'value': '6'},
-            {'label': 'Last 3 Months', 'value': '3'},
-        ],
-        value='12',
-        id='time-selector',
-        inline=True,
-    )
-
-    controls = dbc.Card(
-        [
-            html.Div([
-                html.H3("Time Range"),
-                time_selector,
-            ]),
-            html.Br(),
-            html.Div([
-                html.H3('City'),
-                dcc.Dropdown(
-                    options=[],
-                    id='location-selector',
-                    multi=True
-                )
-            ]),
-            html.Br(),
-            html.Div([
-                html.H3('Company'),
-                dcc.Dropdown(
-                    options=[],
-                    id='company-selector',
-                    multi=True
-                )
-            ]),
-        ],
-        body=True,
-    )
-
-    app.layout = dbc.Container(
-        [
-            html.H1("Job Market Analytics"),
-            html.Hr(),
-            dbc.Row(
-                [
-                    dbc.Col(controls, md=4),
-                    dbc.Col(html.Div(id='main-graph'), md=8),
-                ],
-                align='center'
-            ),
-        ],
-        fluid=True,
-    )
-
-    app.run_server(debug=False)
+    app.run(host='localhost', port=port, debug=is_debug)
