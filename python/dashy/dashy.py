@@ -113,7 +113,7 @@ def get_main_graph(time_input, location_input, company_input):
             )
             GROUP BY 1
             ORDER BY 2 DESC
-            LIMIT 5000
+            LIMIT 10000
             ''').df()
 
         filter_df_records = filter_df[filter_name].to_dict('records')
