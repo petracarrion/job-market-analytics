@@ -7,4 +7,4 @@ source .env
 
 source "${VENV_ACTIVATE}"
 
-python dashy.py prod 8051
+gunicorn -b 0.0.0.0:8051 dashy:server

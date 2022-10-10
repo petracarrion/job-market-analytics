@@ -1,6 +1,7 @@
 dash
 dash-bootstrap-components
 duckdb
+gunicorn
 jupyter-dash
 pandas
 python-dotenv

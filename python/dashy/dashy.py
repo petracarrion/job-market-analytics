@@ -14,6 +14,7 @@ DUCKDB_DWH_FILE = os.getenv('DUCKDB_DWH_FILE')
 FILTER_NAMES = ['location_name', 'company_name']
 
 app = Dash('Dashy', title='Job Market Analytics', external_stylesheets=[dbc.themes.SANDSTONE])
+server = app.server
 
 time_selector = dbc.RadioItems(
     options=[

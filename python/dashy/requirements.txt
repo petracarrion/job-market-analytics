@@ -52,6 +52,8 @@ flask==2.2.2
     #   jupyter-dash
 flask-compress==1.13
     # via dash
+gunicorn==20.1.0
+    # via -r requirements.in
 idna==3.4
     # via requests
 ipykernel==6.16.0
@@ -153,3 +155,7 @@ wcwidth==0.2.5
     # via prompt-toolkit
 werkzeug==2.2.2
     # via flask
+
+# The following packages are considered to be unsafe in a requirements file:
+setuptools==65.4.1
+    # via gunicorn
