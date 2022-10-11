@@ -13,15 +13,19 @@ JOB_DESCRIPTION_SAT_COLUMNS = ['title', 'online_status', 'is_anonymous', 'should
 BASE_COLUMNS = ['year', 'month', 'day', 'job_id', 'load_timestamp']
 
 TECHNOLOGIES = [
-    'JavaScript',
-    'Java',
-    'Python',
-    'SQL',
-    'Golang',
-    'Rust',
-    'Pandas',
+    'AWS',
+    'Azure',
     'dbt',
     'Duckdb',
+    'GCP',
+    'Golang',
+    'Java',
+    'JavaScript',
+    'Pandas',
+    'Python',
+    'Rust',
+    'SQL',
+    'SSIS',
 ]
 
 
