@@ -1,5 +1,6 @@
 import os
 import sys
+import time
 
 import dash_bootstrap_components as dbc
 import duckdb
@@ -18,11 +19,11 @@ server = app.server
 
 time_selector = dbc.RadioItems(
     options=[
+        {'label': 'Last Month', 'value': '1'},
+        {'label': 'Last Quarter', 'value': '3'},
         {'label': 'Last Year', 'value': '12'},
-        {'label': 'Last 6 Months', 'value': '6'},
-        {'label': 'Last 3 Months', 'value': '3'},
     ],
-    value='12',
+    value='1',
     id='time-selector',
     inline=True,
 )
@@ -66,12 +67,17 @@ app.layout = dbc.Container(
             ],
             align='center'
         ),
+        html.Hr(),
+        html.Div(
+            id='performance-info'
+        ),
     ],
     fluid=True,
 )
 
 @app.callback(
     Output('main-graph', 'children'),
+    Output('performance-info', 'children'),
     Output('location-selector', 'options'),
     Output('company-selector', 'options'),
     Input('time-selector', 'value'),
@@ -79,16 +85,17 @@ app.layout = dbc.Container(
     Input('company-selector', 'value'),
 )
 def get_main_graph(time_input, location_input, company_input):
+    start_time = time.time()
     _conn = duckdb.connect(DUCKDB_DWH_FILE, read_only=True)
 
-    time_clause = f'online_at >= current_date - INTERVAL {time_input} MONTH' if time_input else '1 = 1'
-    location_clause = f'location_name IN (SELECT UNNEST({location_input}))' if location_input else '1 = 1'
-    company_clause = f'company_name IN (SELECT UNNEST({company_input}))' if company_input else '1 = 1'
+    time_clause = f'online_at >= current_date - INTERVAL {time_input} MONTH' if time_input     else '1 = 1'
+    location_clause = f'location_name IN (SELECT UNNEST({location_input}))'  if location_input else '1 = 1'
+    company_clause = f'company_name   IN (SELECT UNNEST({company_input }))'  if company_input  else '1 = 1'
 
     df = _conn.execute(f'''
     SELECT online_at,
-           SUM(total_jobs) AS total_jobs
-      FROM aggregated_online_job
+           COUNT(DISTINCT job_id) AS total_jobs
+      FROM normalized_online_job
      WHERE {time_clause} AND
            {location_clause} AND
            {company_clause}
@@ -105,8 +112,8 @@ def get_main_graph(time_input, location_input, company_input):
             FROM (
                 SELECT {filter_name},
                        online_at,
-                       SUM(total_jobs) AS total_jobs
-                  FROM aggregated_online_job
+                       COUNT(DISTINCT job_id) AS total_jobs
+                  FROM normalized_online_job
                  WHERE {time_clause} AND
                        {location_clause if filter_name == 'company_name'  else '1 == 1'} AND
                        {company_clause  if filter_name == 'location_name' else '1 == 1'}
@@ -130,15 +137,18 @@ def get_main_graph(time_input, location_input, company_input):
 
     main_graph = dcc.Graph(figure=fig)
 
+    elapsed_time = time.time() - start_time
+
     return [
         html.Div([main_graph]),
+        html.Div(f'It took {elapsed_time:.2f} seconds'),
         options['location_name'],
         options['company_name'],
     ]
 
 
 if __name__ == '__main__':
-    is_debug = sys.argv[1].lower() != 'prod' if len(sys.argv) > 1 else False
+    is_debug = sys.argv[1].lower() != 'prod' if len(sys.argv) > 1 else True
     port = sys.argv[2] if len(sys.argv) > 2 else 8050
 
     app.run(host='localhost', port=port, debug=is_debug)
