@@ -13,8 +13,10 @@ JOB_DESCRIPTION_SAT_COLUMNS = ['title', 'online_status', 'is_anonymous', 'should
 BASE_COLUMNS = ['year', 'month', 'day', 'job_id', 'load_timestamp']
 
 TECHNOLOGIES = [
+    'Angular',
     'AWS',
     'Azure',
+    'Databricks',
     'dbt',
     'Duckdb',
     'GCP',
@@ -23,9 +25,13 @@ TECHNOLOGIES = [
     'JavaScript',
     'Pandas',
     'Python',
+    'React',
     'Rust',
+    'Snowflake',
     'SQL',
     'SSIS',
+    'Synapse',
+    'Vue',
 ]
 
 
