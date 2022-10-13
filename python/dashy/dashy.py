@@ -12,7 +12,7 @@ load_dotenv()
 
 DUCKDB_DWH_FILE = os.getenv('DUCKDB_DWH_FILE')
 
-FILTER_NAMES = ['location_name', 'company_name']
+FILTER_NAMES = ['location_name', 'company_name', 'technology_name']
 
 app = Dash('Dashy', title='Job Market Analytics', external_stylesheets=[dbc.themes.SANDSTONE])
 server = app.server
@@ -52,6 +52,15 @@ controls = dbc.Card(
                 multi=True
             )
         ]),
+        html.Br(),
+        html.Div([
+            html.H3('Technology'),
+            dcc.Dropdown(
+                options=[],
+                id='technology-selector',
+                multi=True
+            )
+        ]),
     ],
     body=True,
 )
@@ -80,17 +89,20 @@ app.layout = dbc.Container(
     Output('performance-info', 'children'),
     Output('location-selector', 'options'),
     Output('company-selector', 'options'),
+    Output('technology-selector', 'options'),
     Input('time-selector', 'value'),
     Input('location-selector', 'value'),
     Input('company-selector', 'value'),
+    Input('technology-selector', 'value'),
 )
-def get_main_graph(time_input, location_input, company_input):
+def get_main_graph(time_input, location_input, company_input, technology_input):
     start_time = time.time()
     _conn = duckdb.connect(DUCKDB_DWH_FILE, read_only=True)
 
-    time_clause = f'online_at >= current_date - INTERVAL {time_input} MONTH' if time_input     else '1 = 1'
-    location_clause = f'location_name IN (SELECT UNNEST({location_input}))'  if location_input else '1 = 1'
-    company_clause = f'company_name   IN (SELECT UNNEST({company_input }))'  if company_input  else '1 = 1'
+    time_clause = f'online_at >= current_date - INTERVAL    {time_input}   MONTH' if time_input else '1 = 1'
+    location_clause = f'  location_name   IN (SELECT UNNEST({location_input  }))' if location_input else '1 = 1'
+    company_clause = f'   company_name    IN (SELECT UNNEST({company_input   }))' if company_input else '1 = 1'
+    technology_clause = f'technology_name IN (SELECT UNNEST({technology_input}))' if technology_input else '1 = 1'
 
     df = _conn.execute(f'''
     SELECT online_at,
@@ -98,7 +110,8 @@ def get_main_graph(time_input, location_input, company_input):
       FROM normalized_online_job
      WHERE {time_clause} AND
            {location_clause} AND
-           {company_clause}
+           {company_clause} AND
+           {technology_clause}
      GROUP BY 1
      ORDER BY 1
     ''').df()
@@ -115,8 +128,9 @@ def get_main_graph(time_input, location_input, company_input):
                        COUNT(DISTINCT job_id) AS total_jobs
                   FROM normalized_online_job
                  WHERE {time_clause} AND
-                       {location_clause if filter_name == 'company_name'  else '1 == 1'} AND
-                       {company_clause  if filter_name == 'location_name' else '1 == 1'}
+                       {location_clause   if filter_name != 'location_name'   else '1 == 1'} AND
+                       {company_clause    if filter_name != 'company_name'    else '1 == 1'} AND
+                       {technology_clause if filter_name != 'technology_name' else '1 == 1'}
                  GROUP BY 1, 2
             )
             GROUP BY 1
@@ -144,6 +158,7 @@ def get_main_graph(time_input, location_input, company_input):
         html.Div(f'It took {elapsed_time:.2f} seconds'),
         options['location_name'],
         options['company_name'],
+        options['technology_name'],
     ]
 
 

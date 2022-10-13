@@ -11,14 +11,17 @@ WITH f_created_at AS (
     SELECT DISTINCT online_at
       FROM {{ this }}
 ), to_materialize AS (
+
     SELECT DISTINCT f.online_at
-    FROM f_created_at f
+      FROM f_created_at f
 
     {% if is_incremental() %}
      LEFT OUTER JOIN a_created_at a
        ON (f.online_at = a.online_at)
     WHERE a.online_at IS NULL
     {% endif %}
+
+    ORDER BY 1
 
 )
 SELECT f.online_at,
