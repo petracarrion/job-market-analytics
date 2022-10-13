@@ -12,7 +12,7 @@ WITH f_created_at AS (
       FROM {{ this }}
 ), to_materialize AS (
     SELECT DISTINCT f.online_at
-    FROM f_created_at f
+      FROM f_created_at f
 
     {% if is_incremental() %}
      LEFT OUTER JOIN a_created_at a
@@ -24,6 +24,7 @@ WITH f_created_at AS (
 SELECT f.online_at,
        j.company_name,
        l.location_name,
+       t.technology_name,
        COUNT(f.job_id) total_jobs
   FROM to_materialize tm
   JOIN {{ ref('fact_online_job') }} f
@@ -32,4 +33,6 @@ SELECT f.online_at,
     ON (f.job_key = j.job_key)
   JOIN {{ ref('dim_job_location') }} l
     ON (f.job_key = l.job_key)
-GROUP BY 1, 2, 3
+  JOIN {{ ref('dim_job_technology') }} t
+    ON (f.job_key = l.job_key)
+ GROUP BY 1, 2, 3, 4

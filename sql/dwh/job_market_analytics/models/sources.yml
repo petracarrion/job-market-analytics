@@ -11,3 +11,4 @@ sources:
       - name: online_job
       - name: job
       - name: job_location
+      - name: job_technology

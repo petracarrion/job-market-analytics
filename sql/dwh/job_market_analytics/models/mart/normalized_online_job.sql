@@ -24,7 +24,8 @@ WITH f_created_at AS (
 SELECT f.online_at,
        f.job_id,
        j.company_name,
-       l.location_name
+       l.location_name,
+       t.technology_name
   FROM to_materialize tm
   JOIN {{ ref('fact_online_job') }} f
     ON (tm.online_at = f.online_at)
@@ -32,3 +33,5 @@ SELECT f.online_at,
     ON (f.job_key = j.job_key)
   JOIN {{ ref('dim_job_location') }} l
     ON (f.job_key = l.job_key)
+  JOIN {{ ref('dim_job_technology') }} t
+    ON (f.job_key = t.job_key)
