@@ -16,10 +16,10 @@
 
 ## In Progress
 
-- [ ] Implement use case: Technology trends
 
 ## Done
 
+- [x] Implement use case: Technology trends
 - [x] Add a size indicator in the filter options in Dashy
 - [x] Implement some kind of search/dashboard for external users
 - [x] Check out https://github.com/rilldata/rill-developer
