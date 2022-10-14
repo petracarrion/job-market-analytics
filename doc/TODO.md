@@ -2,6 +2,7 @@
 
 ## Open
 
+- [ ] Upload only backup files to the Azure Blob Storage
 - [ ] Add the flag to the do and verify backup commands: --exclude='.DS_Store'
 - [ ] Add a file in the raw layer with the scrape run information for each execution
     - This file could be in JSON format and have the following fields:
