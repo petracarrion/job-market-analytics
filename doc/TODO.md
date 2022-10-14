@@ -2,6 +2,7 @@
 
 ## Open
 
+- [ ] Use LocalExecutor in Airflow
 - [ ] Upload only backup files to the Azure Blob Storage
 - [ ] Implement use case: Compare technologies
 - [ ] Implement use case: Number of jobs relative to city population
