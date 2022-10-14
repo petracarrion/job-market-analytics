@@ -1,3 +1,4 @@
+import os
 from datetime import datetime, timedelta
 from itertools import chain
 
@@ -6,6 +7,8 @@ from airflow.decorators import task
 from airflow.providers.http.hooks.http import HttpHook
 
 from common_airflow_dag import run_flasky_task
+
+os.environ["no_proxy"] = "*"
 
 with DAG('job_market_analytics_hourly_dag',
          description='Job Market Analytics Hourly DAG',

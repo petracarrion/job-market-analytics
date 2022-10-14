@@ -1,9 +1,12 @@
+import os
 from datetime import datetime, timedelta
 
 from airflow import DAG
 from airflow.decorators import task
 
 from common_airflow_dag import run_flasky_task
+
+os.environ["no_proxy"] = "*"
 
 with DAG('job_market_analytics_daily_dag',
          description='Job Market Analytics Daily DAG',
@@ -54,7 +57,6 @@ with DAG('job_market_analytics_daily_dag',
 
     t_curate_sitemaps = curate_sitemaps()
     t_curate_job_descriptions = curate_job_descriptions()
-
 
     cleanse_sitemaps() >> t_curate_sitemaps
     cleanse_job_descriptions() >> t_curate_job_descriptions

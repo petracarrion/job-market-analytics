@@ -2,7 +2,6 @@
 
 ## Open
 
-- [ ] Run Airflow locally to reduce the Docker overhead
 - [ ] Add the flag to the do and verify backup commands: --exclude='.DS_Store'
 - [ ] Add a file in the raw layer with the scrape run information for each execution
     - This file could be in JSON format and have the following fields:
@@ -19,6 +18,7 @@
 
 ## Done
 
+- [x] Run Airflow locally to reduce the Docker overhead
 - [x] Implement use case: Technology trends
 - [x] Add a size indicator in the filter options in Dashy
 - [x] Implement some kind of search/dashboard for external users

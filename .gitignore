@@ -135,3 +135,9 @@ _trial_temp/
 .env-test
 temp.sh
 .DS_Store
+/python/airflow/airflow_home/logs/
+/python/airflow/airflow_home/airflow.cfg
+/python/airflow/airflow_home/airflow.db
+/python/airflow/airflow_home/airflow-webserver.pid
+/python/airflow/airflow_home/standalone_admin_password.txt
+/python/airflow/airflow_home/webserver_config.py
