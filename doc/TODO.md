@@ -17,6 +17,7 @@
 
 ## In Progress
 
+- [ ] Try to have 3 tables for Dashy with different time durations to speed up things
 
 ## Done
 
