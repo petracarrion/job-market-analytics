@@ -179,12 +179,22 @@ def update_graphs(url_hash):
     main_where_clause = ' AND '.join(where_clause.values()) or '1 = 1'
 
     df = _conn.execute(f'''
-    SELECT online_at,
-           COUNT(DISTINCT job_id) AS total_jobs
-      FROM {table_name}
-     WHERE {main_where_clause}
-     GROUP BY 1
-     ORDER BY 1
+    WITH all_dates AS (
+        SELECT DISTINCT online_at
+          FROM {table_name}
+         ORDER BY 1    
+    ), total_jobs AS (
+        SELECT online_at,
+               COUNT(DISTINCT job_id) AS total_jobs
+          FROM {table_name}
+         WHERE {main_where_clause}
+         GROUP BY 1
+         ORDER BY 1    
+    )
+    SELECT ad.online_at,
+           COALESCE(total_jobs, 0) as total_jobs
+           FROM all_dates ad
+           FULL OUTER JOIN total_jobs tj ON (ad.online_at = tj.online_at)
     ''').df()
 
     filter_df = {}
@@ -220,7 +230,7 @@ def update_graphs(url_hash):
 
         if 2 <= len(inputs[filter_name]) <= 20:
             compare_df[filter_name] = _conn.execute(f'''
-            WITH dates AS (
+            WITH all_dates AS (
                 SELECT DISTINCT online_at
                   FROM {table_name}
                  ORDER BY 1
@@ -231,7 +241,7 @@ def update_graphs(url_hash):
             ), cartesian_product AS (
                 SELECT d.online_at,
                        fo.{filter_name}
-                  FROM dates d
+                  FROM all_dates d
                  CROSS JOIN filter_options fo
             ), total_jobs AS (
                 SELECT online_at,
@@ -248,15 +258,6 @@ def update_graphs(url_hash):
               FULL OUTER JOIN total_jobs tj ON (cp.online_at = tj.online_at AND cp.{filter_name} = tj.{filter_name})
              ORDER BY 1
             ''').df()
-            # compare_df[filter_name] = _conn.execute(f'''
-            # SELECT online_at,
-            #        {filter_name},
-            #        COUNT(DISTINCT job_id) AS total_jobs
-            #   FROM {table_name}
-            #  WHERE {main_where_clause}
-            #  GROUP BY 1, 2
-            #  ORDER BY 1
-            # ''').df()
 
     _conn.close()
 
