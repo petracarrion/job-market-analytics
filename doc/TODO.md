@@ -2,7 +2,6 @@
 
 ## Open
 
-- [ ] Use LocalExecutor in Airflow
 - [ ] Upload only backup files to the Azure Blob Storage
 - [ ] Implement use case: Compare technologies
 - [ ] Implement use case: Number of jobs relative to city population
@@ -21,6 +20,7 @@
 
 ## Done
 
+- [x] Use LocalExecutor in Airflow
 - [x] Run Airflow locally to reduce the Docker overhead
 - [x] Implement use case: Technology trends
 - [x] Add a size indicator in the filter options in Dashy
