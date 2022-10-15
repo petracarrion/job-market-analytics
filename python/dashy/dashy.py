@@ -1,6 +1,8 @@
+import json
 import os
 import sys
 import time
+import urllib.parse
 
 import dash_bootstrap_components as dbc
 import duckdb
@@ -67,6 +69,7 @@ controls = dbc.Card(
 
 app.layout = dbc.Container(
     [
+        dcc.Location(id='url'),
         html.H1("Job Market Analytics"),
         html.Hr(),
         dbc.Row(
@@ -84,6 +87,31 @@ app.layout = dbc.Container(
     fluid=True,
 )
 
+
+def encode_param(value):
+    encoded_value = json.dumps(value, separators=(',', ':')) if value else ''
+    return encoded_value
+
+
+@app.callback(
+    Output('url', 'hash'),
+    Input('time-selector', 'value'),
+    Input('location-selector', 'value'),
+    Input('company-selector', 'value'),
+    Input('technology-selector', 'value'),
+)
+def update_hash(time_input, location_input, company_input, technology_input):
+    params = {
+        'time': encode_param(time_input),
+        'location': encode_param(location_input),
+        'company': encode_param(company_input),
+        'technology': encode_param(technology_input),
+    }
+    params = {k: v for k, v in params.items() if v}
+    url_hash = urllib.parse.urlencode(params)
+    return url_hash
+
+
 @app.callback(
     Output('main-graph', 'children'),
     Output('performance-info', 'children'),
@@ -95,7 +123,7 @@ app.layout = dbc.Container(
     Input('company-selector', 'value'),
     Input('technology-selector', 'value'),
 )
-def get_main_graph(time_input, location_input, company_input, technology_input):
+def update_main_graph(time_input, location_input, company_input, technology_input):
     start_time = time.time()
     _conn = duckdb.connect(DUCKDB_DWH_FILE, read_only=True)
 
