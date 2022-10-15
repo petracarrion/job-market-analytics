@@ -153,22 +153,27 @@ def update_main_graph(url_hash):
     start_time = time.time()
     _conn = duckdb.connect(DUCKDB_DWH_FILE, read_only=True)
 
-    time_input = decode_params(url_hash, 'time') or 1
-    location_input = decode_params(url_hash, 'location')
-    company_input = decode_params(url_hash, 'company')
-    technology_input = decode_params(url_hash, 'technology')
+    inputs = {
+        'time_name': decode_params(url_hash, 'time') or 1,
+        'location_name': decode_params(url_hash, 'location'),
+        'company_name': decode_params(url_hash, 'company'),
+        'technology_name': decode_params(url_hash, 'technology'),
+    }
 
-    location_clause = f'  location_name   IN (SELECT UNNEST({location_input}  ))' if location_input else '1 = 1'
-    company_clause = f'   company_name    IN (SELECT UNNEST({company_input}   ))' if company_input else '1 = 1'
-    technology_clause = f'technology_name IN (SELECT UNNEST({technology_input}))' if technology_input else '1 = 1'
+    table_name = f'normalized_online_job_months_{inputs["time_name"]}'
+
+    where_clause_list = []
+    for filter_name in FILTER_NAMES:
+        if inputs[filter_name]:
+            where_clause_list.append(f'{filter_name} IN (SELECT UNNEST({inputs["filter_name"]}  ))')
+
+    where_clause = ' AND '.join(where_clause_list) or '1 = 1'
 
     df = _conn.execute(f'''
     SELECT online_at,
            COUNT(DISTINCT job_id) AS total_jobs
-      FROM normalized_online_job_months_{time_input}
-     WHERE {location_clause} AND
-           {company_clause} AND
-           {technology_clause}
+      FROM {table_name}
+     WHERE {where_clause}
      GROUP BY 1
      ORDER BY 1
     ''').df()
@@ -183,10 +188,8 @@ def update_main_graph(url_hash):
                 SELECT {filter_name},
                        online_at,
                        COUNT(DISTINCT job_id) AS total_jobs
-                  FROM normalized_online_job_months_{time_input}
-                 WHERE {location_clause   if filter_name != 'location_name'   else '1 == 1'} AND
-                       {company_clause    if filter_name != 'company_name'    else '1 == 1'} AND
-                       {technology_clause if filter_name != 'technology_name' else '1 == 1'}
+                  FROM {table_name}
+                 WHERE {where_clause}
                  GROUP BY 1, 2
             )
             GROUP BY 1
