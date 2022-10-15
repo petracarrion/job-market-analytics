@@ -102,7 +102,7 @@ def encode_param(value):
 )
 def update_hash(time_input, location_input, company_input, technology_input):
     params = {
-        'time': time_input,
+        'time': encode_param(time_input),
         'location': encode_param(location_input),
         'company': encode_param(company_input),
         'technology': encode_param(technology_input),
@@ -112,20 +112,33 @@ def update_hash(time_input, location_input, company_input, technology_input):
     return url_hash
 
 
+def decode_params(url_hash, param_name):
+    params = urllib.parse.parse_qs(url_hash)
+    if param_name not in params.keys():
+        return ''
+    param = params[param_name]
+    if isinstance(param, list) and len(param) > 0:
+        param = param[0]
+    param = json.loads(param)
+    return param
+
+
 @app.callback(
     Output('main-graph', 'children'),
     Output('performance-info', 'children'),
     Output('location-selector', 'options'),
     Output('company-selector', 'options'),
     Output('technology-selector', 'options'),
-    Input('time-selector', 'value'),
-    Input('location-selector', 'value'),
-    Input('company-selector', 'value'),
-    Input('technology-selector', 'value'),
+    Input('url', 'hash'),
 )
-def update_main_graph(time_input, location_input, company_input, technology_input):
+def update_main_graph(url_hash):
     start_time = time.time()
     _conn = duckdb.connect(DUCKDB_DWH_FILE, read_only=True)
+
+    time_input = decode_params(url_hash, 'time') or 1
+    location_input = decode_params(url_hash, 'location')
+    company_input = decode_params(url_hash, 'company')
+    technology_input = decode_params(url_hash, 'technology')
 
     time_clause = f'online_at >= current_date - INTERVAL    {time_input}   MONTH' if time_input else '1 = 1'
     location_clause = f'  location_name   IN (SELECT UNNEST({location_input  }))' if location_input else '1 = 1'
