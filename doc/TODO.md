@@ -17,10 +17,10 @@
 
 ## In Progress
 
-- [ ] Use statefuls URLs according to state of the input components on Dashy
 
 ## Done
 
+- [x] Use statefuls URLs according to state of the input components on Dashy
 - [x] Use LocalExecutor in Airflow
 - [x] Run Airflow locally to reduce the Docker overhead
 - [x] Implement use case: Technology trends

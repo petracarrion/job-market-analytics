@@ -7,7 +7,7 @@ import urllib.parse
 import dash_bootstrap_components as dbc
 import duckdb
 import plotly.express as px
-from dash import Dash, dcc, html, Output, Input
+from dash import Dash, dcc, html, Output, Input, State
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -93,6 +93,35 @@ def encode_param(value):
     return encoded_value
 
 
+def decode_params(url_hash, param_name):
+    params = urllib.parse.parse_qs(url_hash[1:])
+    if param_name not in params.keys():
+        return ''
+    param = params[param_name]
+    if isinstance(param, list) and len(param) > 0:
+        param = param[0]
+    param = json.loads(param)
+    return param
+
+
+@app.callback(
+    Output('time-selector', 'value'),
+    Output('location-selector', 'value'),
+    Output('company-selector', 'value'),
+    Output('technology-selector', 'value'),
+    Input('url', 'pathname'),
+    State('url', 'hash'),
+    State('time-selector', 'value'),
+)
+def update_intial_values(_, url_hash, time_input):
+    time_output = decode_params(url_hash, 'time') or time_input
+    location_output = decode_params(url_hash, 'location')
+    company_output = decode_params(url_hash, 'company')
+    technology_output = decode_params(url_hash, 'technology')
+
+    return [time_output, location_output, company_output, technology_output]
+
+
 @app.callback(
     Output('url', 'hash'),
     Input('time-selector', 'value'),
@@ -112,17 +141,6 @@ def update_hash(time_input, location_input, company_input, technology_input):
     return url_hash
 
 
-def decode_params(url_hash, param_name):
-    params = urllib.parse.parse_qs(url_hash)
-    if param_name not in params.keys():
-        return ''
-    param = params[param_name]
-    if isinstance(param, list) and len(param) > 0:
-        param = param[0]
-    param = json.loads(param)
-    return param
-
-
 @app.callback(
     Output('main-graph', 'children'),
     Output('performance-info', 'children'),
@@ -135,14 +153,14 @@ def update_main_graph(url_hash):
     start_time = time.time()
     _conn = duckdb.connect(DUCKDB_DWH_FILE, read_only=True)
 
-    time_input = decode_params(url_hash, 'time') or 1
+    time_input = decode_params(url_hash, 'time')
     location_input = decode_params(url_hash, 'location')
     company_input = decode_params(url_hash, 'company')
     technology_input = decode_params(url_hash, 'technology')
 
     time_clause = f'online_at >= current_date - INTERVAL    {time_input}   MONTH' if time_input else '1 = 1'
-    location_clause = f'  location_name   IN (SELECT UNNEST({location_input  }))' if location_input else '1 = 1'
-    company_clause = f'   company_name    IN (SELECT UNNEST({company_input   }))' if company_input else '1 = 1'
+    location_clause = f'  location_name   IN (SELECT UNNEST({location_input}  ))' if location_input else '1 = 1'
+    company_clause = f'   company_name    IN (SELECT UNNEST({company_input}   ))' if company_input else '1 = 1'
     technology_clause = f'technology_name IN (SELECT UNNEST({technology_input}))' if technology_input else '1 = 1'
 
     df = _conn.execute(f'''
