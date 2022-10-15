@@ -2,6 +2,7 @@
 
 ## Open
 
+- [ ] Make statefuls URLs according to state of the input components on Dashy
 - [ ] Upload only backup files to the Azure Blob Storage
 - [ ] Implement use case: Compare technologies
 - [ ] Implement use case: Number of jobs relative to city population
