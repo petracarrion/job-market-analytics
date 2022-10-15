@@ -153,12 +153,11 @@ def update_main_graph(url_hash):
     start_time = time.time()
     _conn = duckdb.connect(DUCKDB_DWH_FILE, read_only=True)
 
-    time_input = decode_params(url_hash, 'time')
+    time_input = decode_params(url_hash, 'time') or 1
     location_input = decode_params(url_hash, 'location')
     company_input = decode_params(url_hash, 'company')
     technology_input = decode_params(url_hash, 'technology')
 
-    time_clause = f'online_at >= current_date - INTERVAL    {time_input}   MONTH' if time_input else '1 = 1'
     location_clause = f'  location_name   IN (SELECT UNNEST({location_input}  ))' if location_input else '1 = 1'
     company_clause = f'   company_name    IN (SELECT UNNEST({company_input}   ))' if company_input else '1 = 1'
     technology_clause = f'technology_name IN (SELECT UNNEST({technology_input}))' if technology_input else '1 = 1'
@@ -166,9 +165,8 @@ def update_main_graph(url_hash):
     df = _conn.execute(f'''
     SELECT online_at,
            COUNT(DISTINCT job_id) AS total_jobs
-      FROM normalized_online_job
-     WHERE {time_clause} AND
-           {location_clause} AND
+      FROM normalized_online_job_months_{time_input}
+     WHERE {location_clause} AND
            {company_clause} AND
            {technology_clause}
      GROUP BY 1
@@ -185,9 +183,8 @@ def update_main_graph(url_hash):
                 SELECT {filter_name},
                        online_at,
                        COUNT(DISTINCT job_id) AS total_jobs
-                  FROM normalized_online_job
-                 WHERE {time_clause} AND
-                       {location_clause   if filter_name != 'location_name'   else '1 == 1'} AND
+                  FROM normalized_online_job_months_{time_input}
+                 WHERE {location_clause   if filter_name != 'location_name'   else '1 == 1'} AND
                        {company_clause    if filter_name != 'company_name'    else '1 == 1'} AND
                        {technology_clause if filter_name != 'technology_name' else '1 == 1'}
                  GROUP BY 1, 2

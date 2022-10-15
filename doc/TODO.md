@@ -17,10 +17,10 @@
 
 ## In Progress
 
-- [ ] Try to have 3 tables for Dashy with different time durations to speed up things
 
 ## Done
 
+- [x] Have 3 materialized tables for Dashy with different time durations to improve the performance
 - [x] Use statefuls URLs according to state of the input components on Dashy
 - [x] Use LocalExecutor in Airflow
 - [x] Run Airflow locally to reduce the Docker overhead
