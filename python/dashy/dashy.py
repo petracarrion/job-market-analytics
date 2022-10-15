@@ -75,7 +75,13 @@ app.layout = dbc.Container(
         dbc.Row(
             [
                 dbc.Col(controls, md=4),
-                dbc.Col(html.Div(id='main-graph'), md=8),
+                dbc.Col(html.Div(
+                    [
+                        html.Div(id='main-graph'),
+                        html.Div(id='location-graph'),
+                        html.Div(id='company-graph'),
+                        html.Div(id='technology-graph'),
+                    ]), md=8),
             ],
             align='center'
         ),
@@ -94,7 +100,7 @@ def encode_param(value):
 
 
 def decode_params(url_hash, param_name):
-    params = urllib.parse.parse_qs(url_hash[1:])
+    params = urllib.parse.parse_qs(url_hash.lstrip('#'))
     if param_name not in params.keys():
         return ''
     param = params[param_name]
@@ -143,13 +149,16 @@ def update_hash(time_input, location_input, company_input, technology_input):
 
 @app.callback(
     Output('main-graph', 'children'),
+    Output('location-graph', 'children'),
+    Output('company-graph', 'children'),
+    Output('technology-graph', 'children'),
     Output('performance-info', 'children'),
     Output('location-selector', 'options'),
     Output('company-selector', 'options'),
     Output('technology-selector', 'options'),
     Input('url', 'hash'),
 )
-def update_main_graph(url_hash):
+def update_graphs(url_hash):
     start_time = time.time()
     _conn = duckdb.connect(DUCKDB_DWH_FILE, read_only=True)
 
@@ -162,25 +171,31 @@ def update_main_graph(url_hash):
 
     table_name = f'normalized_online_job_months_{inputs["time_name"]}'
 
-    where_clause_list = []
+    where_clause = {}
     for filter_name in FILTER_NAMES:
         if inputs[filter_name]:
-            where_clause_list.append(f'{filter_name} IN (SELECT UNNEST({inputs["filter_name"]}  ))')
+            where_clause[filter_name] = f'{filter_name} IN (SELECT UNNEST({inputs[filter_name]}  ))'
 
-    where_clause = ' AND '.join(where_clause_list) or '1 = 1'
+    main_where_clause = ' AND '.join(where_clause.values()) or '1 = 1'
 
     df = _conn.execute(f'''
     SELECT online_at,
            COUNT(DISTINCT job_id) AS total_jobs
       FROM {table_name}
-     WHERE {where_clause}
+     WHERE {main_where_clause}
      GROUP BY 1
      ORDER BY 1
     ''').df()
 
     filter_df = {}
+    compare_df = {}
     options = {}
     for filter_name in FILTER_NAMES:
+        filter_where_clause_list = []
+        for key, value in where_clause.items():
+            if key != filter_name:
+                filter_where_clause_list.append(value)
+        filter_where_clause = ' AND '.join(filter_where_clause_list) or '1 = 1'
         filter_df[filter_name] = _conn.execute(f'''
             SELECT {filter_name},
                    CAST(MAX(total_jobs) AS INTEGER) AS total_jobs
@@ -189,7 +204,7 @@ def update_main_graph(url_hash):
                        online_at,
                        COUNT(DISTINCT job_id) AS total_jobs
                   FROM {table_name}
-                 WHERE {where_clause}
+                 WHERE {filter_where_clause}
                  GROUP BY 1, 2
             )
             GROUP BY 1
@@ -203,6 +218,46 @@ def update_main_graph(url_hash):
             for option in filter_df_records
         ]
 
+        if 2 <= len(inputs[filter_name]) <= 20:
+            compare_df[filter_name] = _conn.execute(f'''
+            WITH dates AS (
+                SELECT DISTINCT online_at
+                  FROM {table_name}
+                 ORDER BY 1
+            ), filter_options AS (
+                SELECT DISTINCT {filter_name}
+                  FROM {table_name}
+                 WHERE {main_where_clause}
+            ), cartesian_product AS (
+                SELECT d.online_at,
+                       fo.{filter_name}
+                  FROM dates d
+                 CROSS JOIN filter_options fo
+            ), total_jobs AS (
+                SELECT online_at,
+                       {filter_name},
+                       COUNT(DISTINCT job_id) AS total_jobs
+                  FROM {table_name}
+                 WHERE {main_where_clause}
+                 GROUP BY 1, 2
+            )
+            SELECT cp.online_at,
+                   cp.{filter_name},
+                   COALESCE(tj.total_jobs, 0) AS total_jobs
+              FROM cartesian_product cp
+              FULL OUTER JOIN total_jobs tj ON (cp.online_at = tj.online_at AND cp.{filter_name} = tj.{filter_name})
+             ORDER BY 1
+            ''').df()
+            # compare_df[filter_name] = _conn.execute(f'''
+            # SELECT online_at,
+            #        {filter_name},
+            #        COUNT(DISTINCT job_id) AS total_jobs
+            #   FROM {table_name}
+            #  WHERE {main_where_clause}
+            #  GROUP BY 1, 2
+            #  ORDER BY 1
+            # ''').df()
+
     _conn.close()
 
     fig = px.scatter(df, x='online_at', y='total_jobs', trendline='rolling', trendline_options=dict(window=7),
@@ -210,10 +265,22 @@ def update_main_graph(url_hash):
 
     main_graph = dcc.Graph(figure=fig)
 
+    compare_graphs = {}
+    for filter_name, df in compare_df.items():
+        fig = px.line(df, x="online_at", y="total_jobs", color=filter_name, title=filter_name)
+        compare_graphs[filter_name] = dcc.Graph(figure=fig)
+
+    location_graph = compare_graphs['location_name'] if 'location_name' in compare_graphs.keys() else ''
+    company_graph = compare_graphs['company_name'] if 'company_name' in compare_graphs.keys() else ''
+    technology_graph = compare_graphs['technology_name'] if 'technology_name' in compare_graphs.keys() else ''
+
     elapsed_time = time.time() - start_time
 
     return [
         html.Div([main_graph]),
+        html.Div([location_graph]),
+        html.Div([company_graph]),
+        html.Div([technology_graph]),
         html.Div(f'It took {elapsed_time:.2f} seconds'),
         options['location_name'],
         options['company_name'],

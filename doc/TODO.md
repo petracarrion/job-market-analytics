@@ -3,7 +3,6 @@
 ## Open
 
 - [ ] Upload only backup files to the Azure Blob Storage
-- [ ] Implement use case: Compare technologies
 - [ ] Implement use case: Number of jobs relative to city population
 - [ ] Add the flag to the do and verify backup commands: --exclude='.DS_Store'
 - [ ] Add a file in the raw layer with the scrape run information for each execution
@@ -17,6 +16,7 @@
 
 ## In Progress
 
+- [ ] Implement use case: Compare technologies
 
 ## Done
 
