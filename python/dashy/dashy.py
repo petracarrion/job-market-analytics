@@ -102,7 +102,7 @@ def encode_param(value):
 )
 def update_hash(time_input, location_input, company_input, technology_input):
     params = {
-        'time': encode_param(time_input),
+        'time': time_input,
         'location': encode_param(location_input),
         'company': encode_param(company_input),
         'technology': encode_param(technology_input),
