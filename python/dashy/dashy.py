@@ -106,22 +106,19 @@ controls = dbc.Card(
 app.layout = dbc.Container(
     [
         dcc.Location(id='url'),
-        html.H1("Job Market Analytics"),
+        html.Br(),
+        html.A([
+            html.H1("Job Market Analytics"),
+        ], href='/'),
         html.Hr(),
         dbc.Row(
             [
                 dbc.Col([
                     controls,
-                    html.Br(),
-                    html.Br(),
-                    dcc.Loading(
-                        id='loading-performance-info',
-                        children=[html.Div(id='performance-info')],
-                        type=LOADING_TYPE,
-                    ),
                 ], md=4),
                 dbc.Col(html.Div(
                     [
+                        html.Br(),
                         html.H3("Number of jobs online"),
                         dcc.Loading(
                             id='loading-main-graph',
@@ -145,6 +142,12 @@ app.layout = dbc.Container(
                         ),
                     ]), md=8),
             ],
+        ),
+        html.Br(),
+        dcc.Loading(
+            id='loading-performance-info',
+            children=[html.Div(id='performance-info')],
+            type=LOADING_TYPE,
         ),
     ],
     fluid=True,
