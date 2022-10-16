@@ -83,7 +83,6 @@ app.layout = dbc.Container(
                         html.Div(id='technology-graph'),
                     ]), md=8),
             ],
-            align='center'
         ),
         html.Hr(),
         html.Div(
@@ -170,6 +169,8 @@ def update_graphs(url_hash):
     }
 
     table_name = f'normalized_online_job_months_{inputs["time_name"]}'
+    month_ending = 's' if int(inputs["time_name"]) > 1 else ''
+    months_as_text = f'{inputs["time_name"]} month{month_ending}'
 
     where_clause = {}
     for filter_name in FILTER_NAMES:
@@ -262,7 +263,7 @@ def update_graphs(url_hash):
     _conn.close()
 
     fig = px.scatter(df, x='online_at', y='total_jobs', trendline='rolling', trendline_options=dict(window=7),
-                     title='Number of jobs online (7-day rolling average)')
+                     title=f'Number of jobs online (7-day rolling average) in last {months_as_text}')
 
     main_graph = dcc.Graph(figure=fig)
 
