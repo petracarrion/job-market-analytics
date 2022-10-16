@@ -256,7 +256,7 @@ def update_graphs(url_hash):
                    COALESCE(tj.total_jobs, 0) AS total_jobs
               FROM cartesian_product cp
               FULL OUTER JOIN total_jobs tj ON (cp.online_at = tj.online_at AND cp.{filter_name} = tj.{filter_name})
-             ORDER BY 1
+             ORDER BY 1, 2
             ''').df()
 
     _conn.close()
