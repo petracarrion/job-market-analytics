@@ -76,7 +76,12 @@ app.layout = dbc.Container(
         html.Hr(),
         dbc.Row(
             [
-                dbc.Col(controls, md=4),
+                dbc.Col([
+                    controls,
+                    html.Div(
+                        id='performance-info'
+                    ),
+                ], md=4),
                 dbc.Col(html.Div(
                     [
                         html.Div(id='main-graph'),
@@ -87,9 +92,6 @@ app.layout = dbc.Container(
             ],
         ),
         html.Hr(),
-        html.Div(
-            id='performance-info'
-        ),
     ],
     fluid=True,
 )
@@ -291,7 +293,7 @@ def update_graphs(url_hash):
         html.Div([location_graph]),
         html.Div([company_graph]),
         html.Div([technology_graph]),
-        html.Div(f'It took {elapsed_time:.2f} seconds'),
+        html.Div(f'It took {elapsed_time:.2f} seconds on the backend'),
         options['location_name'],
         options['company_name'],
         options['technology_name'],

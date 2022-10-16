@@ -16,10 +16,11 @@
 
 ## In Progress
 
-- [ ] Implement use case: Compare technologies
 
 ## Done
 
+- [x] Cache sql query executions on Dashy
+- [x] Implement use case: Compare technologies
 - [x] Have 3 materialized tables for Dashy with different time durations to improve the performance
 - [x] Use statefuls URLs according to state of the input components on Dashy
 - [x] Use LocalExecutor in Airflow
