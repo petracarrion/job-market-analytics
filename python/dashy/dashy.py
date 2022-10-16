@@ -16,6 +16,8 @@ load_dotenv()
 
 DUCKDB_DWH_FILE = os.getenv('DUCKDB_DWH_FILE')
 
+LOADING_TYPE = 'dot'
+
 
 class Filter:
     def __init__(self, name, label):
@@ -51,7 +53,7 @@ controls = dbc.Card(
             html.H3("Time Range"),
             time_selector,
         ]),
-        html.Br(),
+        html.Br(), #  'graph', 'cube', 'circle', 'dot', or 'default'
         html.Div([
             html.H3('City'),
             dcc.Loading(
@@ -63,7 +65,7 @@ controls = dbc.Card(
                         multi=True
                     ),
                 ],
-                type='circle',
+                type=LOADING_TYPE,
             ),
 
         ]),
@@ -79,7 +81,7 @@ controls = dbc.Card(
                         multi=True
                     ),
                 ],
-                type='circle',
+                type=LOADING_TYPE,
             ),
         ]),
         html.Br(),
@@ -94,7 +96,7 @@ controls = dbc.Card(
                         multi=True
                     ),
                 ],
-                type='circle',
+                type=LOADING_TYPE,
             ),
         ]),
     ],
@@ -110,8 +112,11 @@ app.layout = dbc.Container(
             [
                 dbc.Col([
                     controls,
-                    html.Div(
-                        id='performance-info'
+                    html.Br(),
+                    dcc.Loading(
+                        id='loading-performance-info',
+                        children=[html.Div(id='performance-info')],
+                        type=LOADING_TYPE,
                     ),
                 ], md=4),
                 dbc.Col(html.Div(
@@ -120,27 +125,26 @@ app.layout = dbc.Container(
                         dcc.Loading(
                             id='loading-main-graph',
                             children=[html.Div(id='main-graph')],
-                            type='circle',
+                            type=LOADING_TYPE,
                         ),
                         dcc.Loading(
                             id='loading-location-graph',
                             children=[html.Div(id='location-graph')],
-                            type='circle',
+                            type=LOADING_TYPE,
                         ),
                         dcc.Loading(
                             id='loading-company-graph',
                             children=[html.Div(id='company-graph')],
-                            type='circle',
+                            type=LOADING_TYPE,
                         ),
                         dcc.Loading(
                             id='loading-technology-graph',
                             children=[html.Div(id='technology-graph')],
-                            type='circle',
+                            type=LOADING_TYPE,
                         ),
                     ]), md=8),
             ],
         ),
-        html.Hr(),
     ],
     fluid=True,
 )
