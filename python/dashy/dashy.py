@@ -16,7 +16,20 @@ load_dotenv()
 
 DUCKDB_DWH_FILE = os.getenv('DUCKDB_DWH_FILE')
 
+
+class Filter:
+    def __init__(self, name, label):
+        self.name = name
+        self.label = label
+
+
 FILTER_NAMES = ['location_name', 'company_name', 'technology_name']
+
+FILTERS = {
+    'location_name': Filter('location_name', 'City'),
+    'company_name': Filter('company_name', 'Company'),
+    'technology_name': Filter('technology_name', 'Technology'),
+}
 
 app = Dash('Dashy', title='Job Market Analytics', external_stylesheets=[dbc.themes.SANDSTONE])
 server = app.server
@@ -84,6 +97,7 @@ app.layout = dbc.Container(
                 ], md=4),
                 dbc.Col(html.Div(
                     [
+                        html.H3("Number of jobs online"),
                         html.Div(id='main-graph'),
                         html.Div(id='location-graph'),
                         html.Div(id='company-graph'),
@@ -98,6 +112,8 @@ app.layout = dbc.Container(
 
 
 def encode_param(value):
+    if isinstance(value, list):
+        value = sorted(value)
     encoded_value = json.dumps(value, separators=(',', ':')) if value else ''
     return encoded_value
 
@@ -150,7 +166,7 @@ def update_intial_values(_, url_hash, time_input):
 def update_hash(time_input, location_input, company_input, technology_input):
     params = {
         'time': encode_param(time_input),
-        'location': encode_param(location_input),
+        'city': encode_param(location_input),
         'company': encode_param(company_input),
         'technology': encode_param(technology_input),
     }
@@ -175,14 +191,12 @@ def update_graphs(url_hash):
 
     inputs = {
         'time_name': decode_params(url_hash, 'time') or 1,
-        'location_name': decode_params(url_hash, 'location'),
+        'location_name': decode_params(url_hash, 'city'),
         'company_name': decode_params(url_hash, 'company'),
         'technology_name': decode_params(url_hash, 'technology'),
     }
 
     table_name = f'normalized_online_job_months_{inputs["time_name"]}'
-    month_ending = 's' if int(inputs["time_name"]) > 1 else ''
-    months_as_text = f'{inputs["time_name"]} month{month_ending}'
 
     where_clause = {}
     for filter_name in FILTER_NAMES:
@@ -273,13 +287,16 @@ def update_graphs(url_hash):
             ''')
 
     fig = px.scatter(df, x='online_at', y='total_jobs', trendline='rolling', trendline_options=dict(window=7),
-                     title=f'Number of jobs online (7-day rolling average) in last {months_as_text}')
+                     title=f'<b>Overview</b>')
 
     main_graph = dcc.Graph(figure=fig)
 
     compare_graphs = {}
     for filter_name, df in compare_df.items():
-        fig = px.line(df, x="online_at", y="total_jobs", color=filter_name, title=filter_name)
+        filter = FILTERS[filter_name]
+        df = df.rename(columns={filter_name: filter.label})
+        title = f'<b>Per {filter.label}</b>'
+        fig = px.line(df, x="online_at", y="total_jobs", color=filter.label, title=title)
         compare_graphs[filter_name] = dcc.Graph(figure=fig)
 
     location_graph = compare_graphs['location_name'] if 'location_name' in compare_graphs.keys() else ''
