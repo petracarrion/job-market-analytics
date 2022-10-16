@@ -53,7 +53,7 @@ controls = dbc.Card(
             html.H3("Time Range"),
             time_selector,
         ]),
-        html.Br(), #  'graph', 'cube', 'circle', 'dot', or 'default'
+        html.Br(),
         html.Div([
             html.H3('City'),
             dcc.Loading(
@@ -112,6 +112,7 @@ app.layout = dbc.Container(
             [
                 dbc.Col([
                     controls,
+                    html.Br(),
                     html.Br(),
                     dcc.Loading(
                         id='loading-performance-info',
