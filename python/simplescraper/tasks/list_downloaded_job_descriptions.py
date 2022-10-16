@@ -9,7 +9,7 @@ from common.logging import logger, configure_logger
 from common.storage import DOWNLOADED_JOB_DESCRIPTIONS_CSV, DATA_SOURCE_NAME, save_temp_df, list_raw_files
 
 
-@functools.lru_cache(maxsize=None)
+@functools.lru_cache(maxsize=1024)
 def calculate_days_online(load_timestamp):
     ingestion_datetime = datetime.datetime.strptime(load_timestamp, '%Y/%m/%d/%H-%M-%S')
     now = datetime.datetime.now()

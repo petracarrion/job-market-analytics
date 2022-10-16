@@ -176,7 +176,7 @@ def decode_params(url_hash, param_name):
     return param
 
 
-@functools.lru_cache(maxsize=None)
+@functools.lru_cache(maxsize=1024)
 def query_db(sql_statement, _=date.today()):
     conn = duckdb.connect(DUCKDB_DWH_FILE, read_only=True)
     df = conn.execute(sql_statement).df()
