@@ -18,6 +18,10 @@ DUCKDB_DWH_FILE = os.getenv('DUCKDB_DWH_FILE')
 
 LOADING_TYPE = 'dot'
 
+GRAPH_CONFIG = {
+    'staticPlot': True,
+}
+
 
 class Filter:
     def __init__(self, name, label):
@@ -332,7 +336,7 @@ def update_graphs(url_hash):
     fig = px.scatter(df, x='online_at', y='total_jobs', trendline='rolling', trendline_options=dict(window=7),
                      title=f'<b>Overview</b>')
 
-    main_graph = dcc.Graph(figure=fig)
+    main_graph = dcc.Graph(figure=fig, config=GRAPH_CONFIG)
 
     compare_graphs = {}
     for filter_name, df in compare_df.items():
@@ -340,7 +344,7 @@ def update_graphs(url_hash):
         df = df.rename(columns={filter_name: filter.label})
         title = f'<b>Per {filter.label}</b>'
         fig = px.line(df, x="online_at", y="total_jobs", color=filter.label, title=title)
-        compare_graphs[filter_name] = dcc.Graph(figure=fig)
+        compare_graphs[filter_name] = dcc.Graph(figure=fig, config=GRAPH_CONFIG)
 
     location_graph = compare_graphs['location_name'] if 'location_name' in compare_graphs.keys() else ''
     company_graph = compare_graphs['company_name'] if 'company_name' in compare_graphs.keys() else ''
