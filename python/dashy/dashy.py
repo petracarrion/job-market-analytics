@@ -1,8 +1,10 @@
+import functools
 import json
 import os
 import sys
 import time
 import urllib.parse
+from datetime import date
 
 import dash_bootstrap_components as dbc
 import duckdb
@@ -109,6 +111,15 @@ def decode_params(url_hash, param_name):
     return param
 
 
+@functools.lru_cache(maxsize=None)
+def query_db(sql_statement, _=date.today()):
+    conn = duckdb.connect(DUCKDB_DWH_FILE, read_only=True)
+    df = conn.execute(sql_statement).df()
+    conn.close()
+
+    return df
+
+
 @app.callback(
     Output('time-selector', 'value'),
     Output('location-selector', 'value'),
@@ -159,7 +170,6 @@ def update_hash(time_input, location_input, company_input, technology_input):
 )
 def update_graphs(url_hash):
     start_time = time.time()
-    _conn = duckdb.connect(DUCKDB_DWH_FILE, read_only=True)
 
     inputs = {
         'time_name': decode_params(url_hash, 'time') or 1,
@@ -179,7 +189,7 @@ def update_graphs(url_hash):
 
     main_where_clause = ' AND '.join(where_clause.values()) or '1 = 1'
 
-    df = _conn.execute(f'''
+    df = query_db(f'''
     WITH all_dates AS (
         SELECT DISTINCT online_at
           FROM {table_name}
@@ -196,7 +206,7 @@ def update_graphs(url_hash):
            COALESCE(total_jobs, 0) as total_jobs
            FROM all_dates ad
            FULL OUTER JOIN total_jobs tj ON (ad.online_at = tj.online_at)
-    ''').df()
+    ''')
 
     filter_df = {}
     compare_df = {}
@@ -207,7 +217,7 @@ def update_graphs(url_hash):
             if key != filter_name:
                 filter_where_clause_list.append(value)
         filter_where_clause = ' AND '.join(filter_where_clause_list) or '1 = 1'
-        filter_df[filter_name] = _conn.execute(f'''
+        filter_df[filter_name] = query_db(f'''
             SELECT {filter_name},
                    CAST(MAX(total_jobs) AS INTEGER) AS total_jobs
             FROM (
@@ -221,7 +231,7 @@ def update_graphs(url_hash):
             GROUP BY 1
             ORDER BY 2 DESC
             LIMIT 10000
-            ''').df()
+            ''')
 
         filter_df_records = filter_df[filter_name].to_dict('records')
         options[filter_name] = [
@@ -230,7 +240,7 @@ def update_graphs(url_hash):
         ]
 
         if 2 <= len(inputs[filter_name]) <= 20:
-            compare_df[filter_name] = _conn.execute(f'''
+            compare_df[filter_name] = query_db(f'''
             WITH all_dates AS (
                 SELECT DISTINCT online_at
                   FROM {table_name}
@@ -258,9 +268,7 @@ def update_graphs(url_hash):
               FROM cartesian_product cp
               FULL OUTER JOIN total_jobs tj ON (cp.online_at = tj.online_at AND cp.{filter_name} = tj.{filter_name})
              ORDER BY 1, 2
-            ''').df()
-
-    _conn.close()
+            ''')
 
     fig = px.scatter(df, x='online_at', y='total_jobs', trendline='rolling', trendline_options=dict(window=7),
                      title=f'Number of jobs online (7-day rolling average) in last {months_as_text}')
