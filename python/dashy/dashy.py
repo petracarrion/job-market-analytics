@@ -148,7 +148,7 @@ def query_db(sql_statement, _=date.today()):
     State('time-selector', 'value'),
 )
 def update_intial_values(_, url_hash, time_input):
-    time_output = decode_params(url_hash, 'time') or time_input
+    time_output = decode_params(url_hash, 'months') or time_input
     location_output = decode_params(url_hash, 'location')
     company_output = decode_params(url_hash, 'company')
     technology_output = decode_params(url_hash, 'technology')
@@ -165,7 +165,7 @@ def update_intial_values(_, url_hash, time_input):
 )
 def update_hash(time_input, location_input, company_input, technology_input):
     params = {
-        'time': encode_param(time_input),
+        'months': encode_param(time_input),
         'city': encode_param(location_input),
         'company': encode_param(company_input),
         'technology': encode_param(technology_input),
