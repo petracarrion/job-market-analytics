@@ -54,29 +54,48 @@ controls = dbc.Card(
         html.Br(),
         html.Div([
             html.H3('City'),
-            dcc.Dropdown(
-                options=[],
-                id='location-selector',
-                multi=True
-            )
+            dcc.Loading(
+                id='loading-location-selector',
+                children=[
+                    dcc.Dropdown(
+                        options=[],
+                        id='location-selector',
+                        multi=True
+                    ),
+                ],
+                type='circle',
+            ),
+
         ]),
         html.Br(),
         html.Div([
             html.H3('Company'),
-            dcc.Dropdown(
-                options=[],
-                id='company-selector',
-                multi=True
-            )
+            dcc.Loading(
+                id='loading-company-selector',
+                children=[
+                    dcc.Dropdown(
+                        options=[],
+                        id='company-selector',
+                        multi=True
+                    ),
+                ],
+                type='circle',
+            ),
         ]),
         html.Br(),
         html.Div([
             html.H3('Technology'),
-            dcc.Dropdown(
-                options=[],
-                id='technology-selector',
-                multi=True
-            )
+            dcc.Loading(
+                id='loading-technology-selector',
+                children=[
+                    dcc.Dropdown(
+                        options=[],
+                        id='technology-selector',
+                        multi=True
+                    ),
+                ],
+                type='circle',
+            ),
         ]),
     ],
     body=True,
@@ -98,10 +117,26 @@ app.layout = dbc.Container(
                 dbc.Col(html.Div(
                     [
                         html.H3("Number of jobs online"),
-                        html.Div(id='main-graph'),
-                        html.Div(id='location-graph'),
-                        html.Div(id='company-graph'),
-                        html.Div(id='technology-graph'),
+                        dcc.Loading(
+                            id='loading-main-graph',
+                            children=[html.Div(id='main-graph')],
+                            type='circle',
+                        ),
+                        dcc.Loading(
+                            id='loading-location-graph',
+                            children=[html.Div(id='location-graph')],
+                            type='circle',
+                        ),
+                        dcc.Loading(
+                            id='loading-company-graph',
+                            children=[html.Div(id='company-graph')],
+                            type='circle',
+                        ),
+                        dcc.Loading(
+                            id='loading-technology-graph',
+                            children=[html.Div(id='technology-graph')],
+                            type='circle',
+                        ),
                     ]), md=8),
             ],
         ),
@@ -149,7 +184,7 @@ def query_db(sql_statement, _=date.today()):
 )
 def update_intial_values(_, url_hash, time_input):
     time_output = decode_params(url_hash, 'months') or time_input
-    location_output = decode_params(url_hash, 'location')
+    location_output = decode_params(url_hash, 'city')
     company_output = decode_params(url_hash, 'company')
     technology_output = decode_params(url_hash, 'technology')
 
@@ -190,7 +225,7 @@ def update_graphs(url_hash):
     start_time = time.time()
 
     inputs = {
-        'time_name': decode_params(url_hash, 'time') or 1,
+        'time_name': decode_params(url_hash, 'months') or 1,
         'location_name': decode_params(url_hash, 'city'),
         'company_name': decode_params(url_hash, 'company'),
         'technology_name': decode_params(url_hash, 'technology'),
