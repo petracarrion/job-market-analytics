@@ -7,4 +7,4 @@ source .env
 
 source "${VENV_ACTIVATE}"
 
-gunicorn -b 0.0.0.0:8051 --timeout 300 dashy:server
+gunicorn -w 1 -b 0.0.0.0:8051 --timeout 300 dashy:server
