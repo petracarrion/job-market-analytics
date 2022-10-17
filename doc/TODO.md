@@ -2,6 +2,7 @@
 
 ## Open
 
+- [ ] Slugify the value of the filter selectors
 - [ ] Upload only backup files to the Azure Blob Storage
 - [ ] Implement use case: Number of jobs relative to city population
 - [ ] Add the flag to the do and verify backup commands: --exclude='.DS_Store'
