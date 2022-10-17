@@ -345,18 +345,24 @@ def update_graphs(url_hash):
                  ORDER BY 1, 2
                 ''')
 
-        fig = px.scatter(df, x='online_at', y='total_jobs', trendline='rolling', trendline_options=dict(window=7),
-                         title=f'<b>Overview</b>')
+        fig = px.scatter(df, x='online_at', y='total_jobs', trendline='rolling', trendline_options=dict(window=7))
 
-        main_graph = dcc.Graph(figure=fig, config=GRAPH_CONFIG)
+        main_graph = html.Div([
+            html.Br(),
+            html.H5('Overview'),
+            dcc.Graph(figure=fig, config=GRAPH_CONFIG)
+        ])
 
         compare_graphs = {}
         for filter_name, df in compare_df.items():
             filter = FILTERS[filter_name]
             df = df.rename(columns={filter_name: filter.label})
-            title = f'<b>Per {filter.label}</b>'
-            fig = px.line(df, x="online_at", y="total_jobs", color=filter.label, title=title)
-            compare_graphs[filter_name] = dcc.Graph(figure=fig, config=GRAPH_CONFIG)
+            fig = px.line(df, x="online_at", y="total_jobs", color=filter.label)
+            compare_graphs[filter_name] = html.Div([
+                html.Br(),
+                html.H5(f'By {filter.label}'),
+                dcc.Graph(figure=fig, config=GRAPH_CONFIG),
+            ])
 
         location_graph = compare_graphs['location_name'] if 'location_name' in compare_graphs.keys() else ''
         company_graph = compare_graphs['company_name'] if 'company_name' in compare_graphs.keys() else ''
