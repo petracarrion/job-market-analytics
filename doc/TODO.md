@@ -2,6 +2,7 @@
 
 ## Open
 
+- [ ] Implement use case: Location/Company/Technology changelog
 - [ ] Slugify the value of the filter selectors
 - [ ] Upload only backup files to the Azure Blob Storage
 - [ ] Implement use case: Number of jobs relative to city population
