@@ -22,6 +22,12 @@ GRAPH_CONFIG = {
     'staticPlot': True,
 }
 
+TIME_OPTIONS = [
+    {'label': 'Last Month', 'value': '1'},
+    {'label': 'Last Quarter', 'value': '3'},
+    {'label': 'Last Year', 'value': '12'},
+]
+
 
 class Filter:
     def __init__(self, name, label):
@@ -41,11 +47,7 @@ app = Dash('Dashy', title='Job Market Analytics', external_stylesheets=[dbc.them
 server = app.server
 
 time_selector = dbc.RadioItems(
-    options=[
-        {'label': 'Last Month', 'value': '1'},
-        {'label': 'Last Quarter', 'value': '3'},
-        {'label': 'Last Year', 'value': '12'},
-    ],
+    options=TIME_OPTIONS,
     value='1',
     id='time-selector',
     inline=True,
@@ -55,7 +57,13 @@ controls = dbc.Card(
     [
         html.Div([
             html.H3("Time Range"),
-            time_selector,
+            dcc.Loading(
+                id='loading-time-selector',
+                children=[
+                    time_selector,
+                ],
+                type=LOADING_TYPE,
+            ),
         ]),
         html.Br(),
         html.Div([
@@ -71,7 +79,6 @@ controls = dbc.Card(
                 ],
                 type=LOADING_TYPE,
             ),
-
         ]),
         html.Br(),
         html.Div([
@@ -228,6 +235,7 @@ def update_hash(time_input, location_input, company_input, technology_input):
     Output('company-graph', 'children'),
     Output('technology-graph', 'children'),
     Output('performance-info', 'children'),
+    Output('time-selector', 'options'),
     Output('location-selector', 'options'),
     Output('company-selector', 'options'),
     Output('technology-selector', 'options'),
@@ -293,7 +301,7 @@ def update_graphs(url_hash):
             )
             GROUP BY 1
             ORDER BY 2 DESC
-            LIMIT 10000
+            LIMIT 50000
             ''')
 
         filter_df_records = filter_df[filter_name].to_dict('records')
@@ -358,6 +366,7 @@ def update_graphs(url_hash):
         html.Div([company_graph]),
         html.Div([technology_graph]),
         html.Div(f'It took {elapsed_time:.2f} seconds on the backend'),
+        TIME_OPTIONS,
         options['location_name'],
         options['company_name'],
         options['technology_name'],
