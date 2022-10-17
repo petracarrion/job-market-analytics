@@ -321,12 +321,22 @@ def update_graphs(url_hash):
                       FROM {table_name}
                      ORDER BY 1
                 ), filter_options AS (
-                    SELECT DISTINCT {filter_name}
-                      FROM {table_name}
-                     WHERE {main_where_clause}
+                    SELECT {filter_name},
+                           CAST(MAX(total_jobs) AS INTEGER) AS total_jobs
+                    FROM (
+                        SELECT {filter_name},
+                               online_at,
+                               COUNT(DISTINCT job_id) AS total_jobs
+                          FROM {table_name}
+                         WHERE {main_where_clause}
+                         GROUP BY 1, 2
+                    )
+                    GROUP BY 1
+                    ORDER BY 2 DESC
                 ), cartesian_product AS (
                     SELECT d.online_at,
-                           fo.{filter_name}
+                           fo.{filter_name},
+                           fo.total_jobs
                       FROM all_dates d
                      CROSS JOIN filter_options fo
                 ), total_jobs AS (
@@ -338,11 +348,10 @@ def update_graphs(url_hash):
                      GROUP BY 1, 2
                 )
                 SELECT cp.online_at,
-                       cp.{filter_name},
+                       CONCAT(cp.{filter_name}, ' (', cp.total_jobs, ')') AS {filter_name},
                        COALESCE(tj.total_jobs, 0) AS total_jobs
                   FROM cartesian_product cp
                   FULL OUTER JOIN total_jobs tj ON (cp.online_at = tj.online_at AND cp.{filter_name} = tj.{filter_name})
-                 ORDER BY 1, 2
                 ''')
 
         fig = px.scatter(df, x='online_at', y='total_jobs', trendline='rolling', trendline_options=dict(window=7))
