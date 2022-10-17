@@ -301,7 +301,7 @@ def update_graphs(url_hash):
             )
             GROUP BY 1
             ORDER BY 2 DESC
-            LIMIT 50000
+            LIMIT 10000
             ''')
 
         filter_df_records = filter_df[filter_name].to_dict('records')
