@@ -1,9 +1,12 @@
+import os
 from datetime import datetime, timedelta
 
 from airflow import DAG
 from airflow.decorators import task
 
 from common_airflow_dag import run_flasky_task
+
+os.environ["no_proxy"] = "*"
 
 with DAG('job_market_analytics_curate_sitemaps_catch_up_dag',
          description='Job Market Analytics Curate Sitemaps Catch Up DAG',
