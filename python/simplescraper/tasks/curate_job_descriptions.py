@@ -66,6 +66,7 @@ TECHNOLOGIES = [
 
 def process_job_description(df):
     df = df.copy()
+    df = df[df['company_name'].notna()]
     df = df[BASE_COLUMNS + JOB_DESCRIPTION_SAT_COLUMNS]
     save_curated_df(df, JOB)
 
