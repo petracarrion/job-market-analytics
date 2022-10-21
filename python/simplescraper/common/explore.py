@@ -11,8 +11,8 @@ def display_df(_df):
         display(_df.fillna('.'))
 
 
-def display_sql(sql_statement):
-    conn = duckdb.connect(DUCKDB_DWH_FILE, read_only=True)
+def display_sql(sql_statement, read_only=True):
+    conn = duckdb.connect(DUCKDB_DWH_FILE, read_only=read_only)
     _df = conn.execute(sql_statement).df()
     conn.close()
     return _df
