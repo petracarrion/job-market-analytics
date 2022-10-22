@@ -1,2 +1,2 @@
-dbt-duckdb
+dbt-duckdb==1.2.2
 
