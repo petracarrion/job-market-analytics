@@ -359,6 +359,7 @@ def update_graphs(url_hash):
                 ''')
 
         fig = px.scatter(df, x='online_at', y='total_jobs', trendline='rolling', trendline_options=dict(window=7))
+        fig.update_yaxes(rangemode='tozero')
 
         main_graph = html.Div([
             html.Br(),
@@ -371,6 +372,7 @@ def update_graphs(url_hash):
             filter = FILTERS[filter_name]
             df = df.rename(columns={filter_name: filter.label})
             fig = px.line(df, x="online_at", y="total_jobs", color=filter.label)
+            fig.update_yaxes(rangemode='tozero')
             compare_graphs[filter_name] = html.Div([
                 html.Br(),
                 html.H5(f'By {filter.label}'),
