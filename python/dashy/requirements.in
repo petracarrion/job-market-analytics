@@ -3,5 +3,6 @@ dash-bootstrap-components
 duckdb
 gunicorn
 jupyter-dash
+loguru
 pandas
 python-dotenv

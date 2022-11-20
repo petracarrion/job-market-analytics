@@ -12,6 +12,7 @@ import duckdb
 import plotly.express as px
 from dash import Dash, dcc, html, Output, Input, State
 from dotenv import load_dotenv
+from loguru import logger
 
 load_dotenv()
 
@@ -210,7 +211,10 @@ def update_intial_values(_, url_hash, time_input):
     company_output = decode_params(url_hash, 'company')
     technology_output = decode_params(url_hash, 'technology')
 
-    return [time_output, location_output, company_output, technology_output]
+    outputs = [time_output, location_output, company_output, technology_output]
+    logger.info(f'update_intial_values: {outputs}')
+
+    return outputs
 
 
 @app.callback(
@@ -227,6 +231,7 @@ def update_hash(time_input, location_input, company_input, technology_input):
         'company': encode_param(company_input),
         'technology': encode_param(technology_input),
     }
+    logger.info(f'update_hash: {params}')
     params = {k: v for k, v in params.items() if v}
     url_hash = urllib.parse.urlencode(params)
     return url_hash
@@ -254,6 +259,8 @@ def update_graphs(url_hash):
             'company_name': decode_params(url_hash, 'company'),
             'technology_name': decode_params(url_hash, 'technology'),
         }
+
+        logger.info(f'update_graphs start: {inputs}')
 
         table_name = f'normalized_online_job_months_{inputs["time_name"]}'
 
@@ -382,13 +389,16 @@ def update_graphs(url_hash):
         technology_graph = compare_graphs['technology_name'] if 'technology_name' in compare_graphs.keys() else ''
 
         elapsed_time = time.time() - start_time
+        elapsed_time = f'It took {elapsed_time:.2f} seconds on the backend'
+
+        logger.info(f'update_graphs end: {elapsed_time}')
 
         return [
             html.Div([main_graph]),
             html.Div([location_graph]),
             html.Div([company_graph]),
             html.Div([technology_graph]),
-            html.Div(f'It took {elapsed_time:.2f} seconds on the backend'),
+            html.Div(elapsed_time),
             TIME_OPTIONS,
             options['location_name'],
             options['company_name'],
