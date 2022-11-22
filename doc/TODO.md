@@ -20,10 +20,10 @@
 
 ## In Progress
 
-- [ ] Let users start the y-axis with zero
 
 ## Done
 
+- [x] Let users start the y-axis with zero
 - [x] Make Dashy public with the domain https://jobmarketanalytics.com/
 - [x] Cache sql query executions on Dashy
 - [x] Implement use case: Compare technologies

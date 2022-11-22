@@ -34,6 +34,10 @@ TIME_OPTIONS = [
     {'label': 'Last Year', 'value': '12'},
 ]
 
+GRAPH_OPTIONS = [
+    {'label': 'Start Y-Axis at Zero', 'value': 'startatzero'},
+]
+
 LOCK = Lock()
 
 
@@ -113,6 +117,21 @@ controls = dbc.Card(
                         options=[],
                         id='technology-selector',
                         multi=True
+                    ),
+                ],
+                type=LOADING_TYPE,
+            ),
+        ]),
+        html.Br(),
+        html.Div([
+            html.H3('Graph Options'),
+            dcc.Loading(
+                id='loading-graphoptions-selector',
+                children=[
+                    dbc.Checklist(
+                        options=GRAPH_OPTIONS,
+                        value=[],
+                        id='graphoptions-selector',
                     ),
                 ],
                 type=LOADING_TYPE,
@@ -205,6 +224,7 @@ def query_db(sql_statement, _=date.today()):
     Output('location-selector', 'value'),
     Output('company-selector', 'value'),
     Output('technology-selector', 'value'),
+    Output('graphoptions-selector', 'value'),
     Input('url', 'pathname'),
     State('url', 'hash'),
     State('time-selector', 'value'),
@@ -214,8 +234,9 @@ def update_intial_values(_, url_hash, time_input):
     location_output = decode_params(url_hash, 'city')
     company_output = decode_params(url_hash, 'company')
     technology_output = decode_params(url_hash, 'technology')
+    graphoptions_output = decode_params(url_hash, 'graphoptions')
 
-    outputs = [time_output, location_output, company_output, technology_output]
+    outputs = [time_output, location_output, company_output, technology_output, graphoptions_output]
     logger.info(f'update_intial_values: {outputs}')
 
     return outputs
@@ -227,13 +248,15 @@ def update_intial_values(_, url_hash, time_input):
     Input('location-selector', 'value'),
     Input('company-selector', 'value'),
     Input('technology-selector', 'value'),
+    Input('graphoptions-selector', 'value'),
 )
-def update_hash(time_input, location_input, company_input, technology_input):
+def update_hash(time_input, location_input, company_input, technology_input, graphoptions_input):
     params = {
         'months': encode_param(time_input),
         'city': encode_param(location_input),
         'company': encode_param(company_input),
         'technology': encode_param(technology_input),
+        'graphoptions': encode_param(graphoptions_input),
     }
     logger.info(f'update_hash: {params}')
     params = {k: v for k, v in params.items() if v}
@@ -251,6 +274,7 @@ def update_hash(time_input, location_input, company_input, technology_input):
     Output('location-selector', 'options'),
     Output('company-selector', 'options'),
     Output('technology-selector', 'options'),
+    Output('graphoptions-selector', 'options'),
     Input('url', 'hash'),
 )
 def update_graphs(url_hash):
@@ -262,9 +286,14 @@ def update_graphs(url_hash):
             'location_name': decode_params(url_hash, 'city'),
             'company_name': decode_params(url_hash, 'company'),
             'technology_name': decode_params(url_hash, 'technology'),
+            'graphoptions_name': decode_params(url_hash, 'graphoptions'),
         }
 
         logger.info(f'update_graphs start: {inputs}')
+
+        start_at_zero = False
+        if inputs['graphoptions_name'] and 'startatzero' in inputs['graphoptions_name']:
+            start_at_zero = True
 
         table_name = f'normalized_online_job_months_{inputs["time_name"]}'
 
@@ -370,6 +399,8 @@ def update_graphs(url_hash):
                 ''')
 
         fig = px.scatter(df, x='online_at', y='total_jobs', trendline='rolling', trendline_options=dict(window=7))
+        if start_at_zero:
+            fig.update_yaxes(rangemode='tozero')
 
         main_graph = html.Div([
             html.Br(),
@@ -382,6 +413,8 @@ def update_graphs(url_hash):
             filter = FILTERS[filter_name]
             df = df.rename(columns={filter_name: filter.label})
             fig = px.line(df, x="online_at", y="total_jobs", color=filter.label)
+            if start_at_zero:
+                fig.update_yaxes(rangemode='tozero')
             compare_graphs[filter_name] = html.Div([
                 html.Br(),
                 html.H5(f'By {filter.label}'),
@@ -407,6 +440,7 @@ def update_graphs(url_hash):
             options['location_name'],
             options['company_name'],
             options['technology_name'],
+            GRAPH_OPTIONS,
         ]
 
 
