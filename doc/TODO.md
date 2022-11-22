@@ -2,7 +2,7 @@
 
 ## Open
 
-- [ ] Let users start the y-axis with zero
+- [ ] Implement use case: Location/Company/Technology changelog
 - [ ] Display more than 12 months
 - [ ] Add the next data source
 - [ ] Slugify the value of the filter selectors
@@ -20,7 +20,7 @@
 
 ## In Progress
 
-- [ ] Implement use case: Location/Company/Technology changelog
+- [ ] Let users start the y-axis with zero
 
 ## Done
 
