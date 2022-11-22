@@ -16,6 +16,10 @@ from loguru import logger
 
 load_dotenv()
 
+LOG_FOLDER = os.getenv('LOG_FOLDER')
+LOG_FILE = os.path.join(LOG_FOLDER, 'dashy.log')
+logger.add(LOG_FILE, rotation="1 day")
+
 DUCKDB_DWH_FILE = os.getenv('DUCKDB_DWH_FILE')
 
 LOADING_TYPE = 'dot'
