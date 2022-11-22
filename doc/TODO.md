@@ -23,6 +23,7 @@
 
 ## Done
 
+- [x] Let users use interactive graphs instead of static plots
 - [x] Let users start the y-axis with zero
 - [x] Make Dashy public with the domain https://jobmarketanalytics.com/
 - [x] Cache sql query executions on Dashy

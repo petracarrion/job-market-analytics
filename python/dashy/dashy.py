@@ -24,10 +24,6 @@ DUCKDB_DWH_FILE = os.getenv('DUCKDB_DWH_FILE')
 
 LOADING_TYPE = 'dot'
 
-GRAPH_CONFIG = {
-    'staticPlot': True,
-}
-
 TIME_OPTIONS = [
     {'label': 'Last Month', 'value': '1'},
     {'label': 'Last Quarter', 'value': '3'},
@@ -36,6 +32,7 @@ TIME_OPTIONS = [
 
 GRAPH_OPTIONS = [
     {'label': 'Start Y-Axis at Zero', 'value': 'startatzero'},
+    {'label': 'Interative Graphs', 'value': 'interactive'},
 ]
 
 LOCK = Lock()
@@ -295,6 +292,10 @@ def update_graphs(url_hash):
         if inputs['graphoptions_name'] and 'startatzero' in inputs['graphoptions_name']:
             start_at_zero = True
 
+        static_plot = True
+        if inputs['graphoptions_name'] and 'interactive' in inputs['graphoptions_name']:
+            static_plot = False
+
         table_name = f'normalized_online_job_months_{inputs["time_name"]}'
 
         where_clause = {}
@@ -405,7 +406,7 @@ def update_graphs(url_hash):
         main_graph = html.Div([
             html.Br(),
             html.H5('Overview'),
-            dcc.Graph(figure=fig, config=GRAPH_CONFIG)
+            dcc.Graph(figure=fig, config={'staticPlot': static_plot})
         ])
 
         compare_graphs = {}
@@ -418,7 +419,7 @@ def update_graphs(url_hash):
             compare_graphs[filter_name] = html.Div([
                 html.Br(),
                 html.H5(f'By {filter.label}'),
-                dcc.Graph(figure=fig, config=GRAPH_CONFIG),
+                dcc.Graph(figure=fig, config={'staticPlot': static_plot}),
             ])
 
         location_graph = compare_graphs['location_name'] if 'location_name' in compare_graphs.keys() else ''
