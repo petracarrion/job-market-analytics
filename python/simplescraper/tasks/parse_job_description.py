@@ -10,7 +10,7 @@ METADATA_JSON_PREFIX = 'window.__PRELOADED_STATE__.HeaderStepStoneBlock = '
 METADATA_JSON_SUFFIX = ';'
 
 FIELD_SELECTORS = {
-    'company_name': '.at-header-company-name',
+    #'company_name': '.at-header-company-name',
     # 'description': 'div[itemprop="description"]',
     'description_introduction': '.at-section-text-introduction',
     'description_responsabilities': '.at-section-text-description-content',
@@ -36,16 +36,20 @@ def keys_to_snake_case(metadata):
 
 
 def extract_metadata(soup):
-    metadata = {}
+    listing_data = {}
+    company_data = {}
     script_tag = soup.find('script', id='js-section-preloaded-HeaderStepStoneBlock')
     script_tag_lines = script_tag.text.split('\n')
     for line in script_tag_lines:
         if line.startswith(METADATA_JSON_PREFIX) and line.endswith(METADATA_JSON_SUFFIX):
             json_line = line[len(METADATA_JSON_PREFIX):len(line) - len(METADATA_JSON_SUFFIX)]
-            metadata = json.loads(json_line)['listingData']
-    metadata = flatten_metadata(metadata)
+            line_as_json = json.loads(json_line)
+            listing_data = line_as_json['listingData']
+            company_data = line_as_json['companyData']
+    metadata = flatten_metadata(listing_data)
     metadata = keys_to_snake_case(metadata)
     metadata['job_id'] = metadata.pop('id')
+    metadata['company_name'] = company_data.pop('name') if company_data and 'name' in company_data else ''
     return metadata
 
 
