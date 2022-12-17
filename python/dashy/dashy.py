@@ -208,12 +208,17 @@ def decode_params(url_hash, param_name):
 
 
 @functools.lru_cache(maxsize=1024)
-def query_db(sql_statement, _=date.today()):
+def cached_query_db(sql_statement, timestamp):
+    logger.debug(f'Start cached_query_db with {timestamp=}')
     conn = duckdb.connect(DUCKDB_DWH_FILE, read_only=True)
     df = conn.execute(sql_statement).df()
     conn.close()
 
     return df
+
+
+def query_db(sql_statement):
+    return cached_query_db(sql_statement, date.today())
 
 
 @app.callback(
