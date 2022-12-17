@@ -122,7 +122,7 @@ async def run_async_tasks(chunks, load_timestamp):
 
 def download_job_descriptions(load_timestamp, df_to_download=None):
     configure_logger(load_timestamp)
-    df = df_to_download or load_temp_df(load_timestamp, JOB_DESCRIPTIONS_TO_DOWNLOAD_CSV)
+    df = df_to_download if df_to_download is not None else load_temp_df(load_timestamp, JOB_DESCRIPTIONS_TO_DOWNLOAD_CSV)
 
     # TODO find a better way to avoid Airflow to hang when there are many jobs to download
     # df = df.head(SEMAPHORE_COUNT * MAX_CHUNK_SIZE)
