@@ -27,7 +27,7 @@ with DAG('job_market_analytics_hourly_dag',
         run_flasky_task('do/list_downloaded_job_descriptions')
 
 
-    @task(task_id="download_sitemap")
+    @task(task_id="download_sitemap", retries=1)
     def download_sitemap():
         run_flasky_task('do/download_sitemap')
 
