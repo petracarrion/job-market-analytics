@@ -128,7 +128,7 @@ gitdb==4.0.9
     # via gitpython
 gitpython==3.1.27
     # via bandit
-greenlet==1.1.2
+greenlet==2.0.1
     # via playwright
 gunicorn==20.1.0
     # via -r requirements.in
@@ -273,7 +273,7 @@ pickleshare==0.7.5
     # via ipython
 pip-tools==6.8.0
     # via -r requirements.in
-playwright==1.25.2
+playwright==1.30.0
     # via -r requirements.in
 plotly==5.10.0
     # via
@@ -312,7 +312,7 @@ pycparser==2.21
     # via cffi
 pydocstyle==6.1.1
     # via flake8-docstrings
-pyee==8.1.0
+pyee==9.0.4
     # via playwright
 pyflakes==2.4.0
     # via flake8
@@ -412,7 +412,9 @@ traitlets==5.4.0
     #   notebook
     #   qtconsole
 typing-extensions==4.3.0
-    # via wemake-python-styleguide
+    # via
+    #   pyee
+    #   wemake-python-styleguide
 urllib3==1.26.12
     # via requests
 wcwidth==0.2.5
@@ -421,8 +423,6 @@ webencodings==0.5.1
     # via
     #   bleach
     #   tinycss2
-websockets==10.1
-    # via playwright
 wemake-python-styleguide==0.16.1
     # via -r requirements.in
 werkzeug==2.2.2

@@ -9,7 +9,7 @@ lxml
 loguru
 pandas
 pip-tools
-playwright
+playwright==1.30.0
 plotly-calplot
 plotly-express
 pyarrow
