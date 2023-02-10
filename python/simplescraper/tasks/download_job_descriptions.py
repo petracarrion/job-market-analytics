@@ -10,7 +10,7 @@ from common.env_variables import DATA_SOURCE_URL, SEMAPHORE_COUNT, MAX_CHUNK_SIZ
 from common.logging import logger, configure_logger
 from common.storage import save_raw_file, load_temp_df, JOB_DESCRIPTIONS_TO_DOWNLOAD_CSV
 
-TAB_HITS = 30
+TAB_HITS = 10
 
 
 class PageNotFound(Exception):
