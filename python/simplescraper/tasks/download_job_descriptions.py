@@ -6,7 +6,7 @@ from playwright.async_api import async_playwright, Error, TimeoutError
 from common.chunking import get_chunk_size
 from common.entity import JOB_DESCRIPTION
 from common.env_variables import DATA_SOURCE_URL, SEMAPHORE_COUNT, MAX_CHUNK_SIZE, LATEST_LOAD_TIMESTAMP, RUN_HEADLESS, \
-    MIN_TO_DOWNLOAD
+    MIN_TO_DOWNLOAD, MAX_TO_DOWNLOAD
 from common.logging import logger, configure_logger
 from common.storage import save_raw_file, load_temp_df, JOB_DESCRIPTIONS_TO_DOWNLOAD_CSV
 
@@ -124,8 +124,8 @@ def download_job_descriptions(load_timestamp, df_to_download=None):
     configure_logger(load_timestamp)
     df = df_to_download if df_to_download is not None else load_temp_df(load_timestamp, JOB_DESCRIPTIONS_TO_DOWNLOAD_CSV)
 
-    # TODO find a better way to avoid Airflow to hang when there are many jobs to download
-    # df = df.head(SEMAPHORE_COUNT * MAX_CHUNK_SIZE)
+    if MAX_TO_DOWNLOAD:
+        df = df.head(MAX_TO_DOWNLOAD)
 
     total_count = df.shape[0]
 
