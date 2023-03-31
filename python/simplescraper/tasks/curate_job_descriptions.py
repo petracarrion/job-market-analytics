@@ -15,6 +15,7 @@ BASE_COLUMNS = ['year', 'month', 'day', 'job_id', 'load_timestamp']
 TECHNOLOGIES = [
     'AI',
     'Airflow',
+    'Android',
     'Angular',
     'AWS',
     'Azure',
@@ -31,6 +32,7 @@ TECHNOLOGIES = [
     'ELT',
     'ETL',
     'Flink',
+    'Flutter',
     'GCP',
     'Go',
     'Golang',
