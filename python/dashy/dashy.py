@@ -28,6 +28,7 @@ TIME_OPTIONS = [
     {'label': 'Last Month', 'value': '1'},
     {'label': 'Last Quarter', 'value': '3'},
     {'label': 'Last Year', 'value': '12'},
+    {'label': 'Max.', 'value': 'max'},
 ]
 
 GRAPH_OPTIONS = [

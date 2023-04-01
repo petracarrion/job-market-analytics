@@ -3,7 +3,6 @@
 ## Open
 
 - [ ] Implement use case: Location/Company/Technology changelog
-- [ ] Display more than 12 months
 - [ ] Add the next data source
 - [ ] Slugify the value of the filter selectors
 - [ ] Upload only backup files to the Azure Blob Storage
@@ -23,6 +22,7 @@
 
 ## Done
 
+- [x] Display more than 12 months
 - [x] Let users use interactive graphs instead of static plots
 - [x] Let users start the y-axis with zero
 - [x] Make Dashy public with the domain https://jobmarketanalytics.com/
