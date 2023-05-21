@@ -7,18 +7,14 @@
 
 SELECT MD5(CONCAT_WS('||',
             COALESCE(
-                job.job_id,
                 UPPER(TRIM(CAST(
                     job.job_id
                 AS VARCHAR))),
-                NULL,
                 '^^'),
             COALESCE(
-                job.load_timestamp,
                 UPPER(TRIM(CAST(
                     job.load_timestamp
                 AS VARCHAR))),
-                NULL,
                 '^^')
        )) AS job_key,
        job.job_id,

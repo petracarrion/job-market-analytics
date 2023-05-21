@@ -10,12 +10,13 @@ os.environ["no_proxy"] = "*"
 
 YEAR = 2021
 MONTH = 10
+DAY = 1
 
 with DAG('job_market_analytics_curate_catch_up_dag',
          description='Job Market Analytics Curate Catch Up DAG',
          schedule_interval='@daily',
-         start_date=datetime(YEAR, MONTH, 1),
-         end_date=datetime(YEAR, MONTH, 1) + timedelta(days=30),
+         start_date=datetime(YEAR, MONTH, DAY),
+         end_date=datetime(YEAR, MONTH, DAY) + timedelta(days=15),
          dagrun_timeout=timedelta(minutes=60),
          max_active_runs=2,
          max_active_tasks=2,

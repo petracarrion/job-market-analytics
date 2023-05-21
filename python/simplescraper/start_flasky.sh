@@ -7,5 +7,5 @@ source .env
 
 source "${VENV_ACTIVATE}"
 
-ulimit -n 2048
+ulimit -n 4096
 gunicorn --workers 4 --timeout 3600 --bind 0.0.0.0:3001 'flasky:app'

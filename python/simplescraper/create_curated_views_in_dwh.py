@@ -18,7 +18,9 @@ def create_curated_views_in_dwh():
 
         conn.execute(f'''
         CREATE OR REPLACE view curated.{entity.name} AS
-            SELECT * FROM parquet_scan('{curated_path}', HIVE_PARTITIONING=1);
+            SELECT * FROM parquet_scan('{curated_path}', HIVE_PARTITIONING=1)
+             -- WHERE load_timestamp < '2022-07-01'
+             ;
         ''')
 
     conn.close()

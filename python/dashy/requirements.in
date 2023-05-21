@@ -1,6 +1,6 @@
 dash
 dash-bootstrap-components
-duckdb
+duckdb==0.7.0
 gunicorn
 jupyter-dash
 loguru
