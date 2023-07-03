@@ -11,7 +11,7 @@ os.environ["no_proxy"] = "*"
 with DAG('job_market_analytics_daily_catch_up_dag',
          description='Job Market Analytics Daily Catch UP DAG',
          schedule_interval='@daily',
-         start_date=datetime(2022, 11, 11),
+         start_date=datetime(2023, 5, 24),
          dagrun_timeout=timedelta(minutes=60),
          max_active_runs=1,
          max_active_tasks=1,
