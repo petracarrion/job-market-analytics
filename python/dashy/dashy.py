@@ -219,7 +219,7 @@ def cached_query_db(sql_statement, timestamp):
 
 
 def query_db(sql_statement):
-    return cached_query_db(sql_statement, date.today())
+    return cached_query_db("SET memory_limit='32GB'; " + sql_statement, date.today())
 
 
 @app.callback(
