@@ -7,4 +7,4 @@ source .env
 
 source "${VENV_ACTIVATE}"
 
-airflow standalone
+airflow webserver
