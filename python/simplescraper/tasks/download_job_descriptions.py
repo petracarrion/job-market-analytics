@@ -125,7 +125,10 @@ def download_job_descriptions(load_timestamp, df_to_download=None):
     df = df_to_download if df_to_download is not None else load_temp_df(load_timestamp, JOB_DESCRIPTIONS_TO_DOWNLOAD_CSV)
 
     if MAX_TO_DOWNLOAD:
+        pending_donwnload = df.shape[0] - MAX_TO_DOWNLOAD if df.shape[0] > MAX_TO_DOWNLOAD else 0
         df = df.head(MAX_TO_DOWNLOAD)
+    else:
+        pending_donwnload = 0
 
     total_count = df.shape[0]
 
@@ -140,6 +143,7 @@ def download_job_descriptions(load_timestamp, df_to_download=None):
     logger.info(f'Starting downloading job descriptions for job: {load_timestamp}')
     logger.info(f'Concurrent tasks: {SEMAPHORE_COUNT}')
     logger.info(f'Urls to download: {total_count}')
+    logger.info(f'Pending download: {pending_donwnload}')
 
     loop = asyncio.SelectorEventLoop()
     asyncio.set_event_loop(loop)
@@ -153,6 +157,7 @@ def download_job_descriptions(load_timestamp, df_to_download=None):
     logger.info(f'Elapsed time: {elapsed_time:.2f} seconds')
     logger.info(f'Downloads per second: {total_count / elapsed_time:.2f}')
     logger.success(f'Finished: {total_count} urls for the timestamp {load_timestamp}')
+    logger.success(f'Pending download: {pending_donwnload} urls for the timestamp {load_timestamp}')
 
 
 if __name__ == '__main__':
